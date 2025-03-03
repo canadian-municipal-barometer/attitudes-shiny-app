@@ -1,13 +1,18 @@
 library(shiny)
+library(bslib)
+
+con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data.duckdb")
+df <- DBI::dbReadTable(con, name = "policyData")
+DBI::dbDisconnect(con)
 
 ui <- fluidPage(
   sidebar = sidebar(
     selectInput(
-      inputId = "policy-selector",
+      inputId = "policy_selector",
       label = "Policy",
       choices = c(
-        "Subsidized Housing" = "all_loc_1",
-        "Public Transit" = "all_loc_3"
+        "Subsidized Housing",
+        "Public Transit"
       )
     )
   ),
@@ -17,13 +22,13 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
-  con <- dbConnect(duckdb::duckdb(), dbdir = ":memory:")
-  initialize_database(con, "data/policy-data.duckdb", table = "policy-data")
-
-  df <- dplyr::tbl(con, "policy-data")
-
   output$selected_var <- renderText({
-
+    filter <- input$policy_selector |>
+      switch(
+        "Subsidized Housing" = "all_loc_3",
+        "Public Transit" = "all_loc_3"
+      )
+    return(df[[filter]])
   })
 }
 
