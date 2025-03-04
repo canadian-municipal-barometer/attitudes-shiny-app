@@ -12,7 +12,7 @@ load("data/statement-text.rda")
 ui <- page_fillable(
   titlePanel("Canadian's Policy Attitudes"),
   selectInput(
-    inputId = "policy_selector",
+    inputId = "policy",
     label = "Select a policy, or begin typing a subject of interest:",
     choices = statement_lookup$statement,
     selectize = TRUE,
@@ -22,41 +22,53 @@ ui <- page_fillable(
     col_widths = c(3, 9),
     card(
       selectInput(
-        inputId = "gender_selector",
+        inputId = "gender",
         label = "Gender:",
         choices = levels(df$gender),
-        selectize = TRUE
+        selectize = FALSE
       ),
       selectInput(
-        inputId = "age_selector",
+        inputId = "agecat",
         label = "Age:",
         choices = levels(df$agecat),
-        selectize = TRUE
+        selectize = FALSE
       ),
       selectInput(
-        inputId = "race_selector",
+        inputId = "race",
         label = "Race:",
         choices = levels(df$race),
-        selectize = TRUE
+        selectize = FALSE
       ),
       selectInput(
-        inputId = "educ_selector",
+        inputId = "education",
         label = "Education:",
         choices = levels(df$education),
-        selectize = TRUE
+        selectize = FALSE
       ),
       selectInput(
-        inputId = "income_selector",
+        inputId = "income",
         label = "Income:",
         choices = levels(df$income),
-        selectize = TRUE
+        selectize = FALSE
       ),
       selectInput(
-        inputId = "immig_selector",
+        inputId = "immigrant",
         label = "Immigration Status:",
         choices = levels(df$immigrant),
-        selectize = TRUE
-      )
+        selectize = FALSE
+      ),
+      selectInput(
+        inputId = "province",
+        label = "Province:",
+        choices = levels(df$province),
+        selectize = FALSE
+      ),
+      selectInput(
+        inputId = "homeowner",
+        label = "Homeowner:",
+        choices = levels(df$homeowner),
+        selectize = FALSE
+      ),
     ),
     card(
       textOutput("selected_var")
@@ -67,8 +79,14 @@ ui <- page_fillable(
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
   output$selected_var <- renderText({
-    filter <- statement_lookup$var_name[statement_lookup$statement == input$policy_selector]
-    return(filter)
+    # policy to filter the data by
+    filter <- statement_lookup$var_name[statement_lookup$statement == input$policy]
+
+    # translate the contents of the selectors to variable names
+
+    tmp_df <- glm()
+
+    return(nrow(tmp_df))
   })
 }
 
