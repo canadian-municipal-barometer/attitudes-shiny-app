@@ -2,7 +2,7 @@ library(shiny)
 library(bslib)
 
 # load local, client-side Duckdb database
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data.duckdb")
+con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data-char.duckdb")
 df <- DBI::dbReadTable(con, name = "policyData")
 DBI::dbDisconnect(con)
 
@@ -24,67 +24,112 @@ ui <- bslib::page_fillable(
       shiny::selectInput(
         inputId = "gender",
         label = "Gender:",
-        choices = levels(df$gender),
+        choices = c("Woman", "Man"),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "agecat",
         label = "Age:",
-        choices = levels(df$agecat),
+        choices = c("18-29", "30-44", "45-59", "60+"),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "race",
         label = "Race:",
-        choices = levels(df$race),
+        choices = c(
+          "Arab",
+          "Black",
+          "Chinese",
+          "Filipino",
+          "Indigenous (Inuit, Métis, First Nations)",
+          "Japanese",
+          "Korean",
+          "Latin American",
+          "South Asian (e.g. East Indian, Pakistani, Sri Lankan, etc.)",
+          "Southeast Asian (e.g. Vietnamese, Cambodian, Malaysian, Laotian, etc.)",
+          "West Asian (e.g. Iranian, Afghan, etc.)",
+          "White"
+        ),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "education",
         label = "Education:",
-        choices = levels(df$education),
+        choices = c(
+          "Less than high school",
+          "High school",
+          "Associate's degree or trades",
+          "Bachelor's degree",
+          "Post-graduate degree"
+        ),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "income",
         label = "Income:",
-        choices = levels(df$income),
+        choices = c(
+          "Less than $49,999",
+          "$50,000 to $99,999",
+          "$100,000 to $149,999",
+          "$150,000 to $199,999",
+          "$200,000 or more"
+        ),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "immigrant",
         label = "Immigration Status:",
-        choices = levels(df$immigrant),
+        choices = c("Yes", "No"),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "province",
         label = "Province:",
-        choices = levels(df$province),
+        choices = c(
+          "Alberta",
+          "British Columbia",
+          "Manitoba",
+          "New Brunswick",
+          "Newfoundland and Labrador",
+          "Northwest Territories",
+          "Nova Scotia",
+          "Nunavut",
+          "Ontario",
+          "Prince Edward Island",
+          "Quebec",
+          "Saskatchewan",
+          "Yukon"
+        ),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "popcat",
         label = "Population:",
-        choices = levels(df$popcat),
+        choices = c(
+          "3000-9,999",
+          "10,000-49,999",
+          "50,000-249,999",
+          "250,000-999,999",
+          "1,000,000+"
+        ),
         selectize = FALSE
       ),
       shiny::selectInput(
         inputId = "homeowner",
         label = "Homeowner:",
-        choices = levels(df$homeowner),
+        choices = c("Yes", "No"),
         selectize = FALSE
-      ),
+      )
     ),
     bslib::card(
-      shiny::textOutput("predictions")
+      shiny::plotOutput("predictions")
     )
   )
 )
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
-  output$predictions <- shiny::renderText({
+  output$predictions <- shiny::renderPlot({
     # policy to filter the data by
     filter <- statement_lookup$var_name[statement_lookup$statement == input$policy]
 
@@ -92,7 +137,75 @@ server <- function(input, output) {
 
     tmp_df <- df |> dplyr::filter(policy == filter)
 
-    return()
+    model <- nnet::multinom(
+      factor(outcome) ~
+        factor(gender) +
+        factor(education) +
+        factor(province) +
+        factor(agecat) +
+        factor(race) +
+        factor(homeowner) +
+        factor(income) +
+        factor(immigrant) +
+        factor(popcat),
+      data = tmp_df
+    )
+
+    pred_data <- data.frame(
+      gender = input$gender,
+      education = input$education,
+      province = input$province,
+      agecat = input$agecat,
+      race = input$race,
+      homeowner = input$homeowner,
+      income = input$income,
+      immigrant = input$immigrant,
+      popcat = input$popcat
+    )
+
+    preds <- predict(model, pred_data, type = "probs")
+    preds <- round(preds * 100, 0)
+    preds <- tidyr::tibble(
+      cats = names(preds),
+      probs = preds
+    )
+
+    preds$cats <- factor(
+      preds$cats,
+      levels = c(
+        "No opinion",
+        "Disagree",
+        "Agree"
+      ),
+      labels = c(
+        "No opinion",
+        "Disagree",
+        "Agree"
+      ),
+      ordered = TRUE
+    )
+
+    ggplot2::ggplot(preds, ggplot2::aes(x = cats, y = probs, fill = cats)) +
+      ggplot2::geom_col() +
+      ggplot2::coord_flip() +
+      ggplot2::geom_text(ggplot2::aes(label = paste0(probs, "%")), nudge_y = 3.5) +
+      ggplot2::theme_minimal() +
+      ggplot2::scale_fill_manual(
+        values = c(
+          "Agree" = "#00e335",
+          "Disagree" = "#e30000",
+          "No opinion" = "gray"
+        )
+      ) +
+      ggplot2::theme(
+        legend.position = "none",
+        axis.title.x = ggplot2::element_blank(),
+        axis.title.y = ggplot2::element_blank(),
+        axis.text.x = ggplot2::element_blank(),
+        axis.ticks = ggplot2::element_blank(),
+        panel.grid.major = ggplot2::element_blank(),
+        panel.grid.minor = ggplot2::element_blank(),
+      )
   })
 }
 
