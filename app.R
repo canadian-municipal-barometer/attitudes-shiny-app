@@ -1,6 +1,3 @@
-library(shiny)
-library(bslib)
-
 # load local, client-side Duckdb database
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data-char.duckdb")
 df <- DBI::dbReadTable(con, name = "policyData")
@@ -11,13 +8,6 @@ load("data/statement-text.rda")
 
 ui <- bslib::page_fillable(
   shiny::titlePanel("Canadian's Policy Attitudes"),
-  shiny::selectInput(
-    inputId = "policy",
-    label = "Select a policy, or begin typing a subject of interest:",
-    choices = statement_lookup$statement,
-    selectize = TRUE,
-    width = "40vw"
-  ),
   bslib::layout_columns(
     col_widths = c(3, 9),
     bslib::card(
@@ -121,8 +111,19 @@ ui <- bslib::page_fillable(
         selectize = FALSE
       )
     ),
-    bslib::card(
-      shiny::plotOutput("predictions")
+    shiny::mainPanel(
+      shiny::selectInput(
+        inputId = "policy",
+        label = "Select a policy, or begin typing a subject of interest:",
+        choices = statement_lookup$statement,
+        selectize = TRUE,
+        width = "auto"
+      ),
+      shiny::plotOutput(
+        "predictions",
+        width = "100%",
+        height = "400px"
+      )
     )
   )
 )
