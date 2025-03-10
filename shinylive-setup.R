@@ -1,0 +1,1 @@
+shinylive::export("myapp", "site")
