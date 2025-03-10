@@ -105,12 +105,20 @@ ui <- bslib::page_fillable(
     ),
     shiny::mainPanel(
 
+      # select the policy group to filter by
+      shiny::selectInput(
+        inputId = "policy_group",
+        label = "Select a policy area:",
+        choices = statements$group_name,
+        selectize = FALSE,
+        width = "auto"
+      ),
       # select the filtered policies
       shiny::selectInput(
         inputId = "policy",
-        label = "Select a policy, or begin typing a subject of interest:",
-        choices = statements$statement,
-        selectize = TRUE,
+        label = "Select a policy:",
+        choices = statements$selected_policies,
+        selectize = FALSE,
         width = "auto"
       ),
       shiny::plotOutput(
@@ -124,6 +132,8 @@ ui <- bslib::page_fillable(
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output) {
+  output$selected_policies <- statements$statement[statements$group_name == input$policy_group]
+
   output$predictions <- shiny::renderPlot({
     # policy to filter the data by
     filter <- statements$var_name[statements$statement == input$policy]
