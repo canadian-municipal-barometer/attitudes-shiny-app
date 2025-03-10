@@ -80,8 +80,7 @@ ui <- bslib::page_fillable(
           "Ontario",
           "Prince Edward Island",
           "Quebec",
-          "Saskatchewan",
-          "Territories"
+          "Saskatchewan"
         ),
         selectize = FALSE
       ),
