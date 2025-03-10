@@ -3,8 +3,13 @@ con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data-char.duckdb")
 df <- DBI::dbReadTable(con, name = "policyData")
 DBI::dbDisconnect(con)
 
-# load statement text list (`statement_lookup`)
+# load statement text list (`statements`)
 load("data/statement-text.rda")
+
+# create policy/group lookup
+policy_lookup <- statements |>
+  dplyr::group_by(group_id, group_name) |>
+  dplyr::summarize(var = list(unique(var_name), .groups = "drop"))
 
 ui <- bslib::page_fillable(
   shiny::titlePanel("Canadian's Policy Attitudes"),
@@ -27,17 +32,7 @@ ui <- bslib::page_fillable(
         inputId = "race",
         label = "Race:",
         choices = c(
-          "Arab",
-          "Black",
-          "Chinese",
-          "Filipino",
-          "Indigenous (Inuit, Métis, First Nations)",
-          "Japanese",
-          "Korean",
-          "Latin American",
-          "South Asian (e.g. East Indian, Pakistani, Sri Lankan, etc.)",
-          "Southeast Asian (e.g. Vietnamese, Cambodian, Malaysian, Laotian, etc.)",
-          "West Asian (e.g. Iranian, Afghan, etc.)",
+          "Racialized minority",
           "White"
         ),
         selectize = FALSE
@@ -81,14 +76,12 @@ ui <- bslib::page_fillable(
           "Manitoba",
           "New Brunswick",
           "Newfoundland and Labrador",
-          "Northwest Territories",
           "Nova Scotia",
-          "Nunavut",
           "Ontario",
           "Prince Edward Island",
           "Quebec",
           "Saskatchewan",
-          "Yukon"
+          "Territories"
         ),
         selectize = FALSE
       ),
@@ -112,10 +105,12 @@ ui <- bslib::page_fillable(
       )
     ),
     shiny::mainPanel(
+
+      # select the filtered policies
       shiny::selectInput(
         inputId = "policy",
         label = "Select a policy, or begin typing a subject of interest:",
-        choices = statement_lookup$statement,
+        choices = statements$statement,
         selectize = TRUE,
         width = "auto"
       ),
@@ -132,7 +127,7 @@ ui <- bslib::page_fillable(
 server <- function(input, output) {
   output$predictions <- shiny::renderPlot({
     # policy to filter the data by
-    filter <- statement_lookup$var_name[statement_lookup$statement == input$policy]
+    filter <- statements$var_name[statements$statement == input$policy]
 
     # translate the contents of the selectors to variable names
 
