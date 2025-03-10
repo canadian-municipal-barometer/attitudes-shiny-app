@@ -22,7 +22,7 @@ default_policies <- statements$statement[
 # main --------------------
 
 # belonging to the first row's group name
-ui <- bslib::page_fillable(
+ui <- shiny::fluidPage(
   # set CSS
   # Use flexbox to align the whole app in the center of the viewer
   tags$head(
@@ -34,12 +34,19 @@ ui <- bslib::page_fillable(
       .flex-container {
         display: flex;
         justify-content: center;
-        align-items: start;
         height: 100%;
         width: 100%;
       }
-      .shiny-layout { /* formats sidebarLayout */ }
+      .shiny-layout { /* formats sidebarLayout */
+        align-items: start;
+      }
       #plot-container { background: transparent !important; }
+      #header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 150px;
+      }
     "))
   ),
   # set HTML divs to be formatted by the above CSS
@@ -47,9 +54,10 @@ ui <- bslib::page_fillable(
     class = "flex-container",
     div(
       class = "shiny-layout",
-      shiny::fluidRow(
-        shiny::titlePanel("Canadian's Policy Attitudes"),
-        # TODO: insert right-aligned CMB logo
+      div(
+        id = "header",
+        shiny::titlePanel("Canadians' Municipal Policy Attitudes"),
+        shiny::img(src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg")
       ),
       shiny::sidebarLayout(
         fluid = TRUE,
@@ -57,6 +65,7 @@ ui <- bslib::page_fillable(
           style = "
               max-width: 300px;
               min-width: 225px;
+              background-color: #e6eff7 !important;
             ",
           shiny::selectInput(
             inputId = "province",
@@ -142,7 +151,7 @@ ui <- bslib::page_fillable(
               "Bachelor's degree",
               "Post-graduate degree"
             ),
-            selectize = TRUE
+            selectize = FALSE
           ),
           shiny::selectInput(
             inputId = "income",
@@ -154,7 +163,7 @@ ui <- bslib::page_fillable(
               "$150,000 to $199,999",
               "$200,000 or more"
             ),
-            selectize = TRUE
+            selectize = FALSE
           )
         ),
         shiny::mainPanel(
@@ -268,9 +277,9 @@ server <- function(input, output, session) {
         ggplot2::theme_minimal(base_size = 20) +
         ggplot2::scale_fill_manual(
           values = c(
-            "Agree" = "#00e335",
-            "Disagree" = "#e30000",
-            "No opinion" = "gray"
+            "Agree" = "#1ea300",
+            "Disagree" = "#a30000",
+            "No opinion" = "#949494"
           )
         ) +
         ggplot2::theme(
