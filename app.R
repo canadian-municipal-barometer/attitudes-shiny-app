@@ -113,7 +113,8 @@ ui <- shiny::fluidPage(
               "30-44",
               "45-59",
               "60+"
-            )
+            ),
+            selectize = FALSE
           ),
           shiny::radioButtons(
             inputId = "race",
@@ -277,9 +278,9 @@ server <- function(input, output, session) {
         ggplot2::theme_minimal(base_size = 20) +
         ggplot2::scale_fill_manual(
           values = c(
-            "Agree" = "#1ea300",
-            "Disagree" = "#a30000",
-            "No opinion" = "#949494"
+            "Agree" = "#0091AC",
+            "Disagree" = "#000",
+            "No opinion" = "#6C6E74"
           )
         ) +
         ggplot2::theme(
