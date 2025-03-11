@@ -168,28 +168,42 @@ ui <- shiny::fluidPage(
           )
         ),
         shiny::mainPanel(
-          # select the policy group to filter by
-          shiny::selectInput(
-            inputId = "policy_group",
-            label = "Policy area:",
-            choices = unique(statements$group_name),
-            selectize = FALSE,
-            width = "20%"
-          ),
-          # select the filtered policies
-          shiny::selectInput(
-            inputId = "policy",
-            label = "Select a policy:",
-            choices = default_policies,
-            selectize = FALSE,
-            width = "auto"
-          ),
-          div(
-            id = "plot-container",
-            shiny::plotOutput(
-              "predictions",
-              width = "100%",
-              height = "400px"
+          shiny::tabsetPanel(
+            type = "pill",
+            shiny::tabPanel(
+              title = "Plot",
+              # select the policy group to filter by
+              shiny::selectInput(
+                inputId = "policy_group",
+                label = "Policy area:",
+                choices = unique(statements$group_name),
+                selectize = FALSE,
+                width = "20%"
+              ),
+              # select the filtered policies
+              shiny::selectInput(
+                inputId = "policy",
+                label = "Select a policy:",
+                choices = default_policies,
+                selectize = FALSE,
+                width = "auto"
+              ),
+              div(
+                id = "plot-container",
+                shiny::plotOutput(
+                  "predictions",
+                  width = "100%",
+                  height = "400px"
+                )
+              )
+            ),
+            shiny::tabPanel(
+              title = "Instructions",
+              shiny::h1("Instructions")
+            ),
+            shiny::tabPanel(
+              title = "Details",
+              shiny::h1("Details")
             )
           )
         )
