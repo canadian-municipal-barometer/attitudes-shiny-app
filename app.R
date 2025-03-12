@@ -245,7 +245,8 @@ server <- function(input, output, session) {
           factor(income) +
           factor(immigrant) +
           factor(popcat),
-        data = tmp_df
+        data = tmp_df,
+        weights = tmp_df$wgt
       )
 
       pred_data <- data.frame(
