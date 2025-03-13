@@ -213,7 +213,7 @@ ui <- shiny::fluidPage(
                 width = "auto",
                 shiny::h1("\n"),
                 shiny::p("Welcome!"),
-                shiny::p("This interactive app allows you to explore the policy attitudes of specific demographic groups – gender, age, racial identity, municipal population size, province, and so on – on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians."),
+                shiny::p("This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians."),
                 shiny::p("In the first menu of the “Plot” tab above, select a policy area; then, in the second menu, select a specific policy."),
                 shiny::p("Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot.")
               ),
