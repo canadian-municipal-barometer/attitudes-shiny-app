@@ -224,12 +224,11 @@ ui <- shiny::fluidPage(
                 shiny::p(
                   "Responses were weighted using the protocol outlined in",
                   shiny::a(
-                    "Computing Weights for American National Election Study Survey Data",
+                    "DeBell and Krosnick.",
                     href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf"
-                  ),
-                  "by DeBell and Krosnick."
+                  )
                 ),
-                shiny::p("Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion.")
+                shiny::p("Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion in that province and you may see odd results as a result.")
               )
             )
           )
