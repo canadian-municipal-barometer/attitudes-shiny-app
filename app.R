@@ -40,6 +40,10 @@ ui <- shiny::fluidPage(
       .shiny-layout { /* formats sidebarLayout */
         align-items: start;
       }
+      .main-panel {
+        width: 70vw;
+        min-width: 800px;
+      }
       #plot-container { background: transparent !important; }
       #header {
         display: flex;
@@ -57,13 +61,16 @@ ui <- shiny::fluidPage(
       div(
         id = "header",
         shiny::titlePanel("Canadians' Municipal Policy Attitudes"),
-        shiny::img(src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg")
+        shiny::img(
+          src =
+            "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
+        )
       ),
       shiny::sidebarLayout(
         fluid = TRUE,
         shiny::sidebarPanel(
           style = "
-              max-width: 300px;
+              max-width: 35vw;
               min-width: 225px;
               background-color: #e6eff7 !important;
             ",
