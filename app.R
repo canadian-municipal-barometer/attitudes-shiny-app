@@ -220,7 +220,7 @@ ui <- shiny::fluidPage(
               shiny::tabPanel(
                 title = "Details",
                 shiny::h1("\n"),
-                shiny::p("The data for this app come from the Canadian Municipal Barometer’s annual Citizen Survey. Right now, it uses the 2025 data, but it will soon be updated with more questions from that survey, and in future years new surveys will be added."),
+                shiny::p("The data for this app come from the Canadian Municipal Barometer’s annual Citizen Survey. Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and in future years new surveys will be added."),
                 shiny::p(
                   "Responses were weighted using the protocol outlined in",
                   shiny::a(
