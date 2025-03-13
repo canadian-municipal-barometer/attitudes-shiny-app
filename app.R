@@ -174,43 +174,63 @@ ui <- shiny::fluidPage(
             selectize = FALSE
           )
         ),
-        shiny::mainPanel(
-          shiny::tabsetPanel(
-            type = "pill",
-            shiny::tabPanel(
-              title = "Plot",
-              # select the policy group to filter by
-              shiny::selectInput(
-                inputId = "policy_group",
-                label = "Policy area:",
-                choices = unique(statements$group_name),
-                selectize = FALSE,
-                width = "20%"
-              ),
-              # select the filtered policies
-              shiny::selectInput(
-                inputId = "policy",
-                label = "Select a policy:",
-                choices = default_policies,
-                selectize = FALSE,
-                width = "auto"
-              ),
-              div(
-                id = "plot-container",
-                shiny::plotOutput(
-                  "predictions",
-                  width = "100%",
-                  height = "400px"
+        div(
+          class = "main-panel",
+          shiny::mainPanel(
+            shiny::tabsetPanel(
+              type = "pill",
+              shiny::tabPanel(
+                title = "Plot",
+                # spacing hack
+                shiny::h1("\n"),
+                # select the policy group to filter by
+                shiny::selectInput(
+                  inputId = "policy_group",
+                  label = "Policy area:",
+                  choices = unique(statements$group_name),
+                  selectize = FALSE,
+                  width = "20%"
+                ),
+                # select the filtered policies
+                shiny::selectInput(
+                  inputId = "policy",
+                  label = "Select a policy:",
+                  choices = default_policies,
+                  selectize = FALSE,
+                  width = "auto"
+                ),
+                div(
+                  id = "plot-container",
+                  shiny::plotOutput(
+                    "predictions",
+                    width = "100%",
+                    height = "400px"
+                  )
                 )
+              ),
+              shiny::tabPanel(
+                title = "Instructions",
+                width = "auto",
+                shiny::h1("\n"),
+                shiny::p("Welcome!"),
+                shiny::p("With this tool, you can select a combination of demographic and geographic characteristics to investigate the support a hypothetical group of citizens has for a potential municipal policy."),
+                shiny::p("In the first menu of the “Plot” tab above, select a policy area; then, in the second menu, select a specific policy."),
+                shiny::p("The citizen characteristics are in the panel to the left.")
+              ),
+              shiny::tabPanel(
+                title = "Details",
+                shiny::h1("\n"),
+                shiny::p("The data for this app come from the Canadian Municipal Barometer’s annual Citizen Survey. Right now, it uses the 2025 data, but it will soon be updated with more questions from that survey, and in future years new surveys will be added."),
+                shiny::p(
+                  "Responses were weighted using the protocol outlined in",
+                  shiny::a(
+                    "Computing Weights for American National Election Study Survey Data",
+                    href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf"
+                  ),
+                  "by DeBell and Krosnick."
+                ),
+                shiny::p("Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion.")
               )
-            ),
-            shiny::tabPanel(
-              title = "Instructions",
-              shiny::h1("Instructions")
-            ),
-            shiny::tabPanel(
-              title = "Details",
-              shiny::h1("Details")
             )
           )
         )
