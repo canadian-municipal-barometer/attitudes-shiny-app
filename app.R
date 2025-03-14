@@ -184,7 +184,7 @@ ui <- shiny::fluidPage(
                 # select the policy group to filter by
                 shiny::selectInput(
                   inputId = "policy_group",
-                  label = "Policy area:",
+                  label = "Policy domain:",
                   choices = unique(statements$group_name),
                   selectize = FALSE,
                   width = "20%"
