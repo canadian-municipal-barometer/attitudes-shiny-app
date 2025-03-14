@@ -3,14 +3,12 @@
 # load local, client-side Duckdb database
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data-char.duckdb")
 df <- DBI::dbReadTable(con, name = "policyData")
+statements <- DBI::dbReadTable(con, name = "statements")
 DBI::dbDisconnect(con)
-
-# load statement text object (`statements`)
-load("data/statement-text.rda")
 
 # create policy/group lookup
 policy_lookup <- statements |>
-  dplyr::group_by(group_id, group_name) |>
+  dplyr::group_by(group_name) |>
   dplyr::summarize(var = list(unique(var_name), .groups = "drop"))
 
 # choices for "policy" input need to be set. They should match the policies
@@ -222,13 +220,14 @@ ui <- shiny::fluidPage(
                 shiny::h1("\n"),
                 shiny::p("The data for this app come from the Canadian Municipal Barometer’s annual Citizen Survey. Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and in future years new surveys will be added."),
                 shiny::p(
-                  "Responses were weighted using the protocol outlined in",
+                  "Weights were constructed using iterative proportional fitting (see ",
                   shiny::a(
-                    "DeBell and Krosnick.",
+                    "DeBell and Krosnick",
                     href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf"
-                  )
+                  ),
+                  shiny::p(").")
                 ),
-                shiny::p("Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion in that province and you may see odd results as a result.")
+                shiny::p("Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, which sometimes leads to odd results when Prince Edward Island is selected.")
               )
             )
           )
