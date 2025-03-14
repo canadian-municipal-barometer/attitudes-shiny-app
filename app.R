@@ -1,15 +1,11 @@
 # data prep --------------------
 
-# load local, client-side Duckdb database
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data-char.duckdb")
-df <- DBI::dbReadTable(con, name = "policyData")
-statements <- DBI::dbReadTable(con, name = "statements")
-DBI::dbDisconnect(con)
-
-# create policy/group lookup
-policy_lookup <- statements |>
-  dplyr::group_by(group_name) |>
-  dplyr::summarize(var = list(unique(var_name), .groups = "drop"))
+# load `df` object: main voter data
+load("data/voter-data.rda")
+# load `statements` object: main statement data lookup
+load("data/statements.rda")
+# load `tags` object: choice set for "policy_group" input
+load("data/unique-tags.rda")
 
 # choices for "policy" input need to be set. They should match the policies
 # belonging to the first group in the data
@@ -184,10 +180,10 @@ ui <- shiny::fluidPage(
                 # select the policy group to filter by
                 shiny::selectInput(
                   inputId = "policy_group",
-                  label = "Policy area:",
+                  label = "Policy domain:",
                   choices = unique(statements$group_name),
                   selectize = FALSE,
-                  width = "20%"
+                  width = "30%"
                 ),
                 # select the filtered policies
                 shiny::selectInput(
