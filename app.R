@@ -179,15 +179,7 @@ ui <- fluidPage(
                 # spacing hack
                 h1("\n"),
                 # select the policy group to filter by
-                selectInput(
-                  inputId = "policy_group",
-                  label = "Policy domain:",
-                  choices = statement_tags,
-                  multiple = TRUE,
-                  selected = "Housing",
-                  selectize = TRUE,
-                  width = "30%"
-                ),
+                uiOutput("select_domain"),
                 # select the filtered policies
                 selectInput(
                   inputId = "policy",
@@ -265,6 +257,17 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output, session) {
+  output$select_domain <- renderUI({
+    selectInput(
+      inputId = "policy_group",
+      label = "Policy domain:",
+      choices = statement_tags,
+      multiple = TRUE,
+      selected = "Housing",
+      selectize = TRUE,
+      width = "30%"
+    )
+  })
   observeEvent(input$policy_group, {
     selected_policies <- statements |>
       dplyr::filter(
