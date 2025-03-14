@@ -1,10 +1,11 @@
 # data prep --------------------
 
-# load local, client-side Duckdb database
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/voter-data-char.duckdb")
-df <- DBI::dbReadTable(con, name = "policyData")
-statements <- DBI::dbReadTable(con, name = "statements")
-DBI::dbDisconnect(con)
+# load `df` object: main voter data
+load("data/voter-data.rda")
+# load `statements` object: main statement data lookup
+load("data/statements.rda")
+# load `tags` object: choice set for "policy_group" input
+load("data/unique-tags.rda")
 
 # choices for "policy" input need to be set. They should match the policies
 # belonging to the first group in the data
