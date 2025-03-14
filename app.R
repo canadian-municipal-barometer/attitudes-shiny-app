@@ -17,7 +17,7 @@ default_policies <- statements$statement[
 # main --------------------
 
 # belonging to the first row's group name
-ui <- shiny::fluidPage(
+ui <- fluidPage(
   # set CSS
   # Use flexbox to align the whole app in the center of the viewer
   tags$head(
@@ -55,21 +55,21 @@ ui <- shiny::fluidPage(
       class = "shiny-layout",
       div(
         id = "header",
-        shiny::titlePanel("Canadians' Municipal Policy Attitudes"),
-        shiny::img(
+        titlePanel("Canadians' Municipal Policy Attitudes"),
+        img(
           src =
             "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
         )
       ),
-      shiny::sidebarLayout(
+      sidebarLayout(
         fluid = TRUE,
-        shiny::sidebarPanel(
+        sidebarPanel(
           style = "
               max-width: 35vw;
               min-width: 225px;
               background-color: #e6eff7 !important;
             ",
-          shiny::selectInput(
+          selectInput(
             inputId = "province",
             label = "Province:",
             choices = c(
@@ -86,7 +86,7 @@ ui <- shiny::fluidPage(
             ),
             selectize = FALSE
           ),
-          shiny::selectInput(
+          selectInput(
             inputId = "popcat",
             label = "Population:",
             choices = c(
@@ -98,7 +98,7 @@ ui <- shiny::fluidPage(
             ),
             selectize = FALSE
           ),
-          shiny::radioButtons(
+          radioButtons(
             inputId = "gender",
             label = "Gender:",
             choices = list(
@@ -107,7 +107,7 @@ ui <- shiny::fluidPage(
             ),
             inline = TRUE
           ),
-          shiny::selectInput(
+          selectInput(
             inputId = "agecat",
             label = "Age:",
             choices = c(
@@ -118,7 +118,7 @@ ui <- shiny::fluidPage(
             ),
             selectize = FALSE
           ),
-          shiny::radioButtons(
+          radioButtons(
             inputId = "race",
             label = "Race:",
             choices = list(
@@ -126,7 +126,7 @@ ui <- shiny::fluidPage(
               "White" = "White"
             )
           ),
-          shiny::radioButtons(
+          radioButtons(
             inputId = "immigrant",
             label = "Immigrant:",
             choices = list(
@@ -135,7 +135,7 @@ ui <- shiny::fluidPage(
             ),
             inline = TRUE
           ),
-          shiny::radioButtons(
+          radioButtons(
             inputId = "homeowner",
             label = "Homeowner:",
             choices = list(
@@ -144,7 +144,7 @@ ui <- shiny::fluidPage(
             ),
             inline = TRUE
           ),
-          shiny::selectInput(
+          selectInput(
             inputId = "education",
             label = "Education:",
             choices = c(
@@ -156,7 +156,7 @@ ui <- shiny::fluidPage(
             ),
             selectize = FALSE
           ),
-          shiny::selectInput(
+          selectInput(
             inputId = "income",
             label = "Income:",
             choices = c(
@@ -171,15 +171,15 @@ ui <- shiny::fluidPage(
         ),
         div(
           class = "main-panel",
-          shiny::mainPanel(
-            shiny::tabsetPanel(
+          mainPanel(
+            tabsetPanel(
               type = "pill",
-              shiny::tabPanel(
+              tabPanel(
                 title = "Plot",
                 # spacing hack
-                shiny::h1("\n"),
+                h1("\n"),
                 # select the policy group to filter by
-                shiny::selectInput(
+                selectInput(
                   inputId = "policy_group",
                   label = "Policy domain:",
                   choices = statement_tags,
@@ -189,7 +189,7 @@ ui <- shiny::fluidPage(
                   width = "30%"
                 ),
                 # select the filtered policies
-                shiny::selectInput(
+                selectInput(
                   inputId = "policy",
                   label = "Select a policy:",
                   # updated in `server` first time `policy_group` input used
@@ -199,35 +199,61 @@ ui <- shiny::fluidPage(
                 ),
                 div(
                   id = "plot-container",
-                  shiny::plotOutput(
+                  plotOutput(
                     "predictions",
                     width = "100%",
                     height = "400px"
                   )
                 )
               ),
-              shiny::tabPanel(
+              tabPanel(
                 title = "Instructions",
                 width = "auto",
-                shiny::h1("\n"),
-                shiny::p("Welcome!"),
-                shiny::p("This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians."),
-                shiny::p("In the first menu of the “Plot” tab above, select a policy domain; then, in the second menu, select a specific policy."),
-                shiny::p("Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot.")
+                h1("\n"),
+                p("Welcome!"),
+                p(
+                  "This interactive app allows you to explore the policy",
+                  "attitudes of specific demographic groups on the largest and",
+                  "most diverse set of municipal policy issues ever included",
+                  "in a survey of Canadians."
+                ),
+                p(
+                  "In the first menu of the “Plot” tab above, select a policy",
+                  " domain; then, in the second menu, select a specific policy."
+                ),
+                p(
+                  "Finally, adjust the set of characteristics in the panel to",
+                  "the left to see how different groups view the policy you",
+                  "have selected. When you're done, you can select a new",
+                  "policy by again using the menus above the plot."
+                )
               ),
-              shiny::tabPanel(
+              tabPanel(
                 title = "Details",
-                shiny::h1("\n"),
-                shiny::p("The data for this app come from the Canadian Municipal Barometer’s annual Citizen Survey. Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and in future years new surveys will be added."),
-                shiny::p(
-                  "Weights were constructed using iterative proportional fitting (see ",
-                  shiny::a(
+                h1("\n"),
+                p(
+                  "The data for this app come from the Canadian Municipal",
+                  "Barometer’s annual Citizen Survey. Currently, it uses the",
+                  "2025 data. It will soon be updated with more questions from",
+                  "the 2025 survey, and in future years new surveys will be",
+                  "added."
+                ),
+                p(
+                  "Weights were constructed using iterative proportional",
+                  "fitting (see ",
+                  a(
                     "DeBell and Krosnick",
                     href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf"
                   ),
-                  shiny::p(").")
+                  "for details)."
                 ),
-                shiny::p("Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, which sometimes leads to odd results when Prince Edward Island is selected.")
+                p(
+                  "Note that due to a small number of responses in Prince",
+                  "Edward Island, many of the policy issues for that province",
+                  "do not produce reliable estimates of public opinion, which",
+                  "sometimes leads to odd results when Prince Edward Island is",
+                  "selected."
+                )
               )
             )
           )
@@ -239,21 +265,21 @@ ui <- shiny::fluidPage(
 
 # Define server logic required to draw a histogram ----
 server <- function(input, output, session) {
-  shiny::observeEvent(input$policy_group, {
+  observeEvent(input$policy_group, {
     selected_policies <- statements |>
       dplyr::filter(
         purrr::map_lgl(tags, function(x) any(x %in% input$policy_group))
       ) |>
       dplyr::pull(statement)
 
-    shiny::updateSelectInput(
+    updateSelectInput(
       session,
       "policy",
       choices = selected_policies
     )
   })
 
-  output$predictions <- shiny::renderPlot(
+  output$predictions <- renderPlot(
     {
       # policy to filter the data by
       filter <- statements$var_name[statements$statement == input$policy]
@@ -341,4 +367,4 @@ server <- function(input, output, session) {
 }
 
 # Create Shiny app ----
-shiny::shinyApp(ui = ui, server = server)
+shinyApp(ui = ui, server = server)
