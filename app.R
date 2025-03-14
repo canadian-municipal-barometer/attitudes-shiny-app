@@ -7,10 +7,11 @@ load("data/statements.rda")
 # load `tags` object: choice set for "policy_group" input
 load("data/unique-tags.rda")
 
-# choices for "policy" input need to be set. They should match the policies
-# belonging to the first group in the data
+# choices for "policy" input need to be set. They can match the policies
+# belonging to the first tag of the first statement
+# must match the `selected` parameter of the "policy_group" selector
 default_policies <- statements$statement[
-  statements$group_name == statements$group_name[1]
+  statements$tags %in% statements$tags[1][1]
 ]
 
 # main --------------------
@@ -181,14 +182,17 @@ ui <- shiny::fluidPage(
                 shiny::selectInput(
                   inputId = "policy_group",
                   label = "Policy domain:",
-                  choices = unique(statements$group_name),
-                  selectize = FALSE,
+                  choices = statement_tags,
+                  multiple = TRUE,
+                  selected = "Housing",
+                  selectize = TRUE,
                   width = "30%"
                 ),
                 # select the filtered policies
                 shiny::selectInput(
                   inputId = "policy",
                   label = "Select a policy:",
+                  # updated in `server` first time `policy_group` input used
                   choices = default_policies,
                   selectize = FALSE,
                   width = "auto"
@@ -208,7 +212,7 @@ ui <- shiny::fluidPage(
                 shiny::h1("\n"),
                 shiny::p("Welcome!"),
                 shiny::p("This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians."),
-                shiny::p("In the first menu of the “Plot” tab above, select a policy area; then, in the second menu, select a specific policy."),
+                shiny::p("In the first menu of the “Plot” tab above, select a policy domain; then, in the second menu, select a specific policy."),
                 shiny::p("Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot.")
               ),
               shiny::tabPanel(
@@ -236,9 +240,12 @@ ui <- shiny::fluidPage(
 # Define server logic required to draw a histogram ----
 server <- function(input, output, session) {
   shiny::observeEvent(input$policy_group, {
-    selected_policies <- statements$statement[
-      statements$group_name == input$policy_group
-    ]
+    selected_policies <- statements |>
+      dplyr::filter(
+        purrr::map_lgl(tags, function(x) any(x %in% input$policy_group))
+      ) |>
+      dplyr::pull(statement)
+
     shiny::updateSelectInput(
       session,
       "policy",
