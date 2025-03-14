@@ -174,8 +174,11 @@ ui <- fluidPage(
           mainPanel(
             tabsetPanel(
               type = "pill",
+              selected = "Instructions",
               tabPanel(
                 title = "Plot",
+                # prevent lazy loading
+                loadOnActivate = FALSE,
                 # spacing hack
                 h1("\n"),
                 # select the policy group to filter by
@@ -367,6 +370,8 @@ server <- function(input, output, session) {
     },
     bg = "transparent"
   )
+  # disable any lag due to server-rendering and lazy loading for "select_domain"
+  outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
 }
 
 # Create Shiny app ----
