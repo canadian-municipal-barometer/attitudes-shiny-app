@@ -203,7 +203,6 @@ ui <- fluidPage(
               ),
               tabPanel(
                 title = "Instructions",
-                width = "auto",
                 h1("\n"),
                 p("Welcome!"),
                 p(
@@ -213,8 +212,12 @@ ui <- fluidPage(
                   "in a survey of Canadians."
                 ),
                 p(
-                  "In the first menu of the “Plot” tab above, select a policy",
-                  " domain; then, in the second menu, select a specific policy."
+                  "In the first menu of the “Plot” tab above, select one or",
+                  "more policy domains. The second menu contains specific",
+                  "policy statements belonging to the policy domains you",
+                  "selected. Use the second menu to view public opinion on",
+                  "select a specific policy. To clear the policy domain box,",
+                  'press the "Reset" button.'
                 ),
                 p(
                   "Finally, adjust the set of characteristics in the panel to",
@@ -230,7 +233,7 @@ ui <- fluidPage(
                   "The data for this app come from the Canadian Municipal",
                   "Barometer’s annual Citizen Survey. Currently, it uses the",
                   "2025 data. It will soon be updated with more questions from",
-                  "the 2025 survey, and in future years new surveys will be",
+                  "the 2025 survey, and, in future years, new surveys will be",
                   "added."
                 ),
                 p(
