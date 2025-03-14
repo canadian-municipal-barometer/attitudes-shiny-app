@@ -6,11 +6,6 @@ df <- DBI::dbReadTable(con, name = "policyData")
 statements <- DBI::dbReadTable(con, name = "statements")
 DBI::dbDisconnect(con)
 
-# create policy/group lookup
-policy_lookup <- statements |>
-  dplyr::group_by(group_name) |>
-  dplyr::summarize(var = list(unique(var_name), .groups = "drop"))
-
 # choices for "policy" input need to be set. They should match the policies
 # belonging to the first group in the data
 default_policies <- statements$statement[
