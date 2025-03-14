@@ -23,7 +23,8 @@ ui <- fluidPage(
   # set CSS
   # Use flexbox to align the whole app in the center of the viewer
   tags$head(
-    tags$style(HTML("
+    tags$style(HTML(
+      "
       body, html {
         height: 100%;
         margin: 0;
@@ -52,7 +53,8 @@ ui <- fluidPage(
         justify-content: space-between;
         height: 150px;
       }
-    "))
+    "
+    ))
   ),
   # set HTML divs to be formatted by the above CSS
   div(
@@ -63,8 +65,7 @@ ui <- fluidPage(
         id = "header",
         titlePanel("Canadians' Municipal Policy Attitudes"),
         img(
-          src =
-            "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
+          src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
         )
       ),
       sidebarLayout(
@@ -275,7 +276,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw a histogram ----
+# Define server logic --------------------
 server <- function(input, output, session) {
   output$select_domain <- renderUI({
     selectInput(
@@ -322,14 +323,14 @@ server <- function(input, output, session) {
       model <- nnet::multinom(
         factor(outcome) ~
           factor(gender) +
-          factor(education) +
-          factor(province) +
-          factor(agecat) +
-          factor(race) +
-          factor(homeowner) +
-          factor(income) +
-          factor(immigrant) +
-          factor(popcat),
+            factor(education) +
+            factor(province) +
+            factor(agecat) +
+            factor(race) +
+            factor(homeowner) +
+            factor(income) +
+            factor(immigrant) +
+            factor(popcat),
         data = tmp_df,
         weights = tmp_df$wgt
       )
@@ -368,7 +369,10 @@ server <- function(input, output, session) {
         ordered = TRUE
       )
 
-      ggplot2::ggplot(preds, ggplot2::aes(x = cats, y = probs, fill = cats)) +
+      plot <- ggplot2::ggplot(
+        preds,
+        ggplot2::aes(x = cats, y = probs, fill = cats)
+      ) +
         ggplot2::geom_col() +
         ggplot2::coord_flip() +
         ggplot2::geom_text(
@@ -392,6 +396,7 @@ server <- function(input, output, session) {
           panel.grid.major = ggplot2::element_blank(),
           panel.grid.minor = ggplot2::element_blank()
         )
+      return(plot)
     },
     bg = "transparent"
   )
