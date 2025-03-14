@@ -1,3 +1,5 @@
+library(shiny)
+
 # data prep --------------------
 
 # load `df` object: main voter data
@@ -38,6 +40,10 @@ ui <- fluidPage(
       .main-panel {
         width: 70vw;
         min-width: 800px;
+      }
+      /* Make the select_domain div's formatting match the reset button */
+      .select_domain {
+        align-items: bottom;
       }
       #plot-container { background: transparent !important; }
       #header {
@@ -182,7 +188,15 @@ ui <- fluidPage(
                 # spacing hack
                 h1("\n"),
                 # select the policy group to filter by
-                uiOutput("select_domain"),
+                div(
+                  style = "
+                    display: flex;
+                    align-items: flex-start;
+                     align-items: end;
+                   ",
+                  uiOutput("select_domain"),
+                  actionButton("delete", "Reset", style = "margin: 15px")
+                ),
                 # select the filtered policies
                 selectInput(
                   inputId = "policy",
@@ -271,7 +285,15 @@ server <- function(input, output, session) {
       multiple = TRUE,
       selected = "Housing",
       selectize = TRUE,
-      width = "30%"
+      width = "auto"
+    )
+  })
+  observeEvent(input$delete, {
+    updateSelectInput(
+      session,
+      "policy_group",
+      choices = statement_tags,
+      selected = character(0)
     )
   })
   observeEvent(input$policy_group, {
