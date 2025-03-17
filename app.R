@@ -238,7 +238,7 @@ ui <- fluidPage(
                   "more policy domains. The second menu contains specific",
                   "policy statements belonging to the policy domains you",
                   "selected. Use the second menu to view public opinion on",
-                  "select a specific policy. To clear the policy domain box,",
+                  "a specific policy. To clear the policy domain box,",
                   'press the "Reset" button.'
                 ),
                 p(
