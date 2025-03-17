@@ -188,6 +188,13 @@ ui <- fluidPage(
                 loadOnActivate = FALSE,
                 # spacing hack
                 h1("\n"),
+                p(
+                  "Please select one or more policy domains, and then choose",
+                  "a specific question from the drop-down menu below."
+                ),
+                p(
+                  'To reset the policy domains, click "reset".'
+                ),
                 # select the policy group to filter by
                 div(
                   style = "
@@ -286,7 +293,7 @@ server <- function(input, output, session) {
       multiple = TRUE,
       selected = "Housing",
       selectize = TRUE,
-      width = "auto"
+      width = "300px"
     )
   })
   observeEvent(input$delete, {
