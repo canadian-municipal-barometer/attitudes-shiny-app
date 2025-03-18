@@ -189,8 +189,7 @@ ui <- fluidPage(
                 # spacing hack
                 h1("\n"),
                 p(
-                  "Please select one or more policy domains, and then choose",
-                  "a specific question from the drop-down menu below."
+                  "Please select one or more policy domains, and then choose a specific question from the drop-down menu below."
                 ),
                 p(
                   'To reset the policy domains, click "Reset".'
@@ -228,51 +227,57 @@ ui <- fluidPage(
                 h1("\n"),
                 p("Welcome!"),
                 p(
-                  "This interactive app allows you to explore the policy",
-                  "attitudes of specific demographic groups on the largest and",
-                  "most diverse set of municipal policy issues ever included",
-                  "in a survey of Canadians."
+                  "This interactive app allows you to explore the policy
+                  attitudes of specific demographic groups on the largest and
+                  most diverse set of municipal policy issues ever included
+                  in a survey of Canadians."
                 ),
                 p(
-                  "In the first menu of the “Plot” tab above, select one or",
-                  "more policy domains. The second menu contains specific",
-                  "policy statements belonging to the policy domains you",
-                  "selected. Use the second menu to view public opinion on",
-                  "a specific policy. To clear the policy domain box,",
-                  'press the "Reset" button.'
+                  'In the first menu of the “Plot” tab above, select one or
+                  more policy domains. The second menu contains specific
+                  policy statements belonging to the policy domains you
+                  selected. Use the second menu to view public opinion on
+                  a specific policy. To clear the policy domain box,
+                  press the "Reset" button.'
                 ),
                 p(
-                  "Finally, adjust the set of characteristics in the panel to",
-                  "the left to see how different groups view the policy you",
-                  "have selected. When you're done, you can select a new",
-                  "policy by again using the menus above the plot."
+                  "Finally, adjust the set of characteristics in the panel to
+                  the left to see how different groups view the policy you
+                  have selected. When you're done, you can select a new
+                  policy by again using the menus above the plot."
                 )
               ),
               tabPanel(
                 title = "Details",
                 h1("\n"),
                 p(
-                  "The data for this app come from the Canadian Municipal",
-                  "Barometer’s annual Citizen Survey. Currently, it uses the",
-                  "2025 data. It will soon be updated with more questions from",
-                  "the 2025 survey, and, in future years, new surveys will be",
-                  "added."
+                  "The data for this app come from the Canadian Municipal
+                  Barometer’s annual",
+                  a(
+                    "Citizen Survey",
+                    href = "https://www.cmb-bmc.ca/wp-content/uploads/2025/03/CMB-2025-General-Population-Codebook.pdf",
+                    .noWS = c("after")
+                  ),
+                  ". Currently, it uses the 2025 data. It will soon be updated
+                  with more questions from the 2025 survey, and, in future
+                  years, new surveys will be added."
                 ),
                 p(
-                  "Weights were constructed using iterative proportional",
-                  "fitting (see ",
+                  "Weights were constructed using iterative proportional
+                  fitting (see ",
                   a(
                     "DeBell and Krosnick",
-                    href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf"
+                    href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf",
+                    .noWS = c("after")
                   ),
-                  "for details)."
+                  ")."
                 ),
                 p(
-                  "Note that due to a small number of responses in Prince",
-                  "Edward Island, many of the policy issues for that province",
-                  "do not produce reliable estimates of public opinion, which",
-                  "sometimes leads to odd results when Prince Edward Island is",
-                  "selected."
+                  "Note that due to a small number of responses in Prince
+                  Edward Island, many of the policy issues for that province
+                  do not produce reliable estimates of public opinion, which
+                  sometimes leads to odd results when Prince Edward Island is
+                  selected."
                 )
               )
             )
@@ -283,8 +288,9 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic --------------------
 server <- function(input, output, session) {
+  # UI Rendering --------------------
+
   output$select_domain <- renderUI({
     selectInput(
       inputId = "policy_group",
@@ -318,6 +324,7 @@ server <- function(input, output, session) {
     )
   })
 
+  # plot --------------------
   output$predictions <- renderPlot(
     {
       # policy to filter the data by
