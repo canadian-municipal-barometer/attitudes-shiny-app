@@ -9,12 +9,14 @@ load("data/statements.rda")
 # load `tags` object: choice set for "policy_group" input
 load("data/unique-tags.rda")
 
-# choices for "policy" input need to be set. They can match the policies
+# Choices for "policy" input need to be set. They can match the policies
 # belonging to the first tag of the first statement
 # must match the `selected` parameter of the "policy_group" selector
 default_policies <- statements$statement[
   statements$tags %in% statements$tags[1][1]
 ]
+
+input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection."
 
 # main --------------------
 
@@ -189,7 +191,8 @@ ui <- fluidPage(
                 # spacing hack
                 h1("\n"),
                 p(
-                  "Please select one or more policy domains, and then choose a specific question from the drop-down menu below."
+                  "Please select one or more policy domains, and then choose a",
+                  "specific question from the drop-down menu below."
                 ),
                 p(
                   'To reset the policy domains, click "Reset".'
@@ -334,17 +337,21 @@ server <- function(input, output, session) {
 
       tmp_df <- df |> dplyr::filter(policy == filter)
 
+      # verify that tmp_df has the levels needed for the model to run
+      validate(
+        need(input$province %in% tmp_df$province, input_err),
+        need(input$popcat %in% tmp_df$popcat, input_err),
+        need(input$gender %in% tmp_df$gender, input_err),
+        need(input$agecat %in% tmp_df$agecat, input_err),
+        need(input$race %in% tmp_df$race, input_err),
+        need(input$immigrant %in% tmp_df$immigrant, input_err),
+        need(input$homeowner %in% tmp_df$homeowner, input_err),
+        need(input$education %in% tmp_df$education, input_err),
+        need(input$income %in% tmp_df$income, input_err)
+      )
+
       model <- nnet::multinom(
-        factor(outcome) ~
-          factor(gender) +
-            factor(education) +
-            factor(province) +
-            factor(agecat) +
-            factor(race) +
-            factor(homeowner) +
-            factor(income) +
-            factor(immigrant) +
-            factor(popcat),
+        factor(outcome) ~ factor(gender) + factor(education) + factor(province) + factor(agecat) + factor(race) + factor(homeowner) + factor(income) + factor(immigrant) + factor(popcat),
         data = tmp_df,
         weights = tmp_df$wgt
       )
