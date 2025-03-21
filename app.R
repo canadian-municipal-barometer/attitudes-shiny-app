@@ -22,13 +22,14 @@ input_err <- "The combination of the policy question and demographic characteris
 
 # Translation
 i18n <- Translator$new(translation_csvs_path = "data/translation/")
-# Set default translation language
-i18n$set_translation_language("fr")
+# Set initial language
+i18n$set_translation_language("en")
 
 # main --------------------
 
 # belonging to the first row's group name
 ui <- fluidPage(
+  usei18n(i18n),
   # set CSS
   # Use flexbox to align the whole app in the center of the viewer
   tags$head(
@@ -142,8 +143,8 @@ ui <- fluidPage(
             inputId = "gender",
             label = "Gender:",
             choices = list(
-              "Woman" = "Woman",
-              "Man" = "Man"
+              "Woman",
+              "Man"
             ),
             inline = TRUE
           ),
@@ -359,6 +360,18 @@ server <- function(input, output, session) {
       "policy",
       choices = selected_policies
     )
+  })
+  # toggle language
+  observeEvent(input$lang_toggle, {
+    print(paste("Language change!", input$lang_toggle))
+    # actionButton values start a 0 and go up by 1 every time they activate
+    # So, all odd values input$lang_toggle will occur when the app is in English
+    # and this the language should be updated to French
+    if (input$lang_toggle %% 2 == 1) {
+      shiny.i18n::update_lang(language = "fr", session = session)
+    } else {
+      shiny.i18n::update_lang(language = "en", session = session)
+    }
   })
 
   # plot --------------------
