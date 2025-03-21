@@ -22,8 +22,8 @@ input_err <- "The combination of the policy question and demographic characteris
 
 # belonging to the first row's group name
 ui <- fluidPage(
-  # set CSS
-  # Use flexbox to align the whole app in the center of the viewer
+  # set CSS for elements that don't accept a style argument
+  # in their R constructor
   tags$head(
     tags$style(HTML(
       "
@@ -31,29 +31,9 @@ ui <- fluidPage(
         height: 100%;
         margin: 0;
       }
-      .flex-container {
-        display: flex;
-        justify-content: center;
-        height: 100%;
-        width: 100%;
-      }
-      .shiny-layout { /* formats sidebarLayout */
+      /* formats sidebarLayout */
+      .shiny-layout {
         align-items: start;
-      }
-      .main-panel {
-        width: 70vw;
-        min-width: 800px;
-      }
-      /* Make the select_domain div's formatting match the reset button */
-      .select_domain {
-        align-items: bottom;
-      }
-      #plot-container { background: transparent !important; }
-      #header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 150px;
       }
     "
     ))
@@ -61,10 +41,22 @@ ui <- fluidPage(
   # set HTML divs to be formatted by the above CSS
   div(
     class = "flex-container",
+    style = "
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+    ",
     div(
       class = "shiny-layout",
       div(
         id = "header",
+        style = "
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 150px;
+        ",
         titlePanel("Canadians' Municipal Policy Attitudes"),
         img(
           src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
@@ -180,6 +172,10 @@ ui <- fluidPage(
         ),
         div(
           class = "main-panel",
+          style = "
+            width: 70vw;
+            min-width: 800px;
+          ",
           mainPanel(
             tabsetPanel(
               type = "pill",
@@ -204,7 +200,13 @@ ui <- fluidPage(
                     align-items: flex-start;
                      align-items: end;
                    ",
-                  uiOutput("select_domain"),
+                  uiOutput(
+                    outputId = "select_domain",
+                    # Make the select_domain div's formatting match the reset button
+                    style = "
+                      align-items: bottom;
+                    "
+                  ),
                   actionButton("delete", "Reset", style = "margin: 15px")
                 ),
                 # select the filtered policies
@@ -218,6 +220,9 @@ ui <- fluidPage(
                 ),
                 div(
                   id = "plot-container",
+                  style = "
+                    background: transparent !important;
+                  ",
                   plotOutput(
                     "predictions",
                     width = "100%",
