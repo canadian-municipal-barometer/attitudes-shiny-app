@@ -131,16 +131,16 @@ ui <- fluidPage(
             inputId = "race",
             label = "Race:",
             choices = list(
-              "Racialized minority" = "Racialized minority",
-              "White" = "White"
+              "Racialized minority",
+              "White"
             )
           ),
           radioButtons(
             inputId = "immigrant",
             label = "Immigrant:",
             choices = list(
-              "Yes" = "Yes",
-              "No" = "No"
+              "Yes",
+              "No"
             ),
             inline = TRUE
           ),
@@ -148,8 +148,8 @@ ui <- fluidPage(
             inputId = "homeowner",
             label = "Homeowner:",
             choices = list(
-              "Yes" = "Yes",
-              "No" = "No"
+              "Yes",
+              "No"
             ),
             inline = TRUE
           ),
