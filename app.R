@@ -1,4 +1,6 @@
 library(shiny)
+library(shiny.i18n)
+source("helpers.R")
 
 # data prep --------------------
 
@@ -17,6 +19,11 @@ default_policies <- statements$statement[
 ]
 
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection."
+
+# Translation
+i18n <- Translator$new(translation_csvs_path = "data/translation/")
+# Set initial language
+i18n$set_translation_language("en")
 
 # main --------------------
 
@@ -60,6 +67,24 @@ ui <- fluidPage(
         titlePanel("Canadians' Municipal Policy Attitudes"),
         img(
           src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
+        ),
+      ),
+      div(
+        id = "lang-toggle",
+        actionButton(
+          "lang_button",
+          "FR",
+          style = "
+            color: gray;
+            font-weight: bold;
+            border: 0px;
+            /* to move outside the bounds of its parent */
+            position: absolute;
+            bottom: -37px;
+            right: 10px;
+            /* to ensure the button is above the divs it overlaps */
+            z-index: 1000;
+          "
         )
       ),
       sidebarLayout(
@@ -69,7 +94,7 @@ ui <- fluidPage(
               max-width: 35vw;
               min-width: 225px;
               background-color: #e6eff7 !important;
-            ",
+          ",
           selectInput(
             inputId = "province",
             label = "Province:",
@@ -103,8 +128,8 @@ ui <- fluidPage(
             inputId = "gender",
             label = "Gender:",
             choices = list(
-              "Woman" = "Woman",
-              "Man" = "Man"
+              "Woman",
+              "Man"
             ),
             inline = TRUE
           ),
@@ -131,8 +156,8 @@ ui <- fluidPage(
             inputId = "immigrant",
             label = "Immigrant:",
             choices = list(
-              "Yes",
-              "No"
+              i18n$t("Yes"),
+              i18n$t("No")
             ),
             inline = TRUE
           ),
@@ -140,8 +165,8 @@ ui <- fluidPage(
             inputId = "homeowner",
             label = "Homeowner:",
             choices = list(
-              "Yes",
-              "No"
+              i18n$t("Yes"),
+              i18n$t("No")
             ),
             inline = TRUE
           ),
@@ -299,6 +324,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # UI Rendering --------------------
 
+  # Policy domain menu
   output$select_domain <- renderUI({
     selectInput(
       inputId = "policy_group",
@@ -310,6 +336,7 @@ server <- function(input, output, session) {
       width = "300px"
     )
   })
+  # Reset button
   observeEvent(input$delete, {
     updateSelectInput(
       session,
@@ -318,6 +345,7 @@ server <- function(input, output, session) {
       selected = character(0)
     )
   })
+  # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
     selected_policies <- statements |>
       dplyr::filter(
@@ -331,10 +359,26 @@ server <- function(input, output, session) {
       choices = selected_policies
     )
   })
+  # toggle language
+  observeEvent(input$lang_toggle, {
+    print(paste("Language change!", input$lang_toggle))
+    # actionButton values start a 0 and go up by 1 every time they activate
+    # So, all odd values input$lang_toggle will occur when the app is in English
+    # and this the language should be updated to French
+    if (input$lang_toggle %% 2 == 1) {
+      shiny.i18n::update_lang(language = "fr", session = session)
+    } else {
+      shiny.i18n::update_lang(language = "en", session = session)
+    }
+  })
 
   # plot --------------------
   output$predictions <- renderPlot(
     {
+      # reactive objects (input) need to be digested in a reactive block (in
+      # this case, renderPlot)
+      selected <- un_translate_input(input = input)
+
       # policy to filter the data by
       filter <- statements$var_name[statements$statement == input$policy]
 
@@ -344,15 +388,7 @@ server <- function(input, output, session) {
 
       # verify that tmp_df has the levels needed for the model to run
       validate(
-        need(input$province %in% tmp_df$province, input_err),
-        need(input$popcat %in% tmp_df$popcat, input_err),
-        need(input$gender %in% tmp_df$gender, input_err),
-        need(input$agecat %in% tmp_df$agecat, input_err),
-        need(input$race %in% tmp_df$race, input_err),
-        need(input$immigrant %in% tmp_df$immigrant, input_err),
-        need(input$homeowner %in% tmp_df$homeowner, input_err),
-        need(input$education %in% tmp_df$education, input_err),
-        need(input$income %in% tmp_df$income, input_err)
+        need(input$province %in% tmp_df$province, input_err)
       )
 
       model <- nnet::multinom(
@@ -367,9 +403,9 @@ server <- function(input, output, session) {
         province = input$province,
         agecat = input$agecat,
         race = input$race,
-        homeowner = input$homeowner,
+        homeowner = selected["homeowner"],
         income = input$income,
-        immigrant = input$immigrant,
+        immigrant = selected["immigrant"],
         popcat = input$popcat
       )
 
