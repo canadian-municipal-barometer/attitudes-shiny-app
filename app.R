@@ -62,6 +62,12 @@ ui <- fluidPage(
         justify-content: space-between;
         height: 150px;
       }
+      #lang-toggle {
+        display: flex;
+        justify-content: flex-end;
+        /* to move outside the bounds of its parent */
+        position: relative;
+      }
     "
     ))
   ),
@@ -75,6 +81,24 @@ ui <- fluidPage(
         titlePanel("Canadians' Municipal Policy Attitudes"),
         img(
           src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
+        ),
+      ),
+      div(
+        id = "lang-toggle",
+        actionButton(
+          "lang_button",
+          "FR",
+          style = "
+            color: gray;
+            font-weight: bold;
+            border: 0px;
+            /* to move outside the bounds of its parent */
+            position: absolute;
+            bottom: -37px;
+            right: 10px;
+            /* to ensure the button is above the divs it overlaps */
+            z-index: 1000;
+          "
         )
       ),
       sidebarLayout(
@@ -84,7 +108,7 @@ ui <- fluidPage(
               max-width: 35vw;
               min-width: 225px;
               background-color: #e6eff7 !important;
-            ",
+          ",
           selectInput(
             inputId = "province",
             label = "Province:",
@@ -301,6 +325,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # UI Rendering --------------------
 
+  # Policy domain menu
   output$select_domain <- renderUI({
     selectInput(
       inputId = "policy_group",
@@ -312,6 +337,7 @@ server <- function(input, output, session) {
       width = "300px"
     )
   })
+  # Reset button
   observeEvent(input$delete, {
     updateSelectInput(
       session,
@@ -320,6 +346,7 @@ server <- function(input, output, session) {
       selected = character(0)
     )
   })
+  # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
     selected_policies <- statements |>
       dplyr::filter(
