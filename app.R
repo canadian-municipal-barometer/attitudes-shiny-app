@@ -1,5 +1,6 @@
 library(shiny)
 library(shiny.i18n)
+source("helpers.R")
 
 # data prep --------------------
 
@@ -336,6 +337,10 @@ server <- function(input, output, session) {
   # plot --------------------
   output$predictions <- renderPlot(
     {
+      # reactive objects (input) need to be digested in a reactive block (in
+      # this case, renderPlot)
+      selected <- un_translate_input(input = input)
+
       # policy to filter the data by
       filter <- statements$var_name[statements$statement == input$policy]
 
@@ -360,9 +365,9 @@ server <- function(input, output, session) {
         province = input$province,
         agecat = input$agecat,
         race = input$race,
-        homeowner = input$homeowner,
+        homeowner = selected["homeowner"],
         income = input$income,
-        immigrant = input$immigrant,
+        immigrant = selected["immigrant"],
         popcat = input$popcat
       )
 
