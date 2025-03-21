@@ -1,4 +1,5 @@
 library(shiny)
+library(shiny.i18n)
 
 # data prep --------------------
 
@@ -17,6 +18,11 @@ default_policies <- statements$statement[
 ]
 
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection."
+
+# Translation
+i18n <- Translator$new(translation_csvs_path = "data/translation/")
+# Set default translation language
+i18n$set_translation_language("fr")
 
 # main --------------------
 
@@ -131,16 +137,16 @@ ui <- fluidPage(
             inputId = "race",
             label = "Race:",
             choices = list(
-              "Racialized minority" = "Racialized minority",
-              "White" = "White"
+              "Racialized minority",
+              "White"
             )
           ),
           radioButtons(
             inputId = "immigrant",
             label = "Immigrant:",
             choices = list(
-              "Yes" = "Yes",
-              "No" = "No"
+              i18n$t("Yes"),
+              i18n$t("No")
             ),
             inline = TRUE
           ),
@@ -148,8 +154,8 @@ ui <- fluidPage(
             inputId = "homeowner",
             label = "Homeowner:",
             choices = list(
-              "Yes" = "Yes",
-              "No" = "No"
+              i18n$t("Yes"),
+              i18n$t("No")
             ),
             inline = TRUE
           ),
@@ -339,15 +345,7 @@ server <- function(input, output, session) {
 
       # verify that tmp_df has the levels needed for the model to run
       validate(
-        need(input$province %in% tmp_df$province, input_err),
-        need(input$popcat %in% tmp_df$popcat, input_err),
-        need(input$gender %in% tmp_df$gender, input_err),
-        need(input$agecat %in% tmp_df$agecat, input_err),
-        need(input$race %in% tmp_df$race, input_err),
-        need(input$immigrant %in% tmp_df$immigrant, input_err),
-        need(input$homeowner %in% tmp_df$homeowner, input_err),
-        need(input$education %in% tmp_df$education, input_err),
-        need(input$income %in% tmp_df$income, input_err)
+        need(input$province %in% tmp_df$province, input_err)
       )
 
       model <- nnet::multinom(
