@@ -1,7 +1,5 @@
 en,fr
-# menu names
-Policy domain:,
-Select a policy:,
+# sidebar menu names
 Province:,
 Population:,
 Gender:,
@@ -65,6 +63,7 @@ Canadians' Municipal Policy Attitudes,
 # MAIN PARAGRAPHS
 Plot,
 "Please select one or more policy domains, and then choose a specific question from the drop-down menu below.",
+Policy domain:,
 "Select a policy:",
 Instructions,
 "This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians.",
@@ -76,6 +75,6 @@ Instructions,
 ". Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added.",
 "Weights were constructed using iterative proportional fitting (see ",
 "DeBell and Krosnick",
-"Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, which sometimes leads to odd results when Prince Edward Island is selected.",
+"Note that due to there being a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, and sometimes this leads to odd results when Prince Edward Island is selected.",
 # ERROR MESSAGE
 "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection.",

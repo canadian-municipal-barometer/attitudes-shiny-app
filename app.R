@@ -288,7 +288,7 @@ ui <- fluidPage(
                   ")."
                 ),
                 p(
-                  "Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, which sometimes leads to odd results when Prince Edward Island is selected." # nolint
+                  "Note that due to there being a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, and sometimes this leads to odd results when Prince Edward Island is selected." # nolint
                 )
               )
             )
