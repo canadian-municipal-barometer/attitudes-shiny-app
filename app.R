@@ -40,6 +40,12 @@ ui <- fluidPage(
       .shiny-layout {
         align-items: start; /* aligned with the top of the parent div */
       }
+      #lang-toggle {
+        display: flex;
+        justify-content: flex-end;
+        /* to move outside the bounds of its parent */
+        position: relative;
+      }
     "
     ))
   ),
@@ -154,8 +160,8 @@ ui <- fluidPage(
             inputId = "immigrant",
             label = "Immigrant:",
             choices = list(
-              i18n$t("Yes"),
-              i18n$t("No")
+              "Yes",
+              "No"
             ),
             inline = TRUE
           ),
@@ -163,8 +169,8 @@ ui <- fluidPage(
             inputId = "homeowner",
             label = "Homeowner:",
             choices = list(
-              i18n$t("Yes"),
-              i18n$t("No")
+              "Yes",
+              "No"
             ),
             inline = TRUE
           ),
