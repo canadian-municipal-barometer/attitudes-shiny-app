@@ -1,4 +1,81 @@
 en,fr
+# menu names
+Policy domain:,
+Select a policy:,
+Province:,
+Population:,
+Gender:,
+Age:,
+Race:,
+Immigrant:,
+Homeowner:,
+Education:,
+Income:,
+# menu items
+Agree,
+Disagree,
+No opinion,Pas d'opinion
+Alberta,Alberta
+British Columbia,Colombie-Britannique
+Manitoba,Manitoba
+New Brunswick,Nouveau-Brunswick
+Newfoundland and Labrador,Terre-Neuve-et-Labrador
+Nova Scotia,Nouvelle-Écosse
+Ontario,Ontario
+Prince Edward Island,Île-du-Prince-Édouard
+Quebec,Québec
+Saskatchewan,Saskatchewan
+"Less than $49,999","Moins de $49,999"
+"$50,000 - $99,999","$50,000 - $99,999"
+"$100,000 - $149,999","$100,000 - $149,999"
+"$150,000 - $199,999","$150,000 - $199,999"
+"$200,000 or more","200,000 $ ou plus"
+Man,Homme
+Woman,Femme
 Yes,Oui
 No,Non
+Less than high school,
+High school,
+Associate's degree or trades,
+Bachelor's degree,Baccalauréat
+Post-graduate degree,
+Racialized minority,
+White,Blanc·che
+# Policy Domains
+Housing,
+Affordability,
+Environment,
+Cultural Policy,
+Immigrants and Refugees,
+Inclusion,
+Public Safety,
+Policing,
+Traffic and Transportation,
+Parks and Recreation,
+Services and Maintenance,
+Libraries  ,
+Social Policy,
+Social Services,
+Public Health,
+Public Transit,
+Active Transportation,
+# Other
 FR,EN
+Canadians' Municipal Policy Attitudes,
+# MAIN PARAGRAPHS
+Plot,
+"Please select one or more policy domains, and then choose a specific question from the drop-down menu below.",
+"Select a policy:",
+Instructions,
+"This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians.",
+"In the first menu of the ""Plot"" tab above, select one or more policy domains. The second menu contains specific policy statements belonging to the policy domains you selected. Use the second menu to view public opinion on a specific policy. To clear the policy domain box, press the ""Reset"" button.",
+"Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot.",
+"Details",
+"The data for this app come from the Canadian Municipal Barometer's annual",
+"Citizen Survey",
+". Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added.",
+"Weights were constructed using iterative proportional fitting (see ",
+"DeBell and Krosnick",
+"Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, which sometimes leads to odd results when Prince Edward Island is selected.",
+# ERROR MESSAGE
+"The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection.",
