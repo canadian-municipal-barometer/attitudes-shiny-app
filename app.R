@@ -11,26 +11,24 @@ load("data/statements.rda")
 # load `tags` object: choice set for "policy_group" input
 load("data/unique-tags.rda")
 
-# Choices for "policy" input need to be set. They can match the policies
-# belonging to the first tag of the first statement
+# Choices for "policy" input need to be set.
 # must match the `selected` parameter of the "policy_group" selector
 default_policies <- statements$statement[
   statements$tags %in% statements$tags[1][1]
 ]
 
-input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection."
+# Set the error that is displayed if model inputs aren't present for a policy
+input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
-# Translation
+
+# Translation --------------------
+# load translation file
 i18n <- Translator$new(translation_csvs_path = "data/translation/")
 # Set initial language
 i18n$set_translation_language("en")
 
-# main --------------------
-
-# belonging to the first row's group name
 ui <- fluidPage(
-  # set CSS for elements that don't accept a style argument
-  # in their R constructor
+  # set CSS for elements that don't accept a style argument in their constructor
   tags$head(
     tags$style(HTML(
       "
@@ -40,7 +38,7 @@ ui <- fluidPage(
       }
       /* formats sidebarLayout */
       .shiny-layout {
-        align-items: start;
+        align-items: start; /* aligned with the top of the parent div */
       }
     "
     ))
@@ -66,7 +64,7 @@ ui <- fluidPage(
         ",
         titlePanel("Canadians' Municipal Policy Attitudes"),
         img(
-          src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg"
+          src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg" # nolint
         ),
       ),
       div(
@@ -187,9 +185,9 @@ ui <- fluidPage(
             label = "Income:",
             choices = c(
               "Less than $49,999",
-              "$50,000 to $99,999",
-              "$100,000 to $149,999",
-              "$150,000 to $199,999",
+              "$50,000 - $99,999",
+              "$100,000 - $149,999",
+              "$150,000 - $199,999",
               "$200,000 or more"
             ),
             selectize = FALSE
@@ -212,8 +210,7 @@ ui <- fluidPage(
                 # spacing hack
                 h1("\n"),
                 p(
-                  "Please select one or more policy domains, and then choose a",
-                  "specific question from the drop-down menu below."
+                  "Please select one or more policy domains, and then choose a specific question from the drop-down menu below." # nolint
                 ),
                 p(
                   'To reset the policy domains, click "Reset".'
@@ -227,7 +224,7 @@ ui <- fluidPage(
                    ",
                   uiOutput(
                     outputId = "select_domain",
-                    # Make the select_domain div's formatting match the reset button
+                    # Make the select_domain div's formatting match the reset button # nolint
                     style = "
                       align-items: bottom;
                     "
@@ -260,57 +257,38 @@ ui <- fluidPage(
                 h1("\n"),
                 p("Welcome!"),
                 p(
-                  "This interactive app allows you to explore the policy
-                  attitudes of specific demographic groups on the largest and
-                  most diverse set of municipal policy issues ever included
-                  in a survey of Canadians."
+                  "This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians." # nolint
                 ),
                 p(
-                  'In the first menu of the “Plot” tab above, select one or
-                  more policy domains. The second menu contains specific
-                  policy statements belonging to the policy domains you
-                  selected. Use the second menu to view public opinion on
-                  a specific policy. To clear the policy domain box,
-                  press the "Reset" button.'
+                  'In the first menu of the "Plot" tab above, select one or more policy domains. The second menu contains specific policy statements belonging to the policy domains you selected. Use the second menu to view public opinion on a specific policy. To clear the policy domain box, press the "Reset" button.' # nolint
                 ),
                 p(
-                  "Finally, adjust the set of characteristics in the panel to
-                  the left to see how different groups view the policy you
-                  have selected. When you're done, you can select a new
-                  policy by again using the menus above the plot."
+                  "Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot." # nolint
                 )
               ),
               tabPanel(
                 title = "Details",
                 h1("\n"),
                 p(
-                  "The data for this app come from the Canadian Municipal
-                  Barometer’s annual",
+                  "The data for this app come from the Canadian Municipal Barometer's annual", # nolint
                   a(
                     "Citizen Survey",
-                    href = "https://www.cmb-bmc.ca/wp-content/uploads/2025/03/CMB-2025-General-Population-Codebook.pdf",
+                    href = "https://www.cmb-bmc.ca/wp-content/uploads/2025/03/CMB-2025-General-Population-Codebook.pdf", # nolint
                     .noWS = c("after")
                   ),
-                  ". Currently, it uses the 2025 data. It will soon be updated
-                  with more questions from the 2025 survey, and, in future
-                  years, new surveys will be added."
+                  ". Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added." # nolint
                 ),
                 p(
-                  "Weights were constructed using iterative proportional
-                  fitting (see ",
+                  "Weights were constructed using iterative proportional fitting (see ", # nolint
                   a(
                     "DeBell and Krosnick",
-                    href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf",
+                    href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf", # nolint
                     .noWS = c("after")
                   ),
                   ")."
                 ),
                 p(
-                  "Note that due to a small number of responses in Prince
-                  Edward Island, many of the policy issues for that province
-                  do not produce reliable estimates of public opinion, which
-                  sometimes leads to odd results when Prince Edward Island is
-                  selected."
+                  "Note that due to a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, which sometimes leads to odd results when Prince Edward Island is selected." # nolint
                 )
               )
             )
@@ -329,7 +307,7 @@ server <- function(input, output, session) {
     selectInput(
       inputId = "policy_group",
       label = "Policy domain:",
-      choices = statement_tags,
+      choices = statement_tags, # nolint
       multiple = TRUE,
       selected = "Housing",
       selectize = TRUE,
@@ -341,17 +319,17 @@ server <- function(input, output, session) {
     updateSelectInput(
       session,
       "policy_group",
-      choices = statement_tags,
+      choices = statement_tags, # nolint
       selected = character(0)
     )
   })
   # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
-    selected_policies <- statements |>
+    selected_policies <- statements |> # nolint
       dplyr::filter(
         purrr::map_lgl(tags, function(x) any(x %in% input$policy_group))
       ) |>
-      dplyr::pull(statement)
+      dplyr::pull(statement) # nolint
 
     updateSelectInput(
       session,
@@ -377,14 +355,14 @@ server <- function(input, output, session) {
     {
       # reactive objects (input) need to be digested in a reactive block (in
       # this case, renderPlot)
-      selected <- un_translate_input(input = input)
+      selected <- un_translate_input(input = input) # nolint
 
       # policy to filter the data by
-      filter <- statements$var_name[statements$statement == input$policy]
+      filter <- statements$var_name[statements$statement == input$policy] # nolint
 
       # translate the contents of the selectors to variable names
 
-      tmp_df <- df |> dplyr::filter(policy == filter)
+      tmp_df <- df |> dplyr::filter(policy == filter) # nolint
 
       # verify that tmp_df has the levels needed for the model to run
       validate(
@@ -392,7 +370,7 @@ server <- function(input, output, session) {
       )
 
       model <- nnet::multinom(
-        factor(outcome) ~ factor(gender) + factor(education) + factor(province) + factor(agecat) + factor(race) + factor(homeowner) + factor(income) + factor(immigrant) + factor(popcat),
+        factor(outcome) ~ factor(gender) + factor(education) + factor(province) + factor(agecat) + factor(race) + factor(homeowner) + factor(income) + factor(immigrant) + factor(popcat), # nolint
         data = tmp_df,
         weights = tmp_df$wgt
       )
@@ -433,7 +411,7 @@ server <- function(input, output, session) {
 
       plot <- ggplot2::ggplot(
         preds,
-        ggplot2::aes(x = cats, y = probs, fill = cats)
+        ggplot2::aes(x = cats, y = probs, fill = cats) # nolint
       ) +
         ggplot2::geom_col() +
         ggplot2::coord_flip() +
