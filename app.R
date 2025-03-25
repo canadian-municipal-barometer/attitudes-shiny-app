@@ -28,6 +28,8 @@ i18n <- Translator$new(translation_csvs_path = "data/translation/")
 i18n$set_translation_language("en")
 
 ui <- fluidPage(
+  # necessary for shiny.i18n reactive translation
+  shiny.i18n::usei18n(i18n),
   # set CSS for elements that don't accept a style argument in their constructor
   tags$head(
     tags$style(HTML(
@@ -39,12 +41,6 @@ ui <- fluidPage(
       /* formats sidebarLayout */
       .shiny-layout {
         align-items: start; /* aligned with the top of the parent div */
-      }
-      #lang-toggle {
-        display: flex;
-        justify-content: flex-end;
-        /* to move outside the bounds of its parent */
-        position: relative;
       }
     "
     ))
@@ -75,9 +71,15 @@ ui <- fluidPage(
       ),
       div(
         id = "lang-toggle",
+        style = "
+          display: flex;
+          justify-content: flex-end;
+          /* to move outside the bounds of its parent */
+          position: relative;
+        ",
         actionButton(
-          "lang_button",
-          "FR",
+          "lang_toggle",
+          i18n$t("FR"),
           style = "
             color: gray;
             font-weight: bold;
@@ -102,17 +104,17 @@ ui <- fluidPage(
           selectInput(
             inputId = "province",
             label = "Province:",
-            choices = c(
-              "Alberta",
-              "British Columbia",
-              "Manitoba",
-              "New Brunswick",
-              "Newfoundland and Labrador",
-              "Nova Scotia",
-              "Ontario",
-              "Prince Edward Island",
-              "Quebec",
-              "Saskatchewan"
+            choices = list(
+              "Alberta" = "Alberta",
+              "British Columbia" = "British Columbia",
+              "Manitoba" = "Manitoba",
+              "New Brunswick" = "New Brunswick",
+              "Newfoundland and Labrador" = "Newfoundland and Labrador",
+              "Nova Scotia" = "Nova Scotia",
+              "Ontario" = "Ontario",
+              "Prince Edward Island" = "Prince Edward Island",
+              "Quebec" = "Quebec",
+              "Saskatchewan" = "Saskatchewan"
             ),
             selectize = FALSE
           ),
@@ -132,8 +134,8 @@ ui <- fluidPage(
             inputId = "gender",
             label = "Gender:",
             choices = list(
-              "Woman",
-              "Man"
+              "Woman" = "Woman",
+              "Man" = "Man"
             ),
             inline = TRUE
           ),
@@ -152,16 +154,16 @@ ui <- fluidPage(
             inputId = "race",
             label = "Race:",
             choices = list(
-              "Racialized minority",
-              "White"
+              "Racialized minority" = "Racialized minority",
+              "White" = "White"
             )
           ),
           radioButtons(
             inputId = "immigrant",
             label = "Immigrant:",
             choices = list(
-              "Yes",
-              "No"
+              "Yes" = "Yes",
+              "No" = "No"
             ),
             inline = TRUE
           ),
@@ -169,32 +171,32 @@ ui <- fluidPage(
             inputId = "homeowner",
             label = "Homeowner:",
             choices = list(
-              "Yes",
-              "No"
+              "Yes" = "Yes",
+              "No" = "No"
             ),
             inline = TRUE
           ),
           selectInput(
             inputId = "education",
             label = "Education:",
-            choices = c(
-              "Less than high school",
-              "High school",
-              "Associate's degree or trades",
-              "Bachelor's degree",
-              "Post-graduate degree"
+            choices = list(
+              "Less than high school" = "Less than high school",
+              "High school" = "High school",
+              "Associate's degree or trades" = "Associate's degree or trades",
+              "Bachelor's degree" = "Bachelor's degree",
+              "Post-graduate degree" = "Post-graduate degree"
             ),
             selectize = FALSE
           ),
           selectInput(
             inputId = "income",
             label = "Income:",
-            choices = c(
-              "Less than $49,999",
-              "$50,000 - $99,999",
-              "$100,000 - $149,999",
-              "$150,000 - $199,999",
-              "$200,000 or more"
+            choices = list(
+              "Less than $49,999" = "Less than $49,999",
+              "$50,000 - $99,999" = "$50,000 - $99,999",
+              "$100,000 - $149,999" = "$100,000 - $149,999",
+              "$150,000 - $199,999" = "$150,000 - $199,999",
+              "$200,000 or more" = "$200,000 or more"
             ),
             selectize = FALSE
           )
@@ -343,18 +345,28 @@ server <- function(input, output, session) {
       choices = selected_policies
     )
   })
-  # toggle language
+
+  # Language toggle
+
+  # make reactive i18n object
+  i18n_r <- reactive({
+    i18n
+  })
+  # language toggle observer
   observeEvent(input$lang_toggle, {
     print(paste("Language change!", input$lang_toggle))
     # actionButton values start a 0 and go up by 1 every time they activate
-    # So, all odd values input$lang_toggle will occur when the app is in English
-    # and this the language should be updated to French
+    # So, all odd values of input$lang_toggle will occur when the app is in
+    # English and thus the language should be updated to French.
     if (input$lang_toggle %% 2 == 1) {
-      shiny.i18n::update_lang(language = "fr", session = session)
+      lang <- "fr"
     } else {
-      shiny.i18n::update_lang(language = "en", session = session)
+      lang <- "en"
     }
+    shiny.i18n::update_lang(language = lang, session = session)
+    i18n_r()$set_translation_language(lang)
   })
+  # UI updates for menu item language
 
   # plot --------------------
   output$predictions <- renderPlot(
