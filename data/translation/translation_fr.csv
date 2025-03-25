@@ -2,8 +2,8 @@ en,fr
 # sidebar menu names
 Province:,
 Population:,
-Gender:,
-Age:,
+Gender:,Genre:
+Age:,Age:
 Race:,
 Immigrant:,
 Homeowner:,
