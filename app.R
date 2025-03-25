@@ -104,17 +104,17 @@ ui <- fluidPage(
           selectInput(
             inputId = "province",
             label = "Province:",
-            choices = list(
-              "Alberta" = "Alberta",
-              "British Columbia" = "British Columbia",
-              "Manitoba" = "Manitoba",
-              "New Brunswick" = "New Brunswick",
-              "Newfoundland and Labrador" = "Newfoundland and Labrador",
-              "Nova Scotia" = "Nova Scotia",
-              "Ontario" = "Ontario",
-              "Prince Edward Island" = "Prince Edward Island",
-              "Quebec" = "Quebec",
-              "Saskatchewan" = "Saskatchewan"
+            choices = c(
+              "Alberta",
+              "British Columbia",
+              "Manitoba",
+              "New Brunswick",
+              "Newfoundland and Labrador",
+              "Nova Scotia",
+              "Ontario",
+              "Prince Edward Island",
+              "Quebec",
+              "Saskatchewan"
             ),
             selectize = FALSE
           ),
@@ -132,10 +132,10 @@ ui <- fluidPage(
           ),
           radioButtons(
             inputId = "gender",
-            label = "Gender:",
-            choices = list(
-              "Woman" = "Woman",
-              "Man" = "Man"
+            label = i18n$t("Gender:"),
+            choices = c(
+              i18n$t("Woman"),
+              i18n$t("Man")
             ),
             inline = TRUE
           ),
@@ -153,50 +153,50 @@ ui <- fluidPage(
           radioButtons(
             inputId = "race",
             label = "Race:",
-            choices = list(
-              "Racialized minority" = "Racialized minority",
-              "White" = "White"
+            choices = c(
+              "Racialized minority",
+              "White"
             )
           ),
           radioButtons(
             inputId = "immigrant",
             label = "Immigrant:",
-            choices = list(
-              "Yes" = "Yes",
-              "No" = "No"
+            choices = c(
+              "Yes",
+              "No"
             ),
             inline = TRUE
           ),
           radioButtons(
             inputId = "homeowner",
             label = "Homeowner:",
-            choices = list(
-              "Yes" = "Yes",
-              "No" = "No"
+            choices = c(
+              "Yes",
+              "No"
             ),
             inline = TRUE
           ),
           selectInput(
             inputId = "education",
             label = "Education:",
-            choices = list(
-              "Less than high school" = "Less than high school",
-              "High school" = "High school",
-              "Associate's degree or trades" = "Associate's degree or trades",
-              "Bachelor's degree" = "Bachelor's degree",
-              "Post-graduate degree" = "Post-graduate degree"
+            choices = c(
+              "Less than high school",
+              "High school",
+              "Associate's degree or trades",
+              "Bachelor's degree",
+              "Post-graduate degree"
             ),
             selectize = FALSE
           ),
           selectInput(
             inputId = "income",
             label = "Income:",
-            choices = list(
-              "Less than $49,999" = "Less than $49,999",
-              "$50,000 - $99,999" = "$50,000 - $99,999",
-              "$100,000 - $149,999" = "$100,000 - $149,999",
-              "$150,000 - $199,999" = "$150,000 - $199,999",
-              "$200,000 or more" = "$200,000 or more"
+            choices = c(
+              "Less than $49,999",
+              "$50,000 - $99,999",
+              "$100,000 - $149,999",
+              "$150,000 - $199,999",
+              "$200,000 or more"
             ),
             selectize = FALSE
           )
@@ -367,6 +367,15 @@ server <- function(input, output, session) {
     i18n_r()$set_translation_language(lang)
   })
   # UI updates for menu item language
+  observe({
+    updateRadioButtons(session, "gender",
+      label = i18n_r()$t("Gender:"),
+      choices = c(
+        i18n_r()$t("Woman"),
+        i18n_r()$t("Man")
+      )
+    )
+  })
 
   # plot --------------------
   output$predictions <- renderPlot(
