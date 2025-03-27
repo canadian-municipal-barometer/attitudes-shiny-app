@@ -101,15 +101,105 @@ ui <- fluidPage(
               min-width: 225px;
               background-color: #e6eff7 !important;
           ",
-          uiOutput("province"),
-          uiOutput("popcat"),
-          uiOutput("gender"),
-          uiOutput("agecat"),
-          uiOutput("race"),
-          uiOutput("immigrant"),
-          uiOutput("homeowner"),
-          uiOutput("education"),
-          uiOutput("income")
+          selectInput(
+            inputId = "province",
+            label = "Province:",
+            choices = c(
+              "Alberta",
+              "British Columbia",
+              "Manitoba",
+              "New Brunswick",
+              "Newfoundland and Labrador",
+              "Nova Scotia",
+              "Ontario",
+              "Prince Edward Island",
+              "Quebec",
+              "Saskatchewan"
+            ),
+            selectize = FALSE
+          ),
+          selectInput(
+            inputId = "popcat",
+            label = "Population:",
+            choices = c(
+              "3000-9,999",
+              "10,000-49,999",
+              "50,000-249,999",
+              "250,000-999,999",
+              "1,000,000+"
+            ),
+            selectize = FALSE
+          ),
+          radioButtons(
+            inputId = "gender",
+            label = "Gender:",
+            choices = list(
+              "Woman",
+              "Man"
+            ),
+            inline = TRUE
+          ),
+          selectInput(
+            inputId = "agecat",
+            label = "Age:",
+            choices = c(
+              "18-29",
+              "30-44",
+              "45-59",
+              "60+"
+            ),
+            selectize = FALSE
+          ),
+          radioButtons(
+            inputId = "race",
+            label = "Race:",
+            choices = list(
+              "Racialized minority",
+              "White"
+            )
+          ),
+          radioButtons(
+            inputId = "immigrant",
+            label = "Immigrant:",
+            choices = list(
+              "Yes",
+              "No"
+            ),
+            inline = TRUE
+          ),
+          radioButtons(
+            inputId = "homeowner",
+            label = "Homeowner:",
+            choices = list(
+              "Yes",
+              "No"
+            ),
+            inline = TRUE
+          ),
+          selectInput(
+            inputId = "education",
+            label = "Education:",
+            choices = c(
+              "Less than high school",
+              "High school",
+              "Associate's degree or trades",
+              "Bachelor's degree",
+              "Post-graduate degree"
+            ),
+            selectize = FALSE
+          ),
+          selectInput(
+            inputId = "income",
+            label = "Income:",
+            choices = c(
+              "Less than $49,999",
+              "$50,000 - $99,999",
+              "$100,000 - $149,999",
+              "$150,000 - $199,999",
+              "$200,000 or more"
+            ),
+            selectize = FALSE
+          ),
         ),
         div(
           class = "main-panel",
@@ -220,134 +310,6 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # UI Rendering --------------------
 
-  # sidebar menus
-
-  output$province <- renderUI({
-    selectInput(
-      inputId = "province",
-      label = "Province:",
-      choices = c(
-        "Alberta",
-        "British Columbia",
-        "Manitoba",
-        "New Brunswick",
-        "Newfoundland and Labrador",
-        "Nova Scotia",
-        "Ontario",
-        "Prince Edward Island",
-        "Quebec",
-        "Saskatchewan"
-      ),
-      selectize = FALSE
-    )
-  })
-
-  output$popcat <- renderUI({
-    selectInput(
-      inputId = "popcat",
-      label = "Population:",
-      choices = c(
-        "3000-9,999",
-        "10,000-49,999",
-        "50,000-249,999",
-        "250,000-999,999",
-        "1,000,000+"
-      ),
-      selectize = FALSE
-    )
-  })
-
-  output$gender <- renderUI({
-    radioButtons(
-      inputId = "gender",
-      label = "Gender:",
-      choices = list(
-        "Woman",
-        "Man"
-      ),
-      inline = TRUE
-    )
-  })
-
-  output$agecat <- renderUI({
-    selectInput(
-      inputId = "agecat",
-      label = "Age:",
-      choices = c(
-        "18-29",
-        "30-44",
-        "45-59",
-        "60+"
-      ),
-      selectize = FALSE
-    )
-  })
-
-  output$race <- renderUI({
-    radioButtons(
-      inputId = "race",
-      label = "Race:",
-      choices = list(
-        "Racialized minority",
-        "White"
-      )
-    )
-  })
-
-  output$immigrant <- renderUI({
-    radioButtons(
-      inputId = "immigrant",
-      label = "Immigrant:",
-      choices = list(
-        "Yes",
-        "No"
-      ),
-      inline = TRUE
-    )
-  })
-
-  output$homeowner <- renderUI({
-    radioButtons(
-      inputId = "homeowner",
-      label = "Homeowner:",
-      choices = list(
-        "Yes",
-        "No"
-      ),
-      inline = TRUE
-    )
-  })
-
-  output$education <- renderUI({
-    selectInput(
-      inputId = "education",
-      label = "Education:",
-      choices = c(
-        "Less than high school",
-        "High school",
-        "Associate's degree or trades",
-        "Bachelor's degree",
-        "Post-graduate degree"
-      ),
-      selectize = FALSE
-    )
-  })
-
-  output$income <- renderUI({
-    selectInput(
-      inputId = "income",
-      label = "Income:",
-      choices = c(
-        "Less than $49,999",
-        "$50,000 - $99,999",
-        "$100,000 - $149,999",
-        "$150,000 - $199,999",
-        "$200,000 or more"
-      ),
-      selectize = FALSE
-    )
-  })
-
   # main panel
 
   # Policy domain menu
@@ -394,7 +356,6 @@ server <- function(input, output, session) {
   })
   # language toggle observer
   observeEvent(input$lang_toggle, {
-    print(paste("Language change!", input$lang_toggle))
     # actionButton values start a 0 and go up by 1 every time they activate
     # So, all odd values of input$lang_toggle will occur when the app is in
     # English and thus the language should be updated to French.
@@ -405,6 +366,8 @@ server <- function(input, output, session) {
     }
     shiny.i18n::update_lang(language = lang, session = session)
     i18n_r()$set_translation_language(lang)
+    print(paste("Language change!", input$lang_toggle))
+    print(paste("Current language:", lang))
   })
   # UI updates for menu item language
   observe({
