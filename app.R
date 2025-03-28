@@ -283,13 +283,7 @@ ui <- fluidPage(
                 title = "Details",
                 h1("\n"),
                 p(
-                  "The data for this app come from the Canadian Municipal Barometer's annual", # nolint
-                  a(
-                    "Citizen Survey",
-                    href = "https://www.cmb-bmc.ca/wp-content/uploads/2025/03/CMB-2025-General-Population-Codebook.pdf", # nolint
-                    .noWS = c("after")
-                  ),
-                  ". Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added." # nolint
+                  "The data for this app come from the Canadian Municipal Barometer's annual Citizen Survey. Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added." # nolint
                 ),
                 p(
                   "Weights were constructed using iterative proportional fitting (see ", # nolint
@@ -374,7 +368,9 @@ server <- function(input, output, session) {
     print(paste("Current language:", lang))
 
     # UI updates for menu item language
-    updateSelectInput(session, "province",
+    updateSelectInput(
+      session,
+      "province",
       label = i18n_r$translator$t("Province:"),
       choices = i18n_r$translator$t(
         c(
@@ -391,19 +387,9 @@ server <- function(input, output, session) {
         )
       )
     )
-    updateSelectInput(session, "popcat",
-      label = i18n_r$translator$t("Population:"),
-      choices = i18n_r$translator$t(
-        c(
-          "3000-9,999",
-          "10,000-49,999",
-          "50,000-249,999",
-          "250,000-999,999",
-          "1,000,000+"
-        )
-      )
-    )
-    updateRadioButtons(session, "gender",
+    updateRadioButtons(
+      session,
+      "gender",
       label = i18n_r$translator$t("Gender:"),
       choices = i18n_r$translator$t(
         c(
@@ -412,18 +398,9 @@ server <- function(input, output, session) {
         )
       )
     )
-    updateSelectInput(session, "agecat",
-      label = i18n_r$translator$t("Age:"),
-      choices = i18n_r$translator$t(
-        c(
-          "18-29",
-          "30-44",
-          "45-59",
-          "60+"
-        )
-      )
-    )
-    updateRadioButtons(session, "race",
+    updateRadioButtons(
+      session,
+      "race",
       label = i18n_r$translator$t("Race:"),
       choices = i18n_r$translator$t(
         c(
@@ -432,7 +409,9 @@ server <- function(input, output, session) {
         )
       )
     )
-    updateRadioButtons(session, "immigrant",
+    updateRadioButtons(
+      session,
+      "immigrant",
       label = i18n_r$translator$t("Immigrant:"),
       choices = i18n_r$translator$t(
         c(
@@ -441,7 +420,9 @@ server <- function(input, output, session) {
         )
       )
     )
-    updateRadioButtons(session, "homeowner",
+    updateRadioButtons(
+      session,
+      "homeowner",
       label = i18n_r$translator$t("Homeowner:"),
       choices = i18n_r$translator$t(
         c(
@@ -450,7 +431,9 @@ server <- function(input, output, session) {
         )
       )
     )
-    updateSelectInput(session, "education",
+    updateSelectInput(
+      session,
+      "education",
       label = i18n_r$translator$t("Education:"),
       choices = i18n_r$translator$t(
         c(
@@ -462,15 +445,17 @@ server <- function(input, output, session) {
         )
       )
     )
-    updateSelectInput(session, "education",
-      label = i18n_r$translator$t("Education:"),
+    updateSelectInput(
+      session,
+      "income",
+      label = i18n_r$translator$t("Income:"),
       choices = i18n_r$translator$t(
         c(
-          "Less than $49,999",
-          "$50,000 - $99,999",
-          "$100,000 - $149,999",
-          "$150,000 - $199,999",
-          "$200,000 or more"
+          "Less than high school",
+          "High school",
+          "Associate's degree or trades",
+          "Bachelor's degree",
+          "Post-graduate degree"
         )
       )
     )
@@ -501,7 +486,16 @@ server <- function(input, output, session) {
       )
 
       model <- nnet::multinom(
-        factor(outcome) ~ factor(gender) + factor(education) + factor(province) + factor(agecat) + factor(race) + factor(homeowner) + factor(income) + factor(immigrant) + factor(popcat), # nolint
+        factor(outcome) ~
+          factor(gender) +
+            factor(education) +
+            factor(province) +
+            factor(agecat) +
+            factor(race) +
+            factor(homeowner) +
+            factor(income) +
+            factor(immigrant) +
+            factor(popcat), # nolint
         data = tmp_df,
         weights = tmp_df$wgt
       )

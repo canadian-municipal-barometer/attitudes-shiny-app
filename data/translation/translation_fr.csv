@@ -1,10 +1,10 @@
 en,fr
 # sidebar menu names and choices
-Age:,Age:
-Population:,
+Age:,Âge:
+Population:,Population :
 # menu items
-Agree,
-Disagree,
+Agree,D’accord
+Disagree,En désaccord
 No opinion,Pas d'opinion
 Province:,Province:
 Alberta,Alberta
@@ -26,55 +26,53 @@ Income:,
 Gender:,Genre:
 Man,Homme
 Woman,Femme
-Homeowner:,
-Immigrant:,
+Homeowner:,Propriétaire :
+Immigrant:,Immigrant·e :
 Yes,Oui
 No,Non
-Education:,
-Less than high school,
-High school,
-Associate's degree or trades,
+Education:,Niveau de scolarité :
+Less than high school,Moins que les études secondaires
+High school,Diplôme d’études secondaires
+Associate's degree or trades,Apprentissage/Diplôme d’études professionnelles (DEP)
 Bachelor's degree,Baccalauréat
-Post-graduate degree,
-Race:,
-Racialized minority,
+Post-graduate degree,"Maitrise, doctorat, diplôme professionnel"
+Race:,Origines :
+Racialized minority,Minorité racisée
 White,Blanc·che
 # Policy Domains
-Housing,
-Affordability,
-Environment,
-Cultural Policy,
-Immigrants and Refugees,
-Inclusion,
-Public Safety,
-Policing,
-Traffic and Transportation,
-Parks and Recreation,
-Services and Maintenance,
-Libraries,
-Social Policy,
-Social Services,
-Public Health,
-Public Transit,
-Active Transportation,
+Housing, Logement
+Affordability, Logements abordables
+Environment, Environnement
+Cultural Policy, Politique culturelle
+Immigrants and Refugees, Immigrant·e·s et réfugié·e·s
+Inclusion, Inclusion
+Public Safety, Sécurité publique
+Policing, Police
+Traffic and Transportation, Congestion et transports
+Parks and Recreation, Parcs et loisirs
+Services and Maintenance, Services et maintenance
+Libraries, Bibliothèques
+Social Policy, Politique sociale
+Social Services, Services sociaux
+Public Health, Santé publique
+Public Transit, Transports en commun
+Active Transportation, Transport actif
 # Other
 FR,EN
-Canadians' Municipal Policy Attitudes,
+Canadians' Municipal Policy Attitudes,Attitudes des Canadien·ne·s à l'égard des politiques municipales
 # MAIN PARAGRAPHS
-Plot,
-"Please select one or more policy domains, and then choose a specific question from the drop-down menu below.",
-Policy domain:,
-"Select a policy:",
-Instructions,
-"This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians.",
-"In the first menu of the ""Plot"" tab above, select one or more policy domains. The second menu contains specific policy statements belonging to the policy domains you selected. Use the second menu to view public opinion on a specific policy. To clear the policy domain box, press the ""Reset"" button.",
-"Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot.",
-"Details",
-"The data for this app come from the Canadian Municipal Barometer's annual",
-"Citizen Survey",
-". Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added.",
-"Weights were constructed using iterative proportional fitting (see ",
-"DeBell and Krosnick",
-"Note that due to there being a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, and sometimes this leads to odd results when Prince Edward Island is selected.",
+Plot,Graphique
+"Please select one or more policy domains, and then choose a specific question from the drop-down menu below.","Veuillez sélectionner un ou plusieurs domaines politiques, puis choisissez une question spécifique dans le menu déroulant ci-dessous."
+Policy domain:,Domaine politique :
+"Select a policy:",Sélectionnez une politique :
+Instructions,Instructions
+"This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians.","Cette application interactive vous permet d'explorer les attitudes politiques de groupes démographiques spécifiques sur l'ensemble le plus large et le plus diversifié de questions jamais incluses dans une enquête auprès des Canadien·ne·s."
+"In the first menu of the ""Plot"" tab above, select one or more policy domains. The second menu contains specific policy statements belonging to the policy domains you selected. Use the second menu to view public opinion on a specific policy. To clear the policy domain box, press the ""Reset"" button.","Dans le premier menu de l'onglet ""Graphique"" ci-dessus, sélectionnez un ou plusieurs domaines de politique. Le deuxième menu contient des déclarations politiques spécifiques appartenant aux domaines politiques que vous avez sélectionnés. Utilisez le deuxième menu pour visualiser l'opinion publique sur une politique spécifique. Pour effacer la boîte des domaines politiques, appuyez sur le bouton ""Réinitialiser""."
+"Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot.","Enfin, ajustez l'ensemble des caractéristiques dans le panneau de gauche pour voir comment les différents groupes perçoivent la politique que vous avez sélectionnée. Lorsque vous avez terminé, vous pouvez sélectionner une nouvelle politique en utilisant à nouveau les menus situés au-dessus du graphique."
+"Details",Détails
+"The data for this app come from the Canadian Municipal Barometer's annual Citizen Survey. Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added.","Les données utilisées proviennent de l'enquête d’opinion publique annuelle du Baromètre municipal du Canada. Actuellement, les données de l’enquête de 2025 sont utilisées. Elles seront bientôt mises à jour avec d'autres questions issues de l'enquête 2025 et, dans les années à venir, des données issues de nouvelles enquêtes seront ajoutées."
+"Weights were constructed using iterative proportional fitting (see ","Les pondérations ont été construites à l'aide d'un ajustement proportionnel itératif (voir "
+"DeBell and Krosnick","DeBell et Krosnick"
+"Note that due to there being a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, and sometimes this leads to odd results when Prince Edward Island is selected.","Il convient de noter qu'en raison du faible nombre de réponses reçues en provenance de l'Île-du-Prince-Édouard, de nombreuses questions de politique publique pour cette province ne donnent pas lieu à des estimations fiables de l'opinion publique, ce qui peut parfois conduire à des résultats étranges lorsque l'Île-du-Prince-Édouard est sélectionnée."
 # ERROR MESSAGE
-"The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection.",
+"The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection.","La combinaison de la question de politique publique et des caractéristiques démographiques que vous avez sélectionnée ne figure pas dans les données. Veuillez faire une autre sélection."
