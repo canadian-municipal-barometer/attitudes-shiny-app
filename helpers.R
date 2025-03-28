@@ -1,10 +1,10 @@
 # reassignment, because case_match rejects the reactive type without evaluating
 # it to a vector
 # If inputs are already in English, nothing happens.
-un_translate_input <- function(input) {
+un_translate_input <- function(reactive_input) {
   selected <- list()
 
-  selected["province"] <- input$province |>
+  selected["province"] <- reactive_input$province |>
     switch(
       "Alberta" = "Alberta",
       "Colombie-Britannique" = "British Columbia",
@@ -16,10 +16,10 @@ un_translate_input <- function(input) {
       "Île-du-Prince-Édouard" = "Prince Edward Island",
       "Québec" = "Quebec",
       "Saskatchewan" = "Saskatchewan",
-      input$province
+      reactive_input$province
     )
 
-  selected["popcat"] <- input$popcat |>
+  selected["popcat"] <- reactive_input$popcat |>
     switch("3000-9,999",
       "10,000-49,999",
       "50,000-249,999",
@@ -27,18 +27,18 @@ un_translate_input <- function(input) {
       "1,000,000+"
     )
 
-  selected["homeowner"] <- input$homeowner |>
+  selected["homeowner"] <- reactive_input$homeowner |>
     switch(
       "Oui" = "Yes",
       "Non" = "No",
-      input$homeowner
+      reactive_input$homeowner
     )
 
-  selected["immigrant"] <- input$immigrant |>
+  selected["immigrant"] <- reactive_input$immigrant |>
     switch(
       "Oui" = "Yes",
       "Non" = "No",
-      input$immigrant
+      reactive_input$immigrant
     )
 
   return(selected)
