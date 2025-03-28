@@ -59,6 +59,12 @@ ui <- fluidPage(
       #policy-div .selectize-input {
         font-weight: bold;
       }
+      @media (max-width: 1100px) {
+        .mail-panel {
+          width: 100%;
+          min-width: 400px;
+        }
+      }
     "
     ))
   ),
