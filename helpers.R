@@ -17,14 +17,27 @@ un_translate_input <- function(reactive_input) {
       "Québec" = "Quebec",
       "Saskatchewan" = "Saskatchewan",
       reactive_input$province
+      # NOTE: Does this really evaluate to the value? Switch probably takes care of it?
     )
 
-  selected["popcat"] <- reactive_input$popcat |>
-    switch("3000-9,999",
-      "10,000-49,999",
-      "50,000-249,999",
-      "250,000-999,999",
-      "1,000,000+"
+  selected["gender"] <- reactive_input$gender |>
+    switch(
+      "Homme" = "Man",
+      "Femme" = "Woman",
+      reactive_input$gender
+    )
+  selected["race"] <- reactive_input$race |>
+    switch(
+      "Minorité racisée" = "Racialized minority",
+      "Blanc·che" = "White",
+      reactive_input$race
+    )
+
+  selected["immigrant"] <- reactive_input$immigrant |>
+    switch(
+      "Oui" = "Yes",
+      "Non" = "No",
+      reactive_input$immigrant
     )
 
   selected["homeowner"] <- reactive_input$homeowner |>
@@ -34,11 +47,20 @@ un_translate_input <- function(reactive_input) {
       reactive_input$homeowner
     )
 
-  selected["immigrant"] <- reactive_input$immigrant |>
+  selected["education"] <- reactive_input$education |>
     switch(
-      "Oui" = "Yes",
-      "Non" = "No",
-      reactive_input$immigrant
+      "Moins que les études secondaires" = "Less than high school",
+      "Diplôme d’études secondaires" = "High school",
+      "Apprentissage/Diplôme d’études professionnelles (DEP)" = "Associate's degree or trades", # nolint
+      "Baccalauréat" = "Bachelor's degree",
+      "Maitrise, doctorat, diplôme professionnel" = "Post-graduate degree"
+    )
+
+  selected["income"] <- reactive_input$income |>
+    switch(
+      "Moins de $49,999" = "Less than $49,999",
+      "200,000 $ ou plus" = "$200,000 or more",
+      reactive_input$income
     )
 
   return(selected)
