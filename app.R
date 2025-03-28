@@ -382,7 +382,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateSelectInput(session, "popcat",
       label = i18n_r$translator$t("Population:"),
       choices = i18n_r$translator$t(
@@ -395,7 +394,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateRadioButtons(session, "gender",
       label = i18n_r$translator$t("Gender:"),
       choices = i18n_r$translator$t(
@@ -405,7 +403,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateSelectInput(session, "agecat",
       label = i18n_r$translator$t("Age:"),
       choices = i18n_r$translator$t(
@@ -417,7 +414,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateRadioButtons(session, "race",
       label = i18n_r$translator$t("Race:"),
       choices = i18n_r$translator$t(
@@ -427,7 +423,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateRadioButtons(session, "immigrant",
       label = i18n_r$translator$t("Immigrant:"),
       choices = i18n_r$translator$t(
@@ -437,7 +432,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateRadioButtons(session, "homeowner",
       label = i18n_r$translator$t("Homeowner:"),
       choices = i18n_r$translator$t(
@@ -447,7 +441,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateSelectInput(session, "education",
       label = i18n_r$translator$t("Education:"),
       choices = i18n_r$translator$t(
@@ -460,7 +453,6 @@ server <- function(input, output, session) {
         )
       )
     )
-
     updateSelectInput(session, "education",
       label = i18n_r$translator$t("Education:"),
       choices = i18n_r$translator$t(
@@ -475,12 +467,15 @@ server <- function(input, output, session) {
     )
   })
 
+  # create translated inputs
+
+  selected <- un_translate_input(input = input) # nolint
+
   # plot --------------------
   output$predictions <- renderPlot(
     {
       # reactive objects (input) need to be digested in a reactive block (in
       # this case, renderPlot)
-      selected <- un_translate_input(input = input) # nolint
 
       # policy to filter the data by
       filter <- statements$var_name[statements$statement == input$policy] # nolint
