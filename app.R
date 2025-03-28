@@ -20,8 +20,17 @@ default_policies <- statements$statement[
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
-# load translation file
-i18n <- Translator$new(translation_csvs_path = "data/translation/")
+# translation file
+
+TRANS_DEBUG <- TRUE
+
+# load a duplicate script that contains no real translations but is still
+# accepted by shiny.i18n
+if (TRANS_DEBUG) {
+  i18n <- Translator$new(translation_csvs_path = "data/translation-debug/")
+} else {
+  i18n <- Translator$new(translation_csvs_path = "data/translation/")
+}
 
 ui <- fluidPage(
   # necessary for shiny.i18n reactive translation
@@ -469,7 +478,9 @@ server <- function(input, output, session) {
 
   # create translated inputs
 
-  selected <- un_translate_input(input = input) # nolint
+  observe(
+    selected <- un_translate_input(reactive_input = input) # nolint
+  )
 
   # plot --------------------
   output$predictions <- renderPlot(
