@@ -55,6 +55,10 @@ ui <- fluidPage(
         justify-content: space-between;
         height: 150px;
       }
+      /* put the selected policy in bold so it serves as a title for the plot */
+      #policy-div .selectize-input {
+        font-weight: bold;
+      }
     "
     ))
   ),
@@ -208,13 +212,16 @@ ui <- fluidPage(
                   actionButton("delete", "Reset", style = "margin: 15px")
                 ),
                 # select the filtered policies
-                selectInput(
-                  inputId = "policy",
-                  label = "Select a policy:",
-                  # updated in `server` first time `policy_group` input used
-                  choices = default_policies,
-                  selectize = FALSE,
-                  width = "auto"
+                div(
+                  id = "policy-div",
+                  selectInput(
+                    inputId = "policy",
+                    label = "Select a policy:",
+                    # updated in `server` first time `policy_group` input used
+                    choices = default_policies,
+                    selectize = TRUE,
+                    width = "auto",
+                  ),
                 ),
                 div(
                   id = "plot-container",
