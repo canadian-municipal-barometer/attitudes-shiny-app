@@ -1,6 +1,9 @@
 library(shiny)
 library(shiny.i18n)
 source("helpers.R")
+source("components/update_translation.R")
+source("components/declare_sidebar.R")
+source("components/declare_mainpanel.R")
 
 # data prep --------------------
 
@@ -21,16 +24,8 @@ default_policies <- statements$statement[
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
 # translation file
-
-TRANS_DEBUG <- TRUE
-
-# load a duplicate script that contains no real translations but is still
-# accepted by shiny.i18n
-if (TRANS_DEBUG) {
-  i18n <- Translator$new(translation_csvs_path = "data/translation-debug/")
-} else {
-  i18n <- Translator$new(translation_csvs_path = "data/translation/")
-}
+i18n <- Translator$new(translation_csvs_path = "data/translation/")
+i18n$set_translation_language("en")
 
 ui <- fluidPage(
   # necessary for shiny.i18n reactive translation
@@ -110,209 +105,15 @@ ui <- fluidPage(
       ),
       sidebarLayout(
         fluid = TRUE,
-        sidebarPanel(
-          style = "
-              max-width: 35vw;
-              min-width: 225px;
-              background-color: #e6eff7 !important;
-          ",
-          selectInput(
-            inputId = "province",
-            label = "Province:",
-            choices = c(
-              "Alberta",
-              "British Columbia",
-              "Manitoba",
-              "New Brunswick",
-              "Newfoundland and Labrador",
-              "Nova Scotia",
-              "Ontario",
-              "Prince Edward Island",
-              "Quebec",
-              "Saskatchewan"
-            ),
-            selectize = FALSE
-          ),
-          selectInput(
-            inputId = "popcat",
-            label = "Population:",
-            choices = c(
-              "3000-9,999",
-              "10,000-49,999",
-              "50,000-249,999",
-              "250,000-999,999",
-              "1,000,000+"
-            ),
-            selectize = FALSE
-          ),
-          radioButtons(
-            inputId = "gender",
-            label = "Gender:",
-            choices = c(
-              "Woman",
-              "Man"
-            ),
-            inline = TRUE
-          ),
-          selectInput(
-            inputId = "agecat",
-            label = "Age:",
-            choices = c(
-              "18-29",
-              "30-44",
-              "45-59",
-              "60+"
-            ),
-            selectize = FALSE
-          ),
-          radioButtons(
-            inputId = "race",
-            label = "Race:",
-            choices = c(
-              "Racialized minority",
-              "White"
-            )
-          ),
-          radioButtons(
-            inputId = "immigrant",
-            label = "Immigrant:",
-            choices = c(
-              "Yes",
-              "No"
-            ),
-            inline = TRUE
-          ),
-          radioButtons(
-            inputId = "homeowner",
-            label = "Homeowner:",
-            choices = c(
-              "Yes",
-              "No"
-            ),
-            inline = TRUE
-          ),
-          selectInput(
-            inputId = "education",
-            label = "Education:",
-            choices = c(
-              "Less than high school",
-              "High school",
-              "Associate's degree or trades",
-              "Bachelor's degree",
-              "Post-graduate degree"
-            ),
-            selectize = FALSE
-          ),
-          selectInput(
-            inputId = "income",
-            label = "Income:",
-            choices = c(
-              "Less than $49,999",
-              "$50,000 - $99,999",
-              "$100,000 - $149,999",
-              "$150,000 - $199,999",
-              "$200,000 or more"
-            ),
-            selectize = FALSE
-          ),
-        ),
+        # from "components/"
+        declare_sidebar(),
         div(
           class = "main-panel",
           style = "
             width: 70vw;
             min-width: 800px;
           ",
-          mainPanel(
-            tabsetPanel(
-              type = "pill",
-              selected = "Instructions",
-              tabPanel(
-                title = "Plot",
-                # prevent lazy loading
-                loadOnActivate = FALSE,
-                # spacing hack
-                h1("\n"),
-                p(
-                  "Please select one or more policy domains, and then choose a specific question from the drop-down menu below." # nolint
-                ),
-                p(
-                  'To reset the policy domains, click "Reset".'
-                ),
-                # select the policy group to filter by
-                div(
-                  style = "
-                    display: flex;
-                    align-items: flex-start;
-                     align-items: end;
-                   ",
-                  uiOutput(
-                    outputId = "select_domain",
-                    # Make the select_domain div's formatting match the reset button # nolint
-                    style = "
-                      align-items: bottom;
-                    "
-                  ),
-                  actionButton("delete", "Reset", style = "margin: 15px")
-                ),
-                # select the filtered policies
-                div(
-                  id = "policy-div",
-                  selectInput(
-                    inputId = "policy",
-                    label = "Select a policy:",
-                    # updated in `server` first time `policy_group` input used
-                    choices = default_policies,
-                    selectize = TRUE,
-                    width = "auto",
-                  ),
-                ),
-                div(
-                  id = "plot-container",
-                  style = "
-                    background: transparent !important;
-                  ",
-                  plotOutput(
-                    "predictions",
-                    width = "100%",
-                    height = "400px"
-                  )
-                )
-              ),
-              tabPanel(
-                title = "Instructions",
-                h1("\n"),
-                p("Welcome!"),
-                p(
-                  "This interactive app allows you to explore the policy attitudes of specific demographic groups on the largest and most diverse set of municipal policy issues ever included in a survey of Canadians." # nolint
-                ),
-                p(
-                  'In the first menu of the "Plot" tab above, select one or more policy domains. The second menu contains specific policy statements belonging to the policy domains you selected. Use the second menu to view public opinion on a specific policy. To clear the policy domain box, press the "Reset" button.' # nolint
-                ),
-                p(
-                  "Finally, adjust the set of characteristics in the panel to the left to see how different groups view the policy you have selected. When you're done, you can select a new policy by again using the menus above the plot." # nolint
-                )
-              ),
-              tabPanel(
-                title = "Details",
-                h1("\n"),
-                p(
-                  "The data for this app come from the Canadian Municipal Barometer's annual Citizen Survey. Currently, it uses the 2025 data. It will soon be updated with more questions from the 2025 survey, and, in future years, new surveys will be added." # nolint
-                ),
-                p(
-                  "Weights were constructed using iterative proportional fitting (see ", # nolint
-                  a(
-                    "DeBell and Krosnick",
-                    href = "https://www.electionstudies.org/wp-content/uploads/2018/04/nes012427.pdf", # nolint
-                    .noWS = c("after")
-                  ),
-                  ")."
-                ),
-                p(
-                  "Note that due to there being a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, and sometimes this leads to odd results when Prince Edward Island is selected." # nolint
-                )
-              )
-            )
-          )
+          declare_mainpanel(default_policies),
         )
       )
     )
@@ -366,125 +167,14 @@ server <- function(input, output, session) {
   i18n_r <- reactiveValues(translator = i18n)
 
   # language toggle observer
-  observeEvent(input$lang_toggle, {
-    # actionButton values start a 0 and go up by 1 every time it activate
-    # So, all odd values of input$lang_toggle will occur when the app is in
-    # English and thus the language should be updated to French.
-    if (input$lang_toggle %% 2 == 1) {
-      lang <- "fr"
-    } else {
-      lang <- "en"
-    }
-    i18n_r$translator$set_translation_language(lang)
-
-    print(paste("Language change! Button val:", input$lang_toggle))
-    print(paste("Current language:", lang))
-
-    # UI updates for menu item language
-    updateSelectInput(
-      session,
-      "province",
-      label = i18n_r$translator$t("Province:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Alberta",
-          "British Columbia",
-          "Manitoba",
-          "New Brunswick",
-          "Newfoundland and Labrador",
-          "Nova Scotia",
-          "Ontario",
-          "Prince Edward Island",
-          "Quebec",
-          "Saskatchewan"
-        )
-      )
-    )
-    updateRadioButtons(
-      session,
-      "gender",
-      label = i18n_r$translator$t("Gender:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Man",
-          "Woman"
-        )
-      )
-    )
-    updateRadioButtons(
-      session,
-      "race",
-      label = i18n_r$translator$t("Race:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Racialized minority",
-          "White"
-        )
-      )
-    )
-    updateRadioButtons(
-      session,
-      "immigrant",
-      label = i18n_r$translator$t("Immigrant:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Yes",
-          "No"
-        )
-      )
-    )
-    updateRadioButtons(
-      session,
-      "homeowner",
-      label = i18n_r$translator$t("Homeowner:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Yes",
-          "No"
-        )
-      )
-    )
-    updateSelectInput(
-      session,
-      "education",
-      label = i18n_r$translator$t("Education:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Less than high school",
-          "High school",
-          "Associate's degree or trades",
-          "Bachelor's degree",
-          "Post-graduate degree"
-        )
-      )
-    )
-    updateSelectInput(
-      session,
-      "income",
-      label = i18n_r$translator$t("Income:"),
-      choices = i18n_r$translator$t(
-        c(
-          "Less than high school",
-          "High school",
-          "Associate's degree or trades",
-          "Bachelor's degree",
-          "Post-graduate degree"
-        )
-      )
-    )
-  })
-
-  # create translated inputs
-
-  observe(
-    selected <- un_translate_input(reactive_input = input) # nolint
-  )
+  update_translation(session, input, i18n_r)
 
   # plot --------------------
   output$predictions <- renderPlot(
     {
-      # reactive objects (input) need to be digested in a reactive block (in
-      # this case, renderPlot)
+      # un-translated inputs if they were translated to French in the UI
+      # reactive objects need to be digested in a reactive block (in
+      selected <- un_translate_input(reactive_input = input) # nolint
 
       # policy to filter the data by
       filter <- statements$var_name[statements$statement == input$policy] # nolint
@@ -513,16 +203,26 @@ server <- function(input, output, session) {
         weights = tmp_df$wgt
       )
 
+      print(selected["province"][1])
+      print(input$popcat)
+      print(selected["gender"])
+      print(input$agecat)
+      print(selected["race"])
+      print(selected["immigrant"])
+      print(selected["homeowner"])
+      print(selected["education"])
+      print(selected["income"])
+
       pred_data <- data.frame(
-        gender = input$gender,
-        education = input$education,
-        province = input$province,
+        province = selected["province"],
+        popcat = input$popcat,
+        gender = selected["gender"],
         agecat = input$agecat,
-        race = input$race,
-        homeowner = selected["homeowner"],
-        income = input$income,
+        race = selected["race"],
         immigrant = selected["immigrant"],
-        popcat = input$popcat
+        homeowner = selected["homeowner"],
+        education = selected["education"],
+        income = selected["income"]
       )
 
       preds <- predict(model, pred_data, type = "probs")

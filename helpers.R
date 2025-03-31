@@ -17,7 +17,6 @@ un_translate_input <- function(reactive_input) {
       "Québec" = "Quebec",
       "Saskatchewan" = "Saskatchewan",
       reactive_input$province
-      # NOTE: Does this really evaluate to the value? Switch probably takes care of it?
     )
 
   selected["gender"] <- reactive_input$gender |>
@@ -26,6 +25,7 @@ un_translate_input <- function(reactive_input) {
       "Femme" = "Woman",
       reactive_input$gender
     )
+
   selected["race"] <- reactive_input$race |>
     switch(
       "Minorité racisée" = "Racialized minority",
@@ -53,7 +53,8 @@ un_translate_input <- function(reactive_input) {
       "Diplôme d’études secondaires" = "High school",
       "Apprentissage/Diplôme d’études professionnelles (DEP)" = "Associate's degree or trades", # nolint
       "Baccalauréat" = "Bachelor's degree",
-      "Maitrise, doctorat, diplôme professionnel" = "Post-graduate degree"
+      "Maitrise, doctorat, diplôme professionnel" = "Post-graduate degree",
+      reactive_input$education
     )
 
   selected["income"] <- reactive_input$income |>
