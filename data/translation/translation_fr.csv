@@ -1,12 +1,10 @@
 en,fr
-# sidebar menu names and choices
-Age:,Âge:
+Age:,Âge :
 Population:,Population :
-# menu items
+Province:,Province :
 Agree,D’accord
 Disagree,En désaccord
 No opinion,Pas d'opinion
-Province:,Province:
 Alberta,Alberta
 British Columbia,Colombie-Britannique
 Manitoba,Manitoba
@@ -17,7 +15,7 @@ Ontario,Ontario
 Prince Edward Island,Île-du-Prince-Édouard
 Quebec,Québec
 Saskatchewan,Saskatchewan
-Income:,
+Income:,Revenu :
 "Less than $49,999","Moins de $49,999"
 "$50,000 - $99,999","$50,000 - $99,999"
 "$100,000 - $149,999","$100,000 - $149,999"
@@ -39,7 +37,6 @@ Post-graduate degree,"Maitrise, doctorat, diplôme professionnel"
 Race:,Origines :
 Racialized minority,Minorité racisée
 White,Blanc·che
-# Policy Domains
 Housing, Logement
 Affordability, Logements abordables
 Environment, Environnement
@@ -57,10 +54,8 @@ Social Services, Services sociaux
 Public Health, Santé publique
 Public Transit, Transports en commun
 Active Transportation, Transport actif
-# Other
 FR,EN
 Canadians' Municipal Policy Attitudes,Attitudes des Canadien·ne·s à l'égard des politiques municipales
-# MAIN PARAGRAPHS
 Plot,Graphique
 "Please select one or more policy domains, and then choose a specific question from the drop-down menu below.","Veuillez sélectionner un ou plusieurs domaines politiques, puis choisissez une question spécifique dans le menu déroulant ci-dessous."
 Policy domain:,Domaine politique :
@@ -74,5 +69,4 @@ Instructions,Instructions
 "Weights were constructed using iterative proportional fitting (see ","Les pondérations ont été construites à l'aide d'un ajustement proportionnel itératif (voir "
 "DeBell and Krosnick","DeBell et Krosnick"
 "Note that due to there being a small number of responses in Prince Edward Island, many of the policy issues for that province do not produce reliable estimates of public opinion, and sometimes this leads to odd results when Prince Edward Island is selected.","Il convient de noter qu'en raison du faible nombre de réponses reçues en provenance de l'Île-du-Prince-Édouard, de nombreuses questions de politique publique pour cette province ne donnent pas lieu à des estimations fiables de l'opinion publique, ce qui peut parfois conduire à des résultats étranges lorsque l'Île-du-Prince-Édouard est sélectionnée."
-# ERROR MESSAGE
 "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection.","La combinaison de la question de politique publique et des caractéristiques démographiques que vous avez sélectionnée ne figure pas dans les données. Veuillez faire une autre sélection."
