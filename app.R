@@ -26,7 +26,6 @@ input_err <- "The combination of the policy question and demographic characteris
 
 # translation file
 i18n <- Translator$new(translation_csvs_path = "data/translation/")
-i18n$set_translation_language("en")
 
 ui <- fluidPage(
   # necessary for shiny.i18n reactive translation
@@ -110,8 +109,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # reactive i18n object for use in `update*` functions under `language_update`
   i18n_r <- reactiveValues(translator = i18n)
-  # standard process for updating translator object for server-rendered UI objs
-  i18n <- reactive({
+
+  # standard update of the translator object for server-rendered UI elements
+  translator <- reactive({
     if (input$lang_toggle %% 2 == 1) {
       i18n$set_translation_language("fr")
     } else {
@@ -125,7 +125,7 @@ server <- function(input, output, session) {
   # title panel
   output$title_panel <- renderUI(
     # BUG: need to figure out how to use a translator object on strings like this one
-    titlePanel(i18n()$t("Canadians' Municipal Policy Attitudes"))
+    titlePanel(translator$t("Canadians' Municipal Policy Attitudes"))
   )
 
   # language toggle
