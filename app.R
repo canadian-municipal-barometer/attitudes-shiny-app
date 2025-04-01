@@ -108,8 +108,17 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  # make reactive i18n object
+  # reactive i18n object for use in `update*` functions under `language_update`
   i18n_r <- reactiveValues(translator = i18n)
+  # standard process for updating translator object for server-rendered UI objs
+  i18n <- reactive({
+    if (input$lang_toggle %% 2 == 1) {
+      i18n$set_translation_language("fr")
+    } else {
+      i18n$set_translation_language("en")
+    }
+    i18n
+  })
 
   # UI Rendering --------------------
 
