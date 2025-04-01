@@ -24,12 +24,8 @@ default_policies <- statements$statement[
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
-# translation file
-i18n <- Translator$new(translation_csvs_path = "data/translation/")
-
 ui <- fluidPage(
   # necessary for shiny.i18n reactive translation
-  shiny.i18n::usei18n(i18n),
   # set CSS for elements that don't accept a style argument in their constructor
   tags$head(
     tags$style(HTML(
@@ -92,7 +88,7 @@ ui <- fluidPage(
       sidebarLayout(
         fluid = TRUE,
         # from "components/"
-        render_sidebar(),
+        uiOutput("sidebar_contents"),
         div(
           class = "main-panel",
           style = "
@@ -106,33 +102,32 @@ ui <- fluidPage(
   )
 )
 
-server <- function(input, output, session) {
-  # reactive i18n object for use in `update*` functions under `language_update`
-  i18n_r <- reactiveValues(translator = i18n)
+# load translation file to create shiny.i18n translator object
+translator <- Translator$new(translation_csvs_path = "data/translation/")
 
-  # standard update of the translator object for server-rendered UI elements
-  translator <- reactive({
-    if (input$lang_toggle %% 2 == 1) {
-      i18n$set_translation_language("fr")
-    } else {
-      i18n$set_translation_language("en")
+server <- function(input, output, session) {
+  # convert translator to reactive object
+  i18n <- reactive({
+    observeEvent()
+    selected <- input$selected_language
+    if (length(selected) > 0 && selected %in% translator$get_languages()) {
+      translator$set_translation_language(selected)
     }
-    i18n
+    translator
   })
 
   # UI Rendering --------------------
 
   # title panel
-  output$title_panel <- renderUI(
-    # BUG: need to figure out how to use a translator object on strings like this one
-    titlePanel(translator$t("Canadians' Municipal Policy Attitudes"))
-  )
+  output$title_panel <- renderUI({
+    titlePanel("Canadians' Municipal Policy Attitudes")
+  })
 
   # language toggle
   output$language_toggle <- renderUI(
     actionButton(
       "lang_toggle",
-      i18n$t("FR"),
+      "FR",
       style = "
         color: gray;
         font-weight: bold;
@@ -187,18 +182,17 @@ server <- function(input, output, session) {
     )
   })
 
-  # language toggle observer
-  language_update(session, input, i18n_r) # nolint
+  # sidebar
+  output$sidebar_contents <- render_sidebar() # nolint
 
-  # mainpanel --------------------
+  # mainpanel
   output$mainpanel <- render_mainpanel(default_policies) # nolint
 
-  # plot --------------------
+  # plot
   output$predictions <- render_attitudes_plot(input, input_err, statements, df) # nolint
 
   # disable any lag due to server-rendering and lazy loading for "select_domain"
   outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
 }
 
-# Create Shiny app ----
 shinyApp(ui = ui, server = server)
