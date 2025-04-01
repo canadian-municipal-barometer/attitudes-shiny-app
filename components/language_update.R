@@ -1,5 +1,7 @@
 library(shiny)
 
+# `update*` functions for all the sidebar widgets. Their dependencies change
+# when `set_translation_language` is run by the language button being pressed.
 language_update <- function(session, input, i18n_r) {
   observeEvent(input$lang_toggle, {
     # actionButton values start a 0 and go up by 1 every time it activate
@@ -37,7 +39,7 @@ language_update <- function(session, input, i18n_r) {
     )
     updateSelectInput(
       session,
-      "population",
+      "popcat",
       label = i18n_r$translator$t("Population:")
     )
     updateRadioButtons(

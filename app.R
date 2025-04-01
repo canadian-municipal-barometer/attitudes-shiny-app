@@ -1,9 +1,10 @@
 library(shiny)
 library(shiny.i18n)
 source("helpers.R")
-source("components/update_translation.R")
-source("components/declare_sidebar.R")
-source("components/declare_mainpanel.R")
+source("components/language_update.R")
+source("components/render_sidebar.R")
+source("components/render_mainpanel.R")
+source("components/render_attitudes_plot.R")
 
 # data prep --------------------
 
@@ -47,8 +48,8 @@ ui <- fluidPage(
         font-weight: bold;
       }
       @media (max-width: 1100px) {
-        .mail-panel {
-          width: 100%;
+        .main-panel {
+          width: auto;
           min-width: 400px;
         }
       }
@@ -74,7 +75,7 @@ ui <- fluidPage(
           justify-content: space-between;
           height: 150px;
         ",
-        titlePanel("Canadians' Municipal Policy Attitudes"),
+        uiOutput("title_panel"),
         img(
           src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg" # nolint
         ),
@@ -87,33 +88,19 @@ ui <- fluidPage(
           /* to move outside the bounds of its parent */
           position: relative;
         ",
-        actionButton(
-          "lang_toggle",
-          i18n$t("FR"),
-          style = "
-            color: gray;
-            font-weight: bold;
-            border: 0px;
-            /* to move outside the bounds of its parent */
-            position: absolute;
-            bottom: -37px;
-            right: 10px;
-            /* to ensure the button is above the divs it overlaps */
-            z-index: 1000;
-          "
-        )
+        uiOutput("language_toggle")
       ),
       sidebarLayout(
         fluid = TRUE,
         # from "components/"
-        declare_sidebar(),
+        render_sidebar(),
         div(
           class = "main-panel",
           style = "
             width: 70vw;
             min-width: 800px;
           ",
-          declare_mainpanel(default_policies),
+          uiOutput("mainpanel")
         )
       )
     )
@@ -121,7 +108,35 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  # make reactive i18n object
+  i18n_r <- reactiveValues(translator = i18n)
+
   # UI Rendering --------------------
+
+  # title panel
+  output$title_panel <- renderUI(
+    # BUG: need to figure out how to use a translator object on strings like this one
+    titlePanel(i18n()$t("Canadians' Municipal Policy Attitudes"))
+  )
+
+  # language toggle
+  output$language_toggle <- renderUI(
+    actionButton(
+      "lang_toggle",
+      i18n$t("FR"),
+      style = "
+        color: gray;
+        font-weight: bold;
+        border: 0px;
+        /* to move outside the bounds of its parent */
+        position: absolute;
+        bottom: -37px;
+        right: 10px;
+        /* to ensure the button is above the divs it overlaps */
+        z-index: 1000;
+      "
+    )
+  )
 
   # main panel
 
@@ -137,6 +152,7 @@ server <- function(input, output, session) {
       width = "300px"
     )
   })
+
   # Reset button
   observeEvent(input$delete, {
     updateSelectInput(
@@ -146,6 +162,7 @@ server <- function(input, output, session) {
       selected = character(0)
     )
   })
+
   # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
     selected_policies <- statements |> # nolint
@@ -161,123 +178,15 @@ server <- function(input, output, session) {
     )
   })
 
-  # Language toggle
-
-  # make reactive i18n object
-  i18n_r <- reactiveValues(translator = i18n)
-
   # language toggle observer
-  update_translation(session, input, i18n_r)
+  language_update(session, input, i18n_r) # nolint
+
+  # mainpanel --------------------
+  output$mainpanel <- render_mainpanel(default_policies) # nolint
 
   # plot --------------------
-  output$predictions <- renderPlot(
-    {
-      # un-translated inputs if they were translated to French in the UI
-      # reactive objects need to be digested in a reactive block (in
-      selected <- un_translate_input(reactive_input = input) # nolint
+  output$predictions <- render_attitudes_plot(input, input_err, statements, df) # nolint
 
-      # policy to filter the data by
-      filter <- statements$var_name[statements$statement == input$policy] # nolint
-
-      # translate the contents of the selectors to variable names
-
-      tmp_df <- df |> dplyr::filter(policy == filter) # nolint
-
-      # verify that tmp_df has the levels needed for the model to run
-      validate(
-        need(input$province %in% tmp_df$province, input_err)
-      )
-
-      model <- nnet::multinom(
-        factor(outcome) ~
-          factor(gender) +
-            factor(education) +
-            factor(province) +
-            factor(agecat) +
-            factor(race) +
-            factor(homeowner) +
-            factor(income) +
-            factor(immigrant) +
-            factor(popcat), # nolint
-        data = tmp_df,
-        weights = tmp_df$wgt
-      )
-
-      print(selected["province"][1])
-      print(input$popcat)
-      print(selected["gender"])
-      print(input$agecat)
-      print(selected["race"])
-      print(selected["immigrant"])
-      print(selected["homeowner"])
-      print(selected["education"])
-      print(selected["income"])
-
-      pred_data <- data.frame(
-        province = selected["province"],
-        popcat = input$popcat,
-        gender = selected["gender"],
-        agecat = input$agecat,
-        race = selected["race"],
-        immigrant = selected["immigrant"],
-        homeowner = selected["homeowner"],
-        education = selected["education"],
-        income = selected["income"]
-      )
-
-      preds <- predict(model, pred_data, type = "probs")
-      preds <- round(preds * 100, 0)
-      preds <- tidyr::tibble(
-        cats = names(preds),
-        probs = preds
-      )
-
-      preds$cats <- factor(
-        preds$cats,
-        levels = c(
-          "No opinion",
-          "Disagree",
-          "Agree"
-        ),
-        labels = c(
-          "No opinion",
-          "Disagree",
-          "Agree"
-        ),
-        ordered = TRUE
-      )
-
-      plot <- ggplot2::ggplot(
-        preds,
-        ggplot2::aes(x = cats, y = probs, fill = cats) # nolint
-      ) +
-        ggplot2::geom_col() +
-        ggplot2::coord_flip() +
-        ggplot2::geom_text(
-          ggplot2::aes(label = paste0(probs, "%")),
-          nudge_y = 3.5
-        ) +
-        ggplot2::theme_minimal(base_size = 20) +
-        ggplot2::scale_fill_manual(
-          values = c(
-            "Agree" = "#0091AC",
-            "Disagree" = "#000",
-            "No opinion" = "#6C6E74"
-          )
-        ) +
-        ggplot2::theme(
-          legend.position = "none",
-          axis.title.x = ggplot2::element_blank(),
-          axis.title.y = ggplot2::element_blank(),
-          axis.text.x = ggplot2::element_blank(),
-          axis.ticks = ggplot2::element_blank(),
-          panel.grid.major = ggplot2::element_blank(),
-          panel.grid.minor = ggplot2::element_blank()
-        )
-      return(plot)
-    },
-    bg = "transparent"
-  )
   # disable any lag due to server-rendering and lazy loading for "select_domain"
   outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
 }

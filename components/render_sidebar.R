@@ -1,6 +1,8 @@
 library(shiny)
 
-declare_sidebar <- function() {
+# This doesn't need to be a server-side render, because these widgets all have
+# `update*` functions that reactively update their values.
+render_sidebar <- function() {
   sidebarPanel(
     style = "
           max-width: 35vw;
