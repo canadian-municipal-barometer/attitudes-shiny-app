@@ -71,8 +71,11 @@ ui <- fluidPage(
           height: 150px;
         ",
         uiOutput("title_panel"),
-        img(
-          src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg" # nolint
+        a(
+          img(
+            src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg" # nolint
+          ),
+          href = "https://www.cmb-bmc.ca/"
         ),
       ),
       div(
