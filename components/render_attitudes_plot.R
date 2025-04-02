@@ -95,11 +95,18 @@ render_attitudes_plot <- function(
           nudge_y = 3.5
         ) +
         ggplot2::theme_minimal(base_size = 20) +
+        ggplot2::scale_x_discrete(
+          labels = c(
+            "Agree" = translator()$t("Agree"),
+            "Disagree" = translator()$t("Disagree"),
+            "No opinion" = translator()$t("No opinion")
+          )
+        ) +
         ggplot2::scale_fill_manual(
           values = c(
-            "Agree" = "#0091AC",
-            "Disagree" = "#000",
-            "No opinion" = "#6C6E74"
+            "#6C6E74",
+            "#000",
+            "#0091AC"
           )
         ) +
         ggplot2::theme(
