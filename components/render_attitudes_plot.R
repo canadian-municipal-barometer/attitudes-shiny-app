@@ -1,6 +1,12 @@
 library(shiny)
 
-render_attitudes_plot <- function(input, input_err, statements, df) {
+render_attitudes_plot <- function(
+  input,
+  input_err,
+  statements,
+  df,
+  translator
+) {
   plot <- renderPlot(
     {
       # un-translated inputs if they were translated to French in the UI
@@ -89,13 +95,7 @@ render_attitudes_plot <- function(input, input_err, statements, df) {
           nudge_y = 3.5
         ) +
         ggplot2::theme_minimal(base_size = 20) +
-        ggplot2::scale_fill_manual(
-          values = c(
-            "Agree" = "#0091AC",
-            "Disagree" = "#000",
-            "No opinion" = "#6C6E74"
-          )
-        ) +
+        ggplot2::scale_fill_manual(values = color_codes) +
         ggplot2::theme(
           legend.position = "none",
           axis.title.x = ggplot2::element_blank(),

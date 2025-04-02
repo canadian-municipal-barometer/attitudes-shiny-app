@@ -25,8 +25,8 @@ default_policies <- statements$statement[
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
 ui <- fluidPage(
-  # necessary for shiny.i18n reactive translation
-  # set CSS for elements that don't accept a style argument in their constructor
+  # formatting --------------------
+  # set CSS for elements that don't accept a style argument in their function
   tags$head(
     tags$style(HTML(
       "
@@ -51,7 +51,10 @@ ui <- fluidPage(
     "
     ))
   ),
+  # layout --------------------
   # set HTML divs to be formatted by the above CSS
+  # CSS Flexbox formatting is being used on the next two divs such that the app
+  # centers on the page rather than stretching horizontally
   div(
     class = "flex-container",
     style = "
@@ -70,7 +73,7 @@ ui <- fluidPage(
           justify-content: space-between;
           height: 150px;
         ",
-        uiOutput("title_panel"),
+        uiOutput("title"),
         a(
           img(
             src = "https://www.cmb-bmc.ca/wp-content/uploads/2024/09/logo-bmc-cmb.svg" # nolint
@@ -78,6 +81,9 @@ ui <- fluidPage(
           href = "https://www.cmb-bmc.ca/"
         ),
       ),
+      # the language toggle button is a custom feature and doesn't fit well with
+      # any existing elements, so it gets its own div. It is also using some
+      # cheeky CSS to overlap the title div of the tabPanel (in mainPanel).
       div(
         id = "lang-toggle",
         style = "
@@ -86,7 +92,23 @@ ui <- fluidPage(
           /* to move outside the bounds of its parent */
           position: relative;
         ",
-        uiOutput("language_toggle")
+        # language toggle
+        # needs to defined statically to avoid circular reactivity
+        actionButton(
+          "lang_toggle",
+          "FR",
+          style = "
+              color: gray;
+              font-weight: bold;
+              border: 0px;
+              /* to move outside the bounds of its parent */
+              position: absolute;
+              bottom: -37px;
+              right: 10px;
+              /* to ensure the button is above the divs it overlaps */
+              z-index: 1000;
+            "
+        )
       ),
       sidebarLayout(
         fluid = TRUE,
@@ -109,43 +131,50 @@ ui <- fluidPage(
 translator <- Translator$new(translation_csvs_path = "data/translation/")
 
 server <- function(input, output, session) {
-  # convert translator to reactive object
+  # Observe language toggle button (lang_toggle) and encode the current language
+  # in `lang`, which is a dependency of the react
+
   i18n <- reactive({
-    observeEvent()
-    selected <- input$selected_language
-    if (length(selected) > 0 && selected %in% translator$get_languages()) {
-      translator$set_translation_language(selected)
+    state <- input$lang_toggle
+    if (state %% 2 == 1) {
+      translator$set_translation_language("fr")
+    } else {
+      translator$set_translation_language("en")
     }
-    translator
+    return(translator)
   })
 
   # UI Rendering --------------------
 
   # title panel
-  output$title_panel <- renderUI({
-    titlePanel("Canadians' Municipal Policy Attitudes")
+  output$title <- renderUI({
+    titlePanel(i18n()$t("Canadians' Municipal Policy Attitudes"))
   })
 
-  # language toggle
-  output$language_toggle <- renderUI(
-    actionButton(
-      "lang_toggle",
-      "FR",
-      style = "
-        color: gray;
-        font-weight: bold;
-        border: 0px;
-        /* to move outside the bounds of its parent */
-        position: absolute;
-        bottom: -37px;
-        right: 10px;
-        /* to ensure the button is above the divs it overlaps */
-        z-index: 1000;
-      "
-    )
+  # sidebar
+  output$sidebar_contents <- render_sidebar(translator = i18n) # nolint
+
+  # mainPanel
+  output$mainpanel <- render_mainpanel(
+    default_policies = default_policies,
+    translator = i18n
   )
 
-  # main panel
+  # update the static language button's label on translation toggle
+  observe({
+    updateActionButton(session, "lang_toggle", label = i18n()$t("FR"))
+  })
+
+  # plot
+  output$predictions <- render_attitudes_plot(
+    input = input,
+    input_err = input_err,
+    statements = statements,
+    df = df,
+    translator = i18n
+  )
+
+  # main panel observers
 
   # Policy domain menu
   output$select_domain <- renderUI({
@@ -184,15 +213,6 @@ server <- function(input, output, session) {
       choices = selected_policies
     )
   })
-
-  # sidebar
-  output$sidebar_contents <- render_sidebar() # nolint
-
-  # mainpanel
-  output$mainpanel <- render_mainpanel(default_policies) # nolint
-
-  # plot
-  output$predictions <- render_attitudes_plot(input, input_err, statements, df) # nolint
 
   # disable any lag due to server-rendering and lazy loading for "select_domain"
   outputOptions(output, "select_domain", suspendWhenHidden = FALSE)

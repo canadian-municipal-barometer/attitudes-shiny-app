@@ -1,6 +1,6 @@
 library(shiny)
 
-render_sidebar <- function() {
+render_sidebar <- function(translator) {
   renderUI({
     sidebarPanel(
       style = "
@@ -10,8 +10,8 @@ render_sidebar <- function() {
           ",
       selectInput(
         inputId = "province",
-        label = "Province:",
-        choices = c(
+        label = translator()$t("Province:"),
+        choices = translator()$t(c(
           "Alberta",
           "British Columbia",
           "Manitoba",
@@ -22,12 +22,12 @@ render_sidebar <- function() {
           "Prince Edward Island",
           "Quebec",
           "Saskatchewan"
-        ),
+        )),
         selectize = FALSE
       ),
       selectInput(
         inputId = "popcat",
-        label = "Population:",
+        label = translator()$t("Population:"),
         choices = c(
           "3000-9,999",
           "10,000-49,999",
@@ -39,16 +39,16 @@ render_sidebar <- function() {
       ),
       radioButtons(
         inputId = "gender",
-        label = "Gender:",
-        choices = c(
+        label = translator()$t("Gender:"),
+        choices = translator()$t(c(
           "Woman",
           "Man"
-        ),
+        )),
         inline = TRUE
       ),
       selectInput(
         inputId = "agecat",
-        label = "Age:",
+        label = translator()$t("Age:"),
         choices = c(
           "18-29",
           "30-44",
@@ -59,51 +59,51 @@ render_sidebar <- function() {
       ),
       radioButtons(
         inputId = "race",
-        label = "Race:",
-        choices = c(
+        label = translator()$t("Race:"),
+        choices = translator()$t(c(
           "Racialized minority",
           "White"
-        )
+        ))
       ),
       radioButtons(
         inputId = "immigrant",
-        label = "Immigrant:",
-        choices = c(
+        label = translator()$t("Immigrant:"),
+        choices = translator()$t(c(
           "Yes",
           "No"
-        ),
+        )),
         inline = TRUE
       ),
       radioButtons(
         inputId = "homeowner",
-        label = "Homeowner:",
-        choices = c(
+        label = translator()$t("Homeowner:"),
+        choices = translator()$t(c(
           "Yes",
           "No"
-        ),
+        )),
         inline = TRUE
       ),
       selectInput(
         inputId = "education",
-        label = "Education:",
-        choices = c(
+        label = translator()$t("Education:"),
+        choices = translator()$t(c(
           "Less than high school",
           "High school",
           "Associate's degree or trades",
           "Bachelor's degree",
           "Post-graduate degree"
-        ),
+        )),
         selectize = FALSE
       ),
       selectInput(
         inputId = "income",
-        label = "Income:",
+        label = translator()$t("Income:"),
         choices = c(
-          "Less than $49,999",
+          translator()$t("Less than $49,999"),
           "$50,000 - $99,999",
           "$100,000 - $149,999",
           "$150,000 - $199,999",
-          "$200,000 or more"
+          translator()$t("$200,000 or more")
         ),
         selectize = FALSE
       ),
