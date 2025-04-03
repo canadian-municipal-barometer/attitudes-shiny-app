@@ -37,10 +37,17 @@ ui <- fluidPage(
       /* formats sidebarLayout */
       .shiny-layout {
         align-items: start; /* aligned with the top of the parent div */
+        max-width: 80vw;
       }
       /* put the selected policy in bold so it serves as a title for the plot */
       #policy-div .selectize-input {
         font-weight: bold;
+      }
+      .col-sm-4 {
+        max-width: 30%;
+      }
+      .col-sm-8 {
+        max-width: 100%;
       }
       @media (max-width: 1100px) {
         .main-panel {
@@ -72,6 +79,7 @@ ui <- fluidPage(
           align-items: center;
           justify-content: space-between;
           height: 150px;
+          max-width: 80vw;
         ",
         uiOutput("title"),
         a(
@@ -104,7 +112,7 @@ ui <- fluidPage(
               /* to move outside the bounds of its parent */
               position: absolute;
               bottom: -37px;
-              right: 10px;
+              right: 2vw;
               /* to ensure the button is above the divs it overlaps */
               z-index: 1000;
             "
@@ -117,7 +125,7 @@ ui <- fluidPage(
         div(
           class = "main-panel",
           style = "
-            width: 70vw;
+            width: 80vw;
             min-width: 800px;
           ",
           uiOutput("mainpanel")
@@ -180,12 +188,12 @@ server <- function(input, output, session) {
   output$select_domain <- renderUI({
     selectInput(
       inputId = "policy_group",
-      label = "Policy domain:",
+      label = i18n()$t("Policy domain:"),
       choices = statement_tags, # nolint
       multiple = TRUE,
       selected = "Housing",
       selectize = TRUE,
-      width = "300px"
+      width = "325px"
     )
   })
 

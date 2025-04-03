@@ -4,7 +4,7 @@ render_sidebar <- function(translator) {
   renderUI({
     sidebarPanel(
       style = "
-          max-width: 35vw;
+          max-width: 32vw;
           min-width: 225px;
           background-color: #e6eff7 !important;
           ",
