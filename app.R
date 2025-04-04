@@ -11,9 +11,9 @@ source("components/render_attitudes_plot.R")
 # load `df` object: main voter data
 load("data/voter-data.rda")
 # load `statements` object: main statement data lookup
-load("data/statements.rda")
+load("data/statements_en.rda")
 # load `tags` object: choice set for "policy_group" input
-load("data/unique-tags.rda")
+load("data/unique-tags_en.rda")
 
 # Choices for "policy" input need to be set.
 # must match the `selected` parameter of the "policy_group" selector
