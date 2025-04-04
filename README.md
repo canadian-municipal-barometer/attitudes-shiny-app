@@ -3,3 +3,5 @@ This interactive dashboard allows users to explore how different groups of Canad
 The dashboard can be found at this link:
 
 [https://cmb-bmc-municipal-policy-attitudes.share.connect.posit.cloud/](https://cmb-bmc-municipal-policy-attitudes.share.connect.posit.cloud/)
+
+The repository has three branches: `stable`, `dev`, and `prod`. `prod` is the production branch, which is published on Posit Connect Cloud.
