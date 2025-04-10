@@ -1,7 +1,6 @@
 library(shiny)
 library(shiny.i18n)
 source("helpers.R")
-source("components/language_update.R")
 source("components/render_sidebar.R")
 source("components/render_mainpanel.R")
 source("components/render_attitudes_plot.R")
@@ -124,6 +123,10 @@ load("data/voter-data.rda")
 # `statements_en`, `statements_fr`, `statement_tags_en`, `statement_tags_fr`
 load("data/statements.rda")
 
+# initial statement values
+statements <- reactiveVal(statements_en)
+statement_tags <- reactiveVal(statement_tags_en)
+
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
@@ -131,32 +134,8 @@ input_err <- "The combination of the policy question and demographic characteris
 translator <- Translator$new(translation_csvs_path = "data/translation/")
 
 server <- function(input, output, session) {
-  statements_data <- reactiveValues(
-    en = statements_en, # nolint
-    fr = statements_fr, # nolint
-    tags_en = statement_tags_en, # nolint
-    tags_fr = statements_tags_fr # nolint
-  )
-
   # set statement data (including tags) and shiny.i18n translator based on
   # the current value of `lang_toggle`
-
-  statements <- eventReactive(input$lang_toggle, {
-    if (state %% 2 == 1) {
-      statements_data$fr
-    } else {
-      statements_data$en
-    }
-  })
-
-  statement_tags <- eventReactive(input$lang_toggle, {
-    if (state %% 2 == 1) {
-      statements_data$tags_fr
-    } else {
-      statements_data$tags_en
-    }
-  })
-
   i18n <- reactive({
     state <- input$lang_toggle
     if (state %% 2 == 1) {
@@ -165,6 +144,16 @@ server <- function(input, output, session) {
       translator$set_translation_language("en")
     }
     return(translator)
+  })
+
+  observeEvent(i18n, {
+    if (input$lang_toggle %% 2 == 1) {
+      statements(statements_fr)
+      statement_tags(statement_tags_fr)
+    } else {
+      statements(statements_en)
+      statement_tags(statement_tags_en)
+    }
   })
 
   # UI Rendering --------------------
@@ -179,7 +168,9 @@ server <- function(input, output, session) {
 
   # mainPanel
   output$mainpanel <- render_mainpanel(
-    translator = i18n
+    translator = i18n,
+    statement_tags = statement_tags,
+    statements = statements
   )
 
   # update the static language button's label on translation toggle
@@ -187,43 +178,42 @@ server <- function(input, output, session) {
     updateActionButton(session, "lang_toggle", label = i18n()$t("FR"))
   })
 
+  # filter the data used in the plot
+  filtered_df <- reactive({
+    data <- filter_data(
+      reactive_input = input,
+      statements = statements,
+      df = df
+    )
+    return(data)
+  })
+
   # plot
   output$predictions <- render_attitudes_plot(
-    input = input,
+    reactive_input = input,
     input_err = input_err,
     statements = statements,
-    df = df,
+    df = filtered_df,
     translator = i18n
   )
 
   # main panel observers
-
-  # Policy domain menu
-  output$select_domain <- renderUI({
-    selectInput(
-      inputId = "policy_group",
-      label = i18n()$t("Policy domain:"),
-      choices = statement_tags, # nolint
-      multiple = TRUE,
-      selected = "Housing",
-      selectize = TRUE,
-      width = "325px"
-    )
-  })
 
   # Reset button
   observeEvent(input$delete, {
     updateSelectInput(
       session,
       "policy_group",
-      choices = statement_tags, # nolint
+      choices = statement_tags(), # nolint
       selected = character(0)
     )
+    message("Reset button observer fired")
   })
 
   # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
-    selected_policies <- statements |> # nolint
+    data <- statements()
+    selected_policies <- data |> # nolint
       dplyr::filter(
         purrr::map_lgl(tags, function(x) any(x %in% input$policy_group))
       ) |>
@@ -234,10 +224,8 @@ server <- function(input, output, session) {
       "policy",
       choices = selected_policies
     )
+    message("policy tag observer fired")
   })
-
-  # disable any lag due to server-rendering and lazy loading for "select_domain"
-  outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
 }
 
 shinyApp(ui = ui, server = server)

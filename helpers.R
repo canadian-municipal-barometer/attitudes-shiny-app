@@ -1,3 +1,5 @@
+library(shiny)
+
 # reassignment, because case_match rejects the reactive type without evaluating
 # it to a vector
 # If inputs are already in English, nothing happens.
@@ -65,4 +67,36 @@ un_translate_input <- function(reactive_input) {
     )
 
   return(selected)
+}
+
+# BUG: This is receiving the English policy text even after language was
+# toggled to French
+
+filter_data <- function(
+  reactive_input,
+  statements,
+  df
+) {
+  # TEST:
+  observeEvent(reactive_input$policy, {
+    message(paste("selected policy:", reactive_input$policy))
+  })
+
+  # policy to filter the data by
+  filter <- statements()$var_name[
+    statements()$statement == reactive_input$policy
+  ] # nolint
+
+  # translate the contents of the selectors to variable names
+
+  # TEST:
+  print(colnames(df))
+  print(paste("data dimensions: ", dim(df)))
+  print(paste("data structure:"))
+  print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+  print(str(df))
+
+  df <- df |> dplyr::filter(policy == filter) # nolint
+
+  return(df)
 }

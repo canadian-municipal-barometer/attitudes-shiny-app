@@ -1,7 +1,7 @@
 library(shiny)
 
 render_attitudes_plot <- function(
-  input,
+  reactive_input,
   input_err,
   statements,
   df,
@@ -11,18 +11,11 @@ render_attitudes_plot <- function(
     {
       # un-translated inputs if they were translated to French in the UI
       # reactive objects need to be digested in a reactive block (in
-      selected <- un_translate_input(reactive_input = input) # nolint
+      selected <- un_translate_input(reactive_input = reactive_input) # nolint
 
-      # policy to filter the data by
-      filter <- statements$var_name[statements$statement == input$policy] # nolint
-
-      # translate the contents of the selectors to variable names
-
-      tmp_df <- df |> dplyr::filter(policy == filter) # nolint
-
-      # verify that tmp_df has the levels needed for the model to run
+      # verify that df has the levels needed for the model to run
       validate(
-        need(input$province %in% tmp_df$province, input_err)
+        need(reactive_input$province %in% df()$province, input_err)
       )
 
       model <- nnet::multinom(
@@ -36,14 +29,14 @@ render_attitudes_plot <- function(
             factor(income) +
             factor(immigrant) +
             factor(popcat), # nolint
-        data = tmp_df,
-        weights = tmp_df$wgt
+        data = df(),
+        weights = df()$wgt
       )
 
       print(selected["province"][1])
-      print(input$popcat)
+      print(reactive_input$popcat)
       print(selected["gender"])
-      print(input$agecat)
+      print(reactive_input$agecat)
       print(selected["race"])
       print(selected["immigrant"])
       print(selected["homeowner"])
@@ -52,9 +45,9 @@ render_attitudes_plot <- function(
 
       pred_data <- data.frame(
         province = selected["province"],
-        popcat = input$popcat,
+        popcat = reactive_input$popcat,
         gender = selected["gender"],
-        agecat = input$agecat,
+        agecat = reactive_input$agecat,
         race = selected["race"],
         immigrant = selected["immigrant"],
         homeowner = selected["homeowner"],
@@ -122,5 +115,4 @@ render_attitudes_plot <- function(
     },
     bg = "transparent"
   )
-  return(plot)
 }

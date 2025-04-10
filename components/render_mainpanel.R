@@ -1,6 +1,6 @@
 library(shiny)
 
-render_mainpanel <- function(translator) {
+render_mainpanel <- function(translator, statement_tags, statements) {
   renderUI({
     mainPanel(
       tabsetPanel(
@@ -29,10 +29,17 @@ render_mainpanel <- function(translator) {
                     align-items: flex-start;
                      align-items: end;
                    ",
-            uiOutput(
-              outputId = "select_domain",
-              # Make the select_domain div's formatting match the reset button # nolint
-              style = "align-items: bottom;"
+            div(
+              style = "align-items: bottom;",
+              selectInput(
+                inputId = "policy_group",
+                label = translator()$t("Policy domain:"),
+                choices = statement_tags(), # nolint
+                multiple = TRUE,
+                selected = statement_tags()[1],
+                selectize = TRUE,
+                width = "325px"
+              ),
             ),
             actionButton(
               "delete",
