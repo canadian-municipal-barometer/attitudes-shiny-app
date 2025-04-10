@@ -6,24 +6,6 @@ source("components/render_sidebar.R")
 source("components/render_mainpanel.R")
 source("components/render_attitudes_plot.R")
 
-# data prep --------------------
-
-# load `df` object: main voter data
-load("data/voter-data.rda")
-# load `statements` object: main statement data lookup
-load("data/statements_en.rda")
-# load `tags` object: choice set for "policy_group" input
-load("data/unique-tags_en.rda")
-
-# Choices for "policy" input need to be set.
-# must match the `selected` parameter of the "policy_group" selector
-default_policies <- statements$statement[
-  statements$tags %in% statements$tags[1][1]
-]
-
-# Set the error that is displayed if model inputs aren't present for a policy
-input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
-
 ui <- fluidPage(
   # formatting --------------------
   # set CSS for elements that don't accept a style argument in their function
@@ -61,7 +43,7 @@ ui <- fluidPage(
   # layout --------------------
   # set HTML divs to be formatted by the above CSS
   # CSS Flexbox formatting is being used on the next two divs such that the app
-  # centers on the page rather than stretching horizontally
+  # centers on the page rather than only stretching horizontally
   div(
     class = "flex-container",
     style = "
@@ -135,12 +117,51 @@ ui <- fluidPage(
   )
 )
 
+# data prep --------------------
+
+# `df`: main voter data
+load("data/voter-data.rda")
+# `statements_en`, `statements_fr`, `statement_tags_en`, `statement_tags_fr`
+load("data/statements.rda")
+
+# Choices for "policy" input need to be set.
+# must match the `selected` parameter of the "policy_group" selector
+default_policies <- statements_en$statement[
+  statements_en$tags %in% statements_en$tags[1][1]
+]
+
+# Set the error that is displayed if model inputs aren't present for a policy
+input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
+
 # load translation file to create shiny.i18n translator object
 translator <- Translator$new(translation_csvs_path = "data/translation/")
 
 server <- function(input, output, session) {
-  # Observe language toggle button (lang_toggle) and encode the current language
-  # in `lang`, which is a dependency of the react
+  statements_data <- reactiveValues(
+    en = statements_en, # nolint
+    fr = statements_fr, # nolint
+    tags_en = statement_tags_en, # nolint
+    tags_fr = statements_tags_fr # nolint
+  )
+
+  # set statement data (including tags) and shiny.i18n translator based on
+  # the current value of `lang_toggle`
+
+  statements <- eventReactive(input$lang_toggle, {
+    if (state %% 2 == 1) {
+      statements_data$fr
+    } else {
+      statements_data$en
+    }
+  })
+
+  statement_tags <- eventReactive(input$lang_toggle, {
+    if (state %% 2 == 1) {
+      statements_data$tags_fr
+    } else {
+      statements_data$tags_en
+    }
+  })
 
   i18n <- reactive({
     state <- input$lang_toggle
