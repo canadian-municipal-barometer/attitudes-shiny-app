@@ -124,12 +124,6 @@ load("data/voter-data.rda")
 # `statements_en`, `statements_fr`, `statement_tags_en`, `statement_tags_fr`
 load("data/statements.rda")
 
-# Choices for "policy" input need to be set.
-# must match the `selected` parameter of the "policy_group" selector
-default_policies <- statements_en$statement[
-  statements_en$tags %in% statements_en$tags[1][1]
-]
-
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
@@ -185,7 +179,6 @@ server <- function(input, output, session) {
 
   # mainPanel
   output$mainpanel <- render_mainpanel(
-    default_policies = default_policies,
     translator = i18n
   )
 
