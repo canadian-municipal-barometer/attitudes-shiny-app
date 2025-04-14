@@ -136,21 +136,16 @@ translator <- Translator$new(translation_csvs_path = "data/translation/")
 server <- function(input, output, session) {
   # set statement data (including tags) and shiny.i18n translator based on
   # the current value of `lang_toggle`
-  i18n <- reactive({
-    state <- input$lang_toggle
-    if (state %% 2 == 1) {
-      translator$set_translation_language("fr")
-    } else {
-      translator$set_translation_language("en")
-    }
-    return(translator)
-  })
 
-  observeEvent(i18n, {
+  translator_r <- reactiveVal(translator)
+
+  observeEvent(input$lang_toggle, {
     if (input$lang_toggle %% 2 == 1) {
+      translator_r()$set_translation_language("fr")
       statements(statements_fr)
       statement_tags(statement_tags_fr)
     } else {
+      translator_r()$set_translation_language("en")
       statements(statements_en)
       statement_tags(statement_tags_en)
     }
@@ -160,20 +155,20 @@ server <- function(input, output, session) {
 
   # title panel
   output$title <- renderUI({
-    titlePanel(i18n()$t("Canadians' Municipal Policy Attitudes"))
+    titlePanel(translator_r()$t("Canadians' Municipal Policy Attitudes"))
   })
 
   # sidebar
-  output$sidebar_contents <- render_sidebar(translator = i18n) # nolint
+  output$sidebar_contents <- render_sidebar(translator = translator_r) # nolint
 
   # mainPanel
   output$mainpanel <- render_mainpanel(
-    translator = i18n
+    translator = translator_r
   )
 
   # update the static language button's label on translation toggle
   observe({
-    updateActionButton(session, "lang_toggle", label = i18n()$t("FR"))
+    updateActionButton(session, "lang_toggle", label = translator_r()$t("FR"))
   })
 
   # filter the data used in the plot
@@ -181,7 +176,7 @@ server <- function(input, output, session) {
     data <- filter_data(
       reactive_input = input,
       statements = statements,
-      df = df
+      data = df
     )
     return(data)
   })
@@ -192,7 +187,7 @@ server <- function(input, output, session) {
     input_err = input_err,
     statements = statements,
     df = filtered_df,
-    translator = i18n
+    translator = translator_r
   )
 
   # main panel observers
@@ -201,7 +196,7 @@ server <- function(input, output, session) {
   output$select_domain <- renderUI({
     selectInput(
       inputId = "policy_group",
-      label = i18n()$t("Policy domain:"),
+      label = translator_r()$t("Policy domain:"),
       choices = statement_tags(), # nolint
       multiple = TRUE,
       selected = statement_tags()[1],
