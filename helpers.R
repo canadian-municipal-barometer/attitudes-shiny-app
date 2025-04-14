@@ -75,12 +75,14 @@ un_translate_input <- function(reactive_input) {
 filter_data <- function(
   reactive_input,
   statements,
-  df
+  data
 ) {
   # TEST:
   observeEvent(reactive_input$policy, {
     message(paste("selected policy:", reactive_input$policy))
   })
+
+  req(data)
 
   # policy to filter the data by
   filter <- statements()$var_name[
@@ -90,13 +92,13 @@ filter_data <- function(
   # translate the contents of the selectors to variable names
 
   # TEST:
-  print(colnames(df))
-  print(paste("data dimensions: ", dim(df)))
+  print(colnames(data))
   print(paste("data structure:"))
+  print(paste("Data rows:", nrow(data)))
   print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-  print(str(df))
+  print(str(data))
 
-  df <- df |> dplyr::filter(policy == filter) # nolint
+  data <- data[data$policy == filter]
 
-  return(df)
+  return(data)
 }
