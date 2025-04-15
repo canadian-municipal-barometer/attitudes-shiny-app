@@ -5,7 +5,6 @@ render_mainpanel <- function(translator, statements) {
     mainPanel(
       tabsetPanel(
         type = "pill",
-        selected = "Instructions",
         tabPanel(
           title = translator()$t("Plot"),
           # prevent lazy loading
@@ -52,6 +51,7 @@ render_mainpanel <- function(translator, statements) {
               width = "auto",
             ),
           ),
+          # plot
           div(
             id = "plot-container",
             style = "background: transparent !important;",

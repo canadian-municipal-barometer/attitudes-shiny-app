@@ -76,7 +76,7 @@ un_translate_input <- function(reactive_input) {
 filter_data <- function(
   reactive_input,
   statements,
-  data
+  tbl
 ) {
   req(reactive_input$policy, statements)
 
@@ -95,7 +95,7 @@ filter_data <- function(
   # TEST:
   print(paste("filter: ", filter))
 
-  final <- data |> dplyr::filter(!!dplyr::sym("policy") == filter)
+  final <- tbl |> dplyr::filter(!!dplyr::sym("policy") == filter)
 
   return(final)
 }
