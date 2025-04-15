@@ -173,13 +173,15 @@ server <- function(input, output, session) {
   })
 
   # filter the data used in the plot
+  # HACK: Every time a new policy is selected, this runs once more than the last
+  # time a new policy was selected.
   filtered_df <- reactive({
-    data <- filter_data(
+    input <- isolate(input)
+    filter_data(
       reactive_input = input,
       statements = statements,
-      data = df
+      tbl = df
     )
-    return(data)
   })
 
   # un-translated inputs if they were translated to French in the UI
