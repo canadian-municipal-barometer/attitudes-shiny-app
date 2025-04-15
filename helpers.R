@@ -69,36 +69,33 @@ un_translate_input <- function(reactive_input) {
   return(selected)
 }
 
-# BUG: This is receiving the English policy text even after language was
-# toggled to French
-
 filter_data <- function(
   reactive_input,
   statements,
   data
 ) {
+  req(reactive_input$policy)
+
   # TEST:
   observeEvent(reactive_input$policy, {
     message(paste("selected policy:", reactive_input$policy))
   })
 
-  req(data)
-
   # policy to filter the data by
   filter <- statements()$var_name[
     statements()$statement == reactive_input$policy
-  ] # nolint
+  ]
 
   # translate the contents of the selectors to variable names
 
   # TEST:
-  print(colnames(data))
-  print(paste("data structure:"))
-  print(paste("Data rows:", nrow(data)))
-  print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-  print(str(data))
+  # print(colnames(data))
+  # print(paste("data structure:"))
+  # print(paste("Data rows:", nrow(data)))
+  # print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+  # print(str(data))
 
-  data <- data[data$policy == filter]
+  final <- data |> dplyr::filter(policy == filter)
 
-  return(data)
+  return(final)
 }
