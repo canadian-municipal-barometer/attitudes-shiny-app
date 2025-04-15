@@ -21,6 +21,10 @@ un_translate_input <- function(reactive_input) {
       reactive_input$province
     )
 
+  selected["agecat"] <- reactive_input$agecat
+
+  selected["popcat"] <- reactive_input$popcat
+
   selected["gender"] <- reactive_input$gender |>
     switch(
       "Homme" = "Man",

@@ -182,12 +182,18 @@ server <- function(input, output, session) {
     return(data)
   })
 
+  # un-translated inputs if they were translated to French in the UI
+  # reactive objects need to be digested in a reactive block (in
+  selected <- reactive({
+    un_translate_input(reactive_input = input) # nolint
+  })
+
   # plot
   output$predictions <- render_attitudes_plot(
-    reactive_input = input,
+    selected = selected,
     input_err = input_err,
     statements = statements,
-    data = filtered_df,
+    filtered_df = filtered_df,
     translator = translator_r
   )
 
