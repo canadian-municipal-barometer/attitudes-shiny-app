@@ -74,11 +74,11 @@ filter_data <- function(
   statements,
   data
 ) {
-  req(reactive_input$policy)
+  req(reactive_input$policy, statements)
 
   # TEST:
   observeEvent(reactive_input$policy, {
-    message(paste("selected policy:", reactive_input$policy))
+    dplyr::glimpse(statements())
   })
 
   # policy to filter the data by
@@ -89,13 +89,9 @@ filter_data <- function(
   # translate the contents of the selectors to variable names
 
   # TEST:
-  # print(colnames(data))
-  # print(paste("data structure:"))
-  # print(paste("Data rows:", nrow(data)))
-  # print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-  # print(str(data))
+  print(paste("filter: ", filter))
 
-  final <- data |> dplyr::filter(policy == filter)
+  final <- data |> dplyr::filter(!!dplyr::sym("policy") == filter)
 
   return(final)
 }

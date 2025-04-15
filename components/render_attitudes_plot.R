@@ -4,7 +4,7 @@ render_attitudes_plot <- function(
   reactive_input,
   input_err,
   statements,
-  df,
+  data,
   translator
 ) {
   plot <- renderPlot(
@@ -13,9 +13,9 @@ render_attitudes_plot <- function(
       # reactive objects need to be digested in a reactive block (in
       selected <- un_translate_input(reactive_input = reactive_input) # nolint
 
-      # verify that df has the levels needed for the model to run
+      # verify that data has the levels needed for the model to run
       validate(
-        need(reactive_input$province %in% df()$province, input_err)
+        need(reactive_input$province %in% data()$province, input_err)
       )
 
       model <- nnet::multinom(
@@ -29,8 +29,8 @@ render_attitudes_plot <- function(
             factor(income) +
             factor(immigrant) +
             factor(popcat), # nolint
-        data = df(),
-        weights = df()$wgt
+        data = data(),
+        weights = data()$wgt
       )
 
       print(selected["province"][1])

@@ -163,7 +163,8 @@ server <- function(input, output, session) {
 
   # mainPanel
   output$mainpanel <- render_mainpanel(
-    translator = translator_r
+    translator = translator_r,
+    statements = statements
   )
 
   # update the static language button's label on translation toggle
@@ -186,7 +187,7 @@ server <- function(input, output, session) {
     reactive_input = input,
     input_err = input_err,
     statements = statements,
-    df = filtered_df,
+    data = filtered_df,
     translator = translator_r
   )
 
@@ -194,10 +195,11 @@ server <- function(input, output, session) {
 
   # Policy domain menu
   output$select_domain <- renderUI({
+    req(statement_tags())
     selectInput(
       inputId = "policy_group",
       label = translator_r()$t("Policy domain:"),
-      choices = statement_tags(), # nolint
+      choices = statement_tags(),
       multiple = TRUE,
       selected = statement_tags()[1],
       selectize = TRUE,
@@ -207,10 +209,11 @@ server <- function(input, output, session) {
 
   # Reset button
   observeEvent(input$delete, {
+    statement_tags <- isolate(statement_tags())
     updateSelectInput(
       session,
       "policy_group",
-      choices = statement_tags(), # nolint
+      choices = statement_tags,
       selected = character(0)
     )
   })
@@ -232,7 +235,7 @@ server <- function(input, output, session) {
   })
 
   # disable any lag due to server-rendering and lazy loading for "select_domain"
-  outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
+  # outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
 }
 
 shinyApp(ui = ui, server = server)
