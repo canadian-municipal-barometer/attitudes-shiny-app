@@ -80,22 +80,26 @@ filter_data <- function(
 ) {
   req(reactive_input$policy, statements)
 
-  # TEST:
-  observeEvent(reactive_input$policy, {
-    dplyr::glimpse(statements())
-  })
+  # Get current statements data
+  current_statements <- statements()
 
-  # policy to filter the data by
-  filter <- statements()$var_name[
-    statements()$statement == reactive_input$policy
-  ]
+  # Find the selected policy in statements
+  policy_index <- which(current_statements$statement == reactive_input$policy)
 
-  # translate the contents of the selectors to variable names
+  # Only proceed if we have a match
+  if (length(policy_index) == 0 || is.na(policy_index)) {
+    return(tbl[0, ]) # Return empty data frame if no match
+  }
 
-  # TEST:
-  print(paste("filter: ", filter))
+  # Get the var_name for the selected policy
+  filter_value <- current_statements$var_name[policy_index]
 
-  final <- tbl |> dplyr::filter(!!dplyr::sym("policy") == filter)
+  # Print debug information
+  message("Selected policy: ", reactive_input$policy)
+  message("Filter value: ", filter_value)
+
+  # Standard evaluation instead of non-standard evaluation
+  final <- tbl[tbl$policy == filter_value, ]
 
   return(final)
 }

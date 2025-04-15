@@ -123,10 +123,6 @@ load("data/voter-data.rda")
 # `statements_en`, `statements_fr`, `statement_tags_en`, `statement_tags_fr`
 load("data/statements.rda")
 
-# initial statement values
-statements <- reactiveVal(statements_en)
-statement_tags <- reactiveVal(statement_tags_en)
-
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 
@@ -137,18 +133,34 @@ server <- function(input, output, session) {
   # set statement data (including tags) and shiny.i18n translator based on
   # the current value of `lang_toggle`
 
+  # Initialize reactive values
+  current_lang <- reactiveVal("en")
   translator_r <- reactiveVal(translator)
+  statements <- reactiveVal(statements_en)
+  statement_tags <- reactiveVal(statement_tags_en)
 
+  # Handle language toggle
   observeEvent(input$lang_toggle, {
-    if (input$lang_toggle %% 2 == 1) {
+    # Toggle language between English and French
+    if (current_lang() == "en") {
+      current_lang("fr")
       translator_r()$set_translation_language("fr")
       statements(statements_fr)
       statement_tags(statement_tags_fr)
     } else {
+      current_lang("en")
       translator_r()$set_translation_language("en")
       statements(statements_en)
       statement_tags(statement_tags_en)
     }
+
+    # Update button text
+    updateActionButton(
+      session,
+      "lang_toggle",
+      # Update without shiny.i18n to avoid circular dependency
+      label = ifelse(current_lang() == "en", "FR", "EN")
+    )
   })
 
   # UI Rendering --------------------
@@ -167,16 +179,9 @@ server <- function(input, output, session) {
     statements = statements
   )
 
-  # update the static language button's label on translation toggle
-  observe({
-    updateActionButton(session, "lang_toggle", label = translator_r()$t("FR"))
-  })
-
   # filter the data used in the plot
-  # HACK: Every time a new policy is selected, this runs once more than the last
-  # time a new policy was selected.
   filtered_df <- reactive({
-    input <- isolate(input)
+    req(input$policy)
     filter_data(
       reactive_input = input,
       statements = statements,
@@ -185,7 +190,6 @@ server <- function(input, output, session) {
   })
 
   # un-translated inputs if they were translated to French in the UI
-  # reactive objects need to be digested in a reactive block (in
   selected <- reactive({
     un_translate_input(reactive_input = input) # nolint
   })
@@ -217,23 +221,24 @@ server <- function(input, output, session) {
 
   # Reset button
   observeEvent(input$delete, {
-    statement_tags <- isolate(statement_tags())
     updateSelectInput(
       session,
       "policy_group",
-      choices = statement_tags,
+      choices = statement_tags(),
       selected = character(0)
     )
   })
 
   # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
+    req(statements())
     data <- statements()
-    selected_policies <- data |> # nolint
+
+    selected_policies <- data |>
       dplyr::filter(
         purrr::map_lgl(tags, function(x) any(x %in% input$policy_group))
       ) |>
-      dplyr::pull(statement) # nolint
+      dplyr::pull(statement)
 
     updateSelectInput(
       session,
@@ -241,9 +246,6 @@ server <- function(input, output, session) {
       choices = selected_policies
     )
   })
-
-  # disable any lag due to server-rendering and lazy loading for "select_domain"
-  # outputOptions(output, "select_domain", suspendWhenHidden = FALSE)
 }
 
 shinyApp(ui = ui, server = server)
