@@ -113,7 +113,7 @@ update_policy_menus <- function(session, statements, statement_tags, input) {
     selected = statement_tags()[1]
   )
   update_policy_statements(session, statements, input$policy_group)
-  message("Update policy_group called by lang_toggle")
+  message("update_policy_menus ran")
 }
 
 update_policy_statements <- function(session, statements, policy_group) {

@@ -139,6 +139,12 @@ server <- function(input, output, session) {
   statements <- reactiveVal(statements_en)
   statement_tags <- reactiveVal(statement_tags_en)
 
+  observeEvent(statements, {
+    message('++++"Default" statement data vals++++')
+    message(paste("`statements`:", statements()$statement[1]))
+    message(paste("`statements_tags`:", statement_tags()[1]))
+  })
+
   # Handle language toggle
   observeEvent(input$lang_toggle, {
     message("lang_toggle button pressed")
@@ -146,7 +152,6 @@ server <- function(input, output, session) {
     if (current_lang() == "en") {
       statements(statements_fr)
       statement_tags(statement_tags_fr)
-      update_policy_menus(session, statements, statement_tags, input)
 
       message(str(statements()$statement[1]))
       message(str(statement_tags()))
@@ -156,7 +161,6 @@ server <- function(input, output, session) {
     } else {
       statements(statements_en)
       statement_tags(statement_tags_en)
-      update_policy_menus(session, statements, statement_tags, input)
 
       message(str(statements()))
       message(str(statement_tags()))
@@ -164,6 +168,12 @@ server <- function(input, output, session) {
       current_lang("en")
       translator_r()$set_translation_language("en")
     }
+    message("lang_toggle observer done")
+  })
+
+  observeEvent(statement_tags(), {
+    message("Statement tag observer ran")
+    update_policy_menus(session, statements, statement_tags, input)
   })
 
   observeEvent(input$lang_toggle, {
@@ -194,14 +204,18 @@ server <- function(input, output, session) {
   )
 
   # filter the data used in the plot
-  filtered_df <- reactive({
-    message("filter_data reactive context entered")
-    filter_data(
-      reactive_input = input,
-      statements = statements,
-      tbl = tbl
-    )
-  })
+  filtered_df <- eventReactive(
+    input$policy,
+    ignoreInit = TRUE,
+    {
+      message("filter_data reactive context entered")
+      filter_data(
+        reactive_input = input,
+        statements = statements,
+        tbl = tbl
+      )
+    }
+  )
 
   # un-translated inputs if they were translated to French in the UI
   user_selected <- reactive({
@@ -220,7 +234,6 @@ server <- function(input, output, session) {
 
   # Policy domain menu
   output$select_domain <- renderUI({
-    req(statement_tags())
     selectInput(
       inputId = "policy_group",
       label = translator_r()$t("Policy domain:"),
