@@ -79,26 +79,27 @@ filter_data <- function(
   tbl
 ) {
   req(reactive_input$policy, statements)
+  message("filter_data called")
 
   # Get current statements data
   current_statements <- statements()
 
+  message("reactive_input$policy:", reactive_input$policy)
+
   # Find the selected policy in statements
   policy_index <- which(current_statements$statement == reactive_input$policy)
 
-  # Only proceed if we have a match
-  if (length(policy_index) == 0 || is.na(policy_index)) {
-    return(tbl[0, ]) # Return empty data frame if no match
-  }
+  message(paste("policy_index:", policy_index))
 
   # Get the var_name for the selected policy
   filter_value <- current_statements$var_name[policy_index]
 
-  # Print debug information
-  message("Selected policy: ", reactive_input$policy)
-  message("Filter value: ", filter_value)
+  message(paste("filter_value:", filter_value))
 
-  # Standard evaluation instead of non-standard evaluation
+  # Print debug information
+  # message("Selected policy: ", reactive_input$policy)
+  # message("Filter value: ", filter_value)
+
   final <- tbl[tbl$policy == filter_value, ]
 
   return(final)

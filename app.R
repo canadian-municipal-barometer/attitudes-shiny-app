@@ -74,7 +74,7 @@ ui <- fluidPage(
       # any existing elements, so it gets its own div. It is also using some
       # cheeky CSS to overlap the title div of the tabPanel (in mainPanel).
       div(
-        id = "lang-toggle",
+        id = "lang_toggle",
         style = "
           display: flex;
           justify-content: flex-end;
@@ -118,7 +118,7 @@ ui <- fluidPage(
 
 # data prep --------------------
 
-# `df`: main voter data
+# `tbl`: main voter data
 load("data/voter-data.rda")
 # `statements_en`, `statements_fr`, `statement_tags_en`, `statement_tags_fr`
 load("data/statements.rda")
@@ -141,19 +141,27 @@ server <- function(input, output, session) {
 
   # Handle language toggle
   observeEvent(input$lang_toggle, {
+    message("lang_toggle button pressed")
     # Toggle language between English and French
     if (current_lang() == "en") {
       current_lang("fr")
       translator_r()$set_translation_language("fr")
       statements(statements_fr)
       statement_tags(statement_tags_fr)
+      message(str(statements()))
+      message(str(statement_tags()))
     } else {
       current_lang("en")
       translator_r()$set_translation_language("en")
       statements(statements_en)
       statement_tags(statement_tags_en)
+      message(str(statements()))
+      message(str(statement_tags()))
     }
+  })
 
+  observeEvent(input$lang_toggle, {
+    message("lang_toggle label updated")
     # Update button text
     updateActionButton(
       session,
@@ -181,11 +189,12 @@ server <- function(input, output, session) {
 
   # filter the data used in the plot
   filtered_df <- reactive({
+    message("filter_data reactive context entered")
     req(input$policy)
     filter_data(
       reactive_input = input,
       statements = statements,
-      tbl = df
+      tbl = tbl
     )
   })
 
@@ -232,6 +241,7 @@ server <- function(input, output, session) {
   # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
     req(statements())
+    message("policy selector choice observer called")
     data <- statements()
 
     selected_policies <- data |>

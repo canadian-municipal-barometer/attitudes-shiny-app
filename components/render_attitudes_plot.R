@@ -9,6 +9,7 @@ render_attitudes_plot <- function(
 ) {
   plot <- renderPlot(
     {
+      message("render_attitudes_plot called")
       # verify that data has the levels needed for the model to run
       validate(
         need(selected()["province"] %in% filtered_df()$province, input_err)
@@ -29,15 +30,15 @@ render_attitudes_plot <- function(
         weights = filtered_df()$wgt
       )
 
-      print(selected()["province"][1])
-      print(selected()["popcat"])
-      print(selected()["gender"])
-      print(selected()["agecat"])
-      print(selected()["race"])
-      print(selected()["immigrant"])
-      print(selected()["homeowner"])
-      print(selected()["education"])
-      print(selected()["income"])
+      # print(selected()["province"][1])
+      # print(selected()["popcat"])
+      # print(selected()["gender"])
+      # print(selected()["agecat"])
+      # print(selected()["race"])
+      # print(selected()["immigrant"])
+      # print(selected()["homeowner"])
+      # print(selected()["education"])
+      # print(selected()["income"])
 
       pred_data <- data.frame(
         province = selected()["province"],

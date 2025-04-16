@@ -1,6 +1,7 @@
 library(shiny)
 
 render_mainpanel <- function(translator, statements) {
+  message("mainpanel called")
   renderUI({
     mainPanel(
       tabsetPanel(
@@ -46,7 +47,7 @@ render_mainpanel <- function(translator, statements) {
               inputId = "policy",
               label = translator()$t("Select a policy:"),
               # updated in `server` first time `policy_group` input used
-              choices = statements()$statement,
+              choices = NULL,
               selectize = TRUE,
               width = "auto",
             ),
