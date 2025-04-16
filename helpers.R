@@ -104,3 +104,31 @@ filter_data <- function(
 
   return(final)
 }
+
+update_policy_menus <- function(session, statements, statement_tags, input) {
+  updateSelectInput(
+    session,
+    "policy_group",
+    choices = statement_tags(),
+    selected = statement_tags()[1]
+  )
+  update_policy_statements(session, statements, input$policy_group)
+  message("Update policy_group called by lang_toggle")
+}
+
+update_policy_statements <- function(session, statements, policy_group) {
+  data <- statements()
+
+  filtered_statements <- data |>
+    dplyr::filter(
+      purrr::map_lgl(tags, function(x) any(x %in% policy_group))
+    ) |>
+    dplyr::pull(statement)
+
+  updateSelectInput(
+    session,
+    "policy",
+    choices = filtered_statements,
+    selected = filtered_statements[1]
+  )
+}

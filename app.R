@@ -144,19 +144,25 @@ server <- function(input, output, session) {
     message("lang_toggle button pressed")
     # Toggle language between English and French
     if (current_lang() == "en") {
-      current_lang("fr")
-      translator_r()$set_translation_language("fr")
       statements(statements_fr)
       statement_tags(statement_tags_fr)
-      message(str(statements()))
+      update_policy_menus(session, statements, statement_tags, input)
+
+      message(str(statements()$statement[1]))
       message(str(statement_tags()))
+
+      current_lang("fr")
+      translator_r()$set_translation_language("fr")
     } else {
-      current_lang("en")
-      translator_r()$set_translation_language("en")
       statements(statements_en)
       statement_tags(statement_tags_en)
+      update_policy_menus(session, statements, statement_tags, input)
+
       message(str(statements()))
       message(str(statement_tags()))
+
+      current_lang("en")
+      translator_r()$set_translation_language("en")
     }
   })
 
@@ -190,7 +196,6 @@ server <- function(input, output, session) {
   # filter the data used in the plot
   filtered_df <- reactive({
     message("filter_data reactive context entered")
-    req(input$policy)
     filter_data(
       reactive_input = input,
       statements = statements,
@@ -199,15 +204,14 @@ server <- function(input, output, session) {
   })
 
   # un-translated inputs if they were translated to French in the UI
-  selected <- reactive({
+  user_selected <- reactive({
     un_translate_input(reactive_input = input) # nolint
   })
 
   # plot
   output$predictions <- render_attitudes_plot(
-    selected = selected,
+    user_selected = user_selected,
     input_err = input_err,
-    statements = statements,
     filtered_df = filtered_df,
     translator = translator_r
   )
@@ -221,8 +225,8 @@ server <- function(input, output, session) {
       inputId = "policy_group",
       label = translator_r()$t("Policy domain:"),
       choices = statement_tags(),
-      multiple = TRUE,
       selected = statement_tags()[1],
+      multiple = TRUE,
       selectize = TRUE,
       width = "325px"
     )
@@ -240,21 +244,9 @@ server <- function(input, output, session) {
 
   # update policy statement menu based on policy domain menu
   observeEvent(input$policy_group, {
-    req(statements())
     message("policy selector choice observer called")
-    data <- statements()
 
-    selected_policies <- data |>
-      dplyr::filter(
-        purrr::map_lgl(tags, function(x) any(x %in% input$policy_group))
-      ) |>
-      dplyr::pull(statement)
-
-    updateSelectInput(
-      session,
-      "policy",
-      choices = selected_policies
-    )
+    update_policy_statements(session, statements, input$policy_group)
   })
 }
 
