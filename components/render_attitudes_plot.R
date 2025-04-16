@@ -1,18 +1,21 @@
 library(shiny)
 
 render_attitudes_plot <- function(
-  selected,
+  user_selected,
   input_err,
-  statements,
   filtered_df,
   translator
 ) {
   plot <- renderPlot(
     {
+      # only take a reactive dep on `selected`
+      translator <- isolate(translator())
+
       message("render_attitudes_plot called")
+
       # verify that data has the levels needed for the model to run
       validate(
-        need(selected()["province"] %in% filtered_df()$province, input_err)
+        need(user_selected()["province"] %in% filtered_df()$province, input_err)
       )
 
       model <- nnet::multinom(
@@ -30,26 +33,16 @@ render_attitudes_plot <- function(
         weights = filtered_df()$wgt
       )
 
-      # print(selected()["province"][1])
-      # print(selected()["popcat"])
-      # print(selected()["gender"])
-      # print(selected()["agecat"])
-      # print(selected()["race"])
-      # print(selected()["immigrant"])
-      # print(selected()["homeowner"])
-      # print(selected()["education"])
-      # print(selected()["income"])
-
       pred_data <- data.frame(
-        province = selected()["province"],
-        popcat = selected()["popcat"],
-        gender = selected()["gender"],
-        agecat = selected()["agecat"],
-        race = selected()["race"],
-        immigrant = selected()["immigrant"],
-        homeowner = selected()["homeowner"],
-        education = selected()["education"],
-        income = selected()["income"]
+        province = user_selected()["province"],
+        popcat = user_selected()["popcat"],
+        gender = user_selected()["gender"],
+        agecat = user_selected()["agecat"],
+        race = user_selected()["race"],
+        immigrant = user_selected()["immigrant"],
+        homeowner = user_selected()["homeowner"],
+        education = user_selected()["education"],
+        income = user_selected()["income"]
       )
 
       preds <- predict(model, pred_data, type = "probs")
@@ -87,9 +80,9 @@ render_attitudes_plot <- function(
         ggplot2::theme_minimal(base_size = 20) +
         ggplot2::scale_x_discrete(
           labels = c(
-            "Agree" = translator()$t("Agree"),
-            "Disagree" = translator()$t("Disagree"),
-            "No opinion" = translator()$t("No opinion")
+            "Agree" = translator$t("Agree"),
+            "Disagree" = translator$t("Disagree"),
+            "No opinion" = translator$t("No opinion")
           )
         ) +
         ggplot2::scale_fill_manual(
