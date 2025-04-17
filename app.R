@@ -203,30 +203,12 @@ server <- function(input, output, session) {
     statements = statements
   )
 
-  # filter the data used in the plot
-  filtered_df <- eventReactive(
-    input$policy,
-    ignoreInit = TRUE,
-    {
-      message("filter_data reactive context entered")
-      filter_data(
-        reactive_input = input,
-        statements = statements,
-        tbl = tbl
-      )
-    }
-  )
-
-  # un-translated inputs if they were translated to French in the UI
-  user_selected <- reactive({
-    un_translate_input(reactive_input = input) # nolint
-  })
-
   # plot
   output$predictions <- render_attitudes_plot(
-    user_selected = user_selected,
+    statements = statements,
     input_err = input_err,
-    filtered_df = filtered_df,
+    input = input,
+    tbl = tbl,
     translator = translator_r
   )
 

@@ -74,34 +74,12 @@ un_translate_input <- function(reactive_input) {
 }
 
 filter_data <- function(
-  reactive_input,
+  input,
   statements,
   tbl
 ) {
-  req(reactive_input$policy, statements)
+  req(input$policy, statements)
   message("filter_data called")
-
-  # Get current statements data
-  current_statements <- statements()
-
-  message("reactive_input$policy:", reactive_input$policy)
-
-  # Find the selected policy in statements
-  policy_index <- which(current_statements$statement == reactive_input$policy)
-
-  message(paste("policy_index:", policy_index))
-
-  # Get the var_name for the selected policy
-  filter_value <- current_statements$var_name[policy_index]
-
-  message(paste("filter_value:", filter_value))
-
-  # Print debug information
-  # message("Selected policy: ", reactive_input$policy)
-  # message("Filter value: ", filter_value)
-
-  final <- tbl[tbl$policy == filter_value, ]
-
   return(final)
 }
 

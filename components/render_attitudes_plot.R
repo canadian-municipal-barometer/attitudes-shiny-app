@@ -1,21 +1,35 @@
 library(shiny)
+source("helpers.R")
 
 render_attitudes_plot <- function(
-  user_selected,
+  statements,
   input_err,
-  filtered_df,
+  input,
+  tbl,
   translator
 ) {
   plot <- renderPlot(
     {
+      req(statements())
+      message("render_attitudes_plot called")
+
+      # Find the selected policy in statements
+      policy_index <- which(statements()$statement == input$policy)
+
+      # Get the var_name for the selected policy
+      filter_value <- statements()$var_name[policy_index]
+      tbl <- tbl |>
+        dplyr::filter(policy == filter_value)
+
+      # un-translated inputs if they were translated to French in the UI
+      user_selected <- un_translate_input(reactive_input = input) # nolint
+
       # only take a reactive dep on `selected`
       translator <- isolate(translator())
 
-      message("render_attitudes_plot called")
-
       # verify that data has the levels needed for the model to run
       validate(
-        need(user_selected()["province"] %in% filtered_df()$province, input_err)
+        need(user_selected["province"] %in% tbl$province, input_err)
       )
 
       model <- nnet::multinom(
@@ -29,20 +43,20 @@ render_attitudes_plot <- function(
             factor(income) +
             factor(immigrant) +
             factor(popcat), # nolint
-        data = filtered_df(),
-        weights = filtered_df()$wgt
+        data = tbl,
+        weights = tbl$wgt
       )
 
       pred_data <- data.frame(
-        province = user_selected()["province"],
-        popcat = user_selected()["popcat"],
-        gender = user_selected()["gender"],
-        agecat = user_selected()["agecat"],
-        race = user_selected()["race"],
-        immigrant = user_selected()["immigrant"],
-        homeowner = user_selected()["homeowner"],
-        education = user_selected()["education"],
-        income = user_selected()["income"]
+        province = user_selected["province"],
+        popcat = user_selected["popcat"],
+        gender = user_selected["gender"],
+        agecat = user_selected["agecat"],
+        race = user_selected["race"],
+        immigrant = user_selected["immigrant"],
+        homeowner = user_selected["homeowner"],
+        education = user_selected["education"],
+        income = user_selected["income"]
       )
 
       preds <- predict(model, pred_data, type = "probs")
