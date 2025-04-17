@@ -2,6 +2,7 @@ library(shiny)
 
 render_sidebar <- function(translator) {
   renderUI({
+    message("\n`sidebar_contents` declared\n")
     sidebarPanel(
       style = "
           max-width: 32vw;

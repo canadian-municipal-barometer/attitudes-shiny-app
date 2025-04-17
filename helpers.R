@@ -4,6 +4,7 @@ library(shiny)
 # it to a vector
 # If inputs are already in English, nothing happens.
 un_translate_input <- function(reactive_input) {
+  cat("---`un_translate_selected` ran")
   selected <- list()
 
   selected["province"] <- reactive_input$province |>
@@ -73,33 +74,24 @@ un_translate_input <- function(reactive_input) {
   return(selected)
 }
 
-filter_data <- function(
-  input,
-  statements,
-  tbl
-) {
-  req(input$policy, statements)
-  message("filter_data called")
-  return(final)
-}
-
-update_policy_menus <- function(session, statements, statement_tags, input) {
+policy_menus_update <- function(session, statements, statement_tags, input) {
+  cat("---`update_policy_menus` ran\n")
   updateSelectInput(
     session,
-    "policy_group",
+    "select_domain",
     choices = statement_tags(),
     selected = statement_tags()[1]
   )
-  update_policy_statements(session, statements, input$policy_group)
-  message("update_policy_menus ran")
+  statements_update(session, statements, input$select_domain)
 }
 
-update_policy_statements <- function(session, statements, policy_group) {
+statements_update <- function(session, statements, select_domain) {
+  cat("---`update_policy_statements` ran\n")
   data <- statements()
 
   filtered_statements <- data |>
     dplyr::filter(
-      purrr::map_lgl(tags, function(x) any(x %in% policy_group))
+      purrr::map_lgl(tags, function(x) any(x %in% select_domain))
     ) |>
     dplyr::pull(statement)
 
@@ -109,4 +101,5 @@ update_policy_statements <- function(session, statements, policy_group) {
     choices = filtered_statements,
     selected = filtered_statements[1]
   )
+  return(filtered_statements[1])
 }

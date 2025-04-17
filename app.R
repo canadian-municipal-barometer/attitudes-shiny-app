@@ -42,7 +42,7 @@ ui <- fluidPage(
   # layout --------------------
   # set HTML divs to be formatted by the above CSS
   # CSS Flexbox formatting is being used on the next two divs such that the app
-  # centers on the page rather than only stretching horizontally
+  # centers on the page while still stretching horizontally
   div(
     class = "flex-container",
     style = "
@@ -130,54 +130,48 @@ input_err <- "The combination of the policy question and demographic characteris
 translator <- Translator$new(translation_csvs_path = "data/translation/")
 
 server <- function(input, output, session) {
-  # set statement data (including tags) and shiny.i18n translator based on
-  # the current value of `lang_toggle`
+  cat("server function entered")
 
   # Initialize reactive values
   current_lang <- reactiveVal("en")
+  policy_state <- reactiveVal()
   translator_r <- reactiveVal(translator)
-  statements <- reactiveVal(statements_en)
-  statement_tags <- reactiveVal(statement_tags_en)
+  statements <- reactiveVal(statements_en) # nolint
+  statement_tags <- reactiveVal(statement_tags_en) # nolint
 
-  observeEvent(statements, {
-    message('++++"Default" statement data vals++++')
-    message(paste("`statements`:", statements()$statement[1]))
-    message(paste("`statements_tags`:", statement_tags()[1]))
+  observe({
+    message(paste(
+      "\n=====",
+      "\n`statements() updated`",
+      "\n---`statements$statement[1]`:",
+      statements()$statement[1],
+      "\n`statement_tags()` updated",
+      "\n---`statement_tags[1]`:",
+      statement_tags()[1],
+      "\n"
+    ))
   })
 
   # Handle language toggle
   observeEvent(input$lang_toggle, {
-    message("lang_toggle button pressed")
     # Toggle language between English and French
     if (current_lang() == "en") {
-      statements(statements_fr)
-      statement_tags(statement_tags_fr)
-
-      message(str(statements()$statement[1]))
-      message(str(statement_tags()))
-
+      statements(statements_fr) # nolint
+      statement_tags(statement_tags_fr) # nolint
       current_lang("fr")
       translator_r()$set_translation_language("fr")
     } else {
-      statements(statements_en)
-      statement_tags(statement_tags_en)
-
-      message(str(statements()))
-      message(str(statement_tags()))
-
+      statements(statements_en) # nolint
+      statement_tags(statement_tags_en) # nolint
       current_lang("en")
       translator_r()$set_translation_language("en")
     }
-    message("lang_toggle observer done")
-  })
-
-  observeEvent(statement_tags(), {
-    message("Statement tag observer ran")
-    update_policy_menus(session, statements, statement_tags, input)
+    message("\nlang_toggle complete")
+    message(paste("`current_lang`:", current_lang(), "\n"))
   })
 
   observeEvent(input$lang_toggle, {
-    message("lang_toggle label updated")
+    message("\n`lang_toggle` label updated\n")
     # Update button text
     updateActionButton(
       session,
@@ -185,6 +179,61 @@ server <- function(input, output, session) {
       # Update without shiny.i18n to avoid circular dependency
       label = ifelse(current_lang() == "en", "FR", "EN")
     )
+  })
+
+  # main reactive elements --------------------
+
+  # Policy domain menu
+  output$select_domain <- renderUI({
+    message("`select_domain` ran")
+    selectInput(
+      inputId = "select_domain",
+      label = translator_r()$t("Policy domain:"),
+      choices = statement_tags(),
+      selected = statement_tags()[1],
+      multiple = TRUE,
+      selectize = TRUE,
+      width = "325px"
+    )
+  })
+
+  # policy statements menu
+  output$policy <- renderUI({
+    selectInput(
+      inputId = "policy",
+      label = translator_r()$t("Select a policy:"),
+      # updated in `server` first time `select_domain` input used
+      choices = NULL,
+      selectize = TRUE,
+      width = "auto",
+    )
+  })
+
+  # Reset button
+  observeEvent(input$delete, {
+    message("`select_domain` reset\n")
+    updateSelectInput(
+      session,
+      "select_domain",
+      choices = statement_tags(),
+      selected = character(0)
+    )
+  })
+
+  observeEvent(statement_tags(), {
+    message("\n`statement_tags()` observer")
+    policy_menus_update(session, statements, statement_tags, input) # nolint
+  })
+
+  # update policy statement menu based on policy domain menu
+  observeEvent(input$select_domain, {
+    message("\n`select_domain` observer")
+    cur_policy <- statements_update(
+      session,
+      statements,
+      input$select_domain
+    )
+    policy_state(cur_policy)
   })
 
   # UI Rendering --------------------
@@ -208,41 +257,10 @@ server <- function(input, output, session) {
     statements = statements,
     input_err = input_err,
     input = input,
-    tbl = tbl,
-    translator = translator_r
+    tbl = tbl, # nolint
+    translator = translator_r,
+    policy_state = policy_state
   )
-
-  # main panel observers
-
-  # Policy domain menu
-  output$select_domain <- renderUI({
-    selectInput(
-      inputId = "policy_group",
-      label = translator_r()$t("Policy domain:"),
-      choices = statement_tags(),
-      selected = statement_tags()[1],
-      multiple = TRUE,
-      selectize = TRUE,
-      width = "325px"
-    )
-  })
-
-  # Reset button
-  observeEvent(input$delete, {
-    updateSelectInput(
-      session,
-      "policy_group",
-      choices = statement_tags(),
-      selected = character(0)
-    )
-  })
-
-  # update policy statement menu based on policy domain menu
-  observeEvent(input$policy_group, {
-    message("policy selector choice observer called")
-
-    update_policy_statements(session, statements, input$policy_group)
-  })
 }
 
 shinyApp(ui = ui, server = server)

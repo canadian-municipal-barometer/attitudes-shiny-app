@@ -6,45 +6,71 @@ render_attitudes_plot <- function(
   input_err,
   input,
   tbl,
-  translator
+  translator,
+  policy_state
 ) {
   plot <- renderPlot(
     {
-      req(statements())
-      message("render_attitudes_plot called")
+      statements <- isolate(statements)
+      tbl <- isolate(tbl)
+      translator <- isolate(translator)
+      policy_state <- isolate(policy_state)
+
+      message(paste("\n`render_attitudes_plot` attempted"))
+
+      req(
+        ((is.null(policy_state()) == FALSE) & (policy_state() != "")) &
+          (policy_state() == input$policy)
+      )
 
       # Find the selected policy in statements
       policy_index <- which(statements()$statement == input$policy)
 
+      message(paste("`policy_index`:", policy_index))
+
       # Get the var_name for the selected policy
       filter_value <- statements()$var_name[policy_index]
+
+      message(paste("`filter_value`:", filter_value))
+      message(paste("`tbl$policy[1]`:", tbl$policy[1]))
+
       tbl <- tbl |>
         dplyr::filter(policy == filter_value)
 
       # un-translated inputs if they were translated to French in the UI
       user_selected <- un_translate_input(reactive_input = input) # nolint
 
-      # only take a reactive dep on `selected`
-      translator <- isolate(translator())
-
       # verify that data has the levels needed for the model to run
       validate(
         need(user_selected["province"] %in% tbl$province, input_err)
       )
 
-      model <- nnet::multinom(
-        factor(outcome) ~
-          factor(gender) +
-            factor(education) +
-            factor(province) +
-            factor(agecat) +
-            factor(race) +
-            factor(homeowner) +
-            factor(income) +
-            factor(immigrant) +
-            factor(popcat), # nolint
-        data = tbl,
-        weights = tbl$wgt
+      # an immediately invoked function
+      model <- (function() {
+        sink("/dev/null") # disable console logging
+        model <- nnet::multinom(
+          factor(outcome) ~
+            factor(gender) +
+              factor(education) +
+              factor(province) +
+              factor(agecat) +
+              factor(race) +
+              factor(homeowner) +
+              factor(income) +
+              factor(immigrant) +
+              factor(popcat), # nolint
+          data = tbl,
+          weights = tbl$wgt
+        )
+        sink()
+        if (!is.null(model)) {
+          message("\n---model fit successful\n")
+          return(model)
+        }
+      })()
+
+      validate(
+        need(model, "We're sorry. There seems to have been error.")
       )
 
       pred_data <- data.frame(
@@ -94,9 +120,9 @@ render_attitudes_plot <- function(
         ggplot2::theme_minimal(base_size = 20) +
         ggplot2::scale_x_discrete(
           labels = c(
-            "Agree" = translator$t("Agree"),
-            "Disagree" = translator$t("Disagree"),
-            "No opinion" = translator$t("No opinion")
+            "Agree" = translator()$t("Agree"),
+            "Disagree" = translator()$t("Disagree"),
+            "No opinion" = translator()$t("No opinion")
           )
         ) +
         ggplot2::scale_fill_manual(

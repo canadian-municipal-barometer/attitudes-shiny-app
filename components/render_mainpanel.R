@@ -1,8 +1,8 @@
 library(shiny)
 
 render_mainpanel <- function(translator, statements) {
-  message("mainpanel called")
   renderUI({
+    message("\n`mainpanel` declared\n")
     mainPanel(
       tabsetPanel(
         type = "pill",
@@ -43,14 +43,7 @@ render_mainpanel <- function(translator, statements) {
           # select the filtered policies
           div(
             id = "policy-div",
-            selectInput(
-              inputId = "policy",
-              label = translator()$t("Select a policy:"),
-              # updated in `server` first time `policy_group` input used
-              choices = NULL,
-              selectize = TRUE,
-              width = "auto",
-            ),
+            uiOutput(outputId = "policy")
           ),
           # plot
           div(
