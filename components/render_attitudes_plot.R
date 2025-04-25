@@ -18,13 +18,13 @@ render_attitudes_plot <- function(
 
       message(paste("\n`render_attitudes_plot` attempted"))
 
-      req(
-        ((is.null(policy_state()) == FALSE) & (policy_state() != "")) &
-          (policy_state() == input$policy)
-      )
+      # req(
+      #   ((is.null(policy_state()) == FALSE) & (policy_state() != "")) &
+      #     (policy_state() == input()$policy)
+      # )
 
       # Find the selected policy in statements
-      policy_index <- which(statements()$statement == input$policy)
+      policy_index <- which(statements()$statement == input()$policy)
 
       message(paste("`policy_index`:", policy_index))
 
@@ -38,7 +38,7 @@ render_attitudes_plot <- function(
         dplyr::filter(policy == filter_value)
 
       # un-translated inputs if they were translated to French in the UI
-      user_selected <- un_translate_input(reactive_input = input) # nolint
+      user_selected <- un_translate_input(reactive_input = input()) # nolint
 
       # verify that data has the levels needed for the model to run
       validate(

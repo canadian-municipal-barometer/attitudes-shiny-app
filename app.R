@@ -222,7 +222,7 @@ server <- function(input, output, session) {
 
   observeEvent(statement_tags(), {
     message("\n`statement_tags()` observer")
-    policy_menus_update(session, statements, statement_tags, input) # nolint
+    all_policy_menus_update(session, statements, statement_tags, input) # nolint
   })
 
   # update policy statement menu based on policy domain menu
@@ -256,7 +256,9 @@ server <- function(input, output, session) {
   output$predictions <- render_attitudes_plot(
     statements = statements,
     input_err = input_err,
-    input = input,
+    input = reactive({
+      input
+    }),
     tbl = tbl, # nolint
     translator = translator_r,
     policy_state = policy_state
