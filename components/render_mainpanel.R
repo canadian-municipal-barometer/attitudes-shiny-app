@@ -34,11 +34,6 @@ render_mainpanel <- function(translator, statements) {
               # Make the select_domain div's formatting match the reset button # nolint
               style = "align-items: bottom;"
             ),
-            actionButton(
-              "delete",
-              translator()$t("Reset"),
-              style = "margin: 15px"
-            )
           ),
           # select the filtered policies
           div(

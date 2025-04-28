@@ -219,15 +219,15 @@ server <- function(input, output, session) {
   # main reactive elements --------------------
 
   # Policy domain menu
-  # BUG: This shouldn't run at all after the app is initially loaded
+  # BUG: This probably shouldn't run at all after the app is initially loaded,
+  # except to re-set it's label using the translator
   output$select_domain <- renderUI({
     message("`select_domain` initialized")
     selectInput(
       inputId = "select_domain",
       label = translator_r()$t("Policy domain:"),
       choices = statement_tags(),
-      selected = statement_tags()[1],
-      multiple = TRUE,
+      multiple = FALSE,
       selectize = TRUE,
       width = "325px"
     )
@@ -242,17 +242,6 @@ server <- function(input, output, session) {
       choices = NULL,
       selectize = TRUE,
       width = "auto",
-    )
-  })
-
-  # Reset button
-  observeEvent(input$delete, {
-    message("`select_domain` reset\n")
-    updateSelectInput(
-      session,
-      "select_domain",
-      choices = statement_tags(),
-      selected = character(0)
     )
   })
 
