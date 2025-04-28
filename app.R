@@ -134,7 +134,7 @@ server <- function(input, output, session) {
 
   # Initialize reactive values
   current_lang <- reactiveVal("en")
-  policy_state <- reactiveVal()
+  input_state <- reactiveVal(TRUE)
   translator_r <- reactiveVal(translator)
   statements <- reactiveVal(statements_en) # nolint
   statement_tags <- reactiveVal(statement_tags_en) # nolint
@@ -168,8 +168,10 @@ server <- function(input, output, session) {
     }
     message("\nlang_toggle complete")
     message(paste("`current_lang`:", current_lang(), "\n"))
-    policy_state("updating")
-    message(paste("`policy_state` = ", policy_state()))
+    # invalidate `input_state` because of updates to underlying statements and
+    # tags data
+    input_state(FALSE)
+    message(paste("`input_state` = ", input_state()))
   })
 
   observeEvent(input$lang_toggle, {
@@ -183,16 +185,41 @@ server <- function(input, output, session) {
     )
   })
 
-  # policy state observer
-  observeEvent(input$policy, {
-    message(paste("`input$policy` observer ran"))
-    policy_state(input$policy)
-    message(paste("`policy_state` = ", policy_state()))
+  reactive_policy <- eventReactive(input$policy, {
+    input$policy
+  })
+
+  reactive_domain <- eventReactive(input$policy_domain, {
+    input$policy_domain
+  })
+
+  observe({
+    message("\n===================================================")
+    message("state observer entered")
+    message(paste("\n`reactive_policy` (`input$policy`) =", reactive_policy()))
+    message(paste(
+      "\nstatements()$statement[1]` = ",
+      statements()$statement[1]
+    ))
+    message(paste(
+      "\n`reactive_domain` (`input$select_domain`) =",
+      reactive_domain()
+    ))
+    message(paste("\n`statement_tags()[1]` = ", statement_tags()[1]))
+    # only operate while in the updating state, when `input_state` is invalidated # nolint
+
+    req(input_state() == FALSE)
+    message("`input_state` observer in invalidated state")
+    # once data and UI values are aligned, validate `input_state`
+    req(statements()$statement[1] == reactive_policy)
+    req(statement_tags()[1] == reactive_domain)
+    input_state(TRUE)
   })
 
   # main reactive elements --------------------
 
   # Policy domain menu
+  # BUG: This shouldn't run at all after the app is initially loaded
   output$select_domain <- renderUI({
     message("`select_domain` initialized")
     selectInput(
@@ -236,17 +263,12 @@ server <- function(input, output, session) {
     message("\n`statement_tags()` observer")
 
     tags_update(session, statement_tags) # nolint
-    message(paste("\n*****`input$select_domain` =", input$select_domain))
 
     statements_update(
       session,
       statements,
       input$select_domain
     )
-    message(paste("*****`input$policy` =", input$policy))
-
-    policy_state(input$policy)
-    message(paste("*****`policy_state` =", policy_state()))
   })
 
   # update policy statement menu based on policy domain menu
@@ -284,7 +306,7 @@ server <- function(input, output, session) {
     }),
     tbl = tbl, # nolint
     translator = translator_r,
-    policy_state = policy_state
+    input_state = input_state
   )
 }
 

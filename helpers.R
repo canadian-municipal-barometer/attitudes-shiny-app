@@ -80,7 +80,6 @@ tags_update <- function(
 ) {
   cat("---`all_policy_menus_update` ran\n")
   cat("---`select_domain` input widget updated\n")
-  cat(paste("\n*****`statement_tags()[1]` = ", statement_tags()[1]))
   updateSelectInput(
     session,
     "select_domain",
