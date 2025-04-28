@@ -17,11 +17,12 @@ render_attitudes_plot <- function(
       policy_state <- isolate(policy_state)
 
       message(paste("\n`render_attitudes_plot` attempted"))
+      message(paste("\n`policy_state` =", policy_state()))
 
-      # req(
-      #   ((is.null(policy_state()) == FALSE) & (policy_state() != "")) &
-      #     (policy_state() == input()$policy)
-      # )
+      req(
+        ((is.null(policy_state()) == FALSE) & (policy_state() != "")) &
+          (policy_state() == input()$policy)
+      )
 
       # Find the selected policy in statements
       policy_index <- which(statements()$statement == input()$policy)

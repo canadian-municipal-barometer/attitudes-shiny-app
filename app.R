@@ -168,6 +168,8 @@ server <- function(input, output, session) {
     }
     message("\nlang_toggle complete")
     message(paste("`current_lang`:", current_lang(), "\n"))
+    policy_state("updating")
+    message(paste("`policy_state` = ", policy_state()))
   })
 
   observeEvent(input$lang_toggle, {
@@ -181,11 +183,18 @@ server <- function(input, output, session) {
     )
   })
 
+  # policy state observer
+  observeEvent(input$policy, {
+    message(paste("`input$policy` observer ran"))
+    policy_state(input$policy)
+    message(paste("`policy_state` = ", policy_state()))
+  })
+
   # main reactive elements --------------------
 
   # Policy domain menu
   output$select_domain <- renderUI({
-    message("`select_domain` ran")
+    message("`select_domain` initialized")
     selectInput(
       inputId = "select_domain",
       label = translator_r()$t("Policy domain:"),
@@ -221,19 +230,33 @@ server <- function(input, output, session) {
   })
 
   observeEvent(statement_tags(), {
+    isolate(statements())
+
+    # NOTE: only runs when translation is triggered
     message("\n`statement_tags()` observer")
-    all_policy_menus_update(session, statements, statement_tags, input) # nolint
+
+    tags_update(session, statement_tags) # nolint
+    message(paste("\n*****`input$select_domain` =", input$select_domain))
+
+    statements_update(
+      session,
+      statements,
+      input$select_domain
+    )
+    message(paste("*****`input$policy` =", input$policy))
+
+    policy_state(input$policy)
+    message(paste("*****`policy_state` =", policy_state()))
   })
 
   # update policy statement menu based on policy domain menu
   observeEvent(input$select_domain, {
     message("\n`select_domain` observer")
-    cur_policy <- statements_update(
+    statements_update(
       session,
       statements,
       input$select_domain
     )
-    policy_state(cur_policy)
   })
 
   # UI Rendering --------------------

@@ -74,21 +74,19 @@ un_translate_input <- function(reactive_input) {
   return(selected)
 }
 
-all_policy_menus_update <- function(
+tags_update <- function(
   session,
-  statements,
-  statement_tags,
-  input
+  statement_tags
 ) {
   cat("---`all_policy_menus_update` ran\n")
   cat("---`select_domain` input widget updated\n")
+  cat(paste("\n*****`statement_tags()[1]` = ", statement_tags()[1]))
   updateSelectInput(
     session,
     "select_domain",
     choices = statement_tags(),
     selected = statement_tags()[1]
   )
-  statements_update(session, statements, input$select_domain)
 }
 
 statements_update <- function(session, statements, select_domain) {
