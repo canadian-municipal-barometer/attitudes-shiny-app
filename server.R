@@ -27,20 +27,21 @@ server <- function(input, output, session) {
   observeEvent(input$lang_toggle, {
     # Toggle language between English and French
     if (current_lang_r() == "en") {
+      selected_domain <- statement_tags_fr[1]
+      statements_r(statements_fr)
       updateSelectInput(
         session = session,
         inputId = "policy_domain",
-        choices = statement_tags_en, # nolint
-        selected = statement_tags_en[1]
+        choices = statement_tags_fr, # nolint
+        selected = selected_domain
       )
       statements_update(
         session = session,
-        statements = statements_en, # nolint
-        # this needs to be equivalent to what `input$policy` normally would be
-        domain = statement_tags_en[1] # nolint
+        statements_r = statements_r, # nolint
+        # this needs to be equivalent to what `input$policy` is when this is
+        # called outside of a language update
+        domain = selected_domain # nolint
       )
-      svy_data_r <- filter_statements(statement_tags_en, selected)
-      statements_r(statements_en)
 
       updateActionButton(
         session,
@@ -53,9 +54,7 @@ server <- function(input, output, session) {
       translator_r()$set_translation_language("fr")
     } else {
       # TODO:
-      message("French lang toggle branch")
-      # current_lang_r("en")
-      # translator_r()$set_translation_language("en")
+      message("English lang toggle branch")
     }
     message("\nlang_toggle complete")
     message(paste("`current_lang`:", current_lang_r(), "\n"))
@@ -115,15 +114,18 @@ server <- function(input, output, session) {
     )
   })
 
+  # un-translated inputs if they were translated to French in the UI
+  user_selected <- reactive({
+    un_translate_input(input)
+  })
+
   # plot
   output$predictions <- render_attitudes_plot(
     statements_r = statements_r,
-    input_err = input_err,
-    input_r = reactive({
-      input
-    }),
     filtered_svy_data_r = filtered_svy_r, # nolint
-    translator_r = translator_r
+    translator_r = translator_r,
+    user_selected = user_selected,
+    input_err = input_err
   )
 
   # mainpanel

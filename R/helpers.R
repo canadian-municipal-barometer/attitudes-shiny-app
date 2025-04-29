@@ -1,13 +1,14 @@
 library(shiny)
 
-# reassignment, because case_match rejects the reactive type without evaluating
-# it to a vector
-# If inputs are already in English, nothing happens.
-un_translate_input <- function(reactive_input) {
+# uses switch statements to convert french to english, because the model only
+# runs on English values.
+# Also converts the input object to a list, which is required by
+# `render_attitudes_plot` even when no language translation occurs.
+un_translate_input <- function(input) {
   cat("---`un_translate_selected` ran")
   selected <- list()
 
-  selected["province"] <- reactive_input$province |>
+  selected["province"] <- input$province |>
     switch(
       "Alberta" = "Alberta",
       "Colombie-Britannique" = "British Columbia",
@@ -19,56 +20,56 @@ un_translate_input <- function(reactive_input) {
       "Île-du-Prince-Édouard" = "Prince Edward Island",
       "Québec" = "Quebec",
       "Saskatchewan" = "Saskatchewan",
-      reactive_input$province
+      input$province
     )
 
-  selected["agecat"] <- reactive_input$agecat
+  selected["agecat"] <- input$agecat
 
-  selected["popcat"] <- reactive_input$popcat
+  selected["popcat"] <- input$popcat
 
-  selected["gender"] <- reactive_input$gender |>
+  selected["gender"] <- input$gender |>
     switch(
       "Homme" = "Man",
       "Femme" = "Woman",
-      reactive_input$gender
+      input$gender
     )
 
-  selected["race"] <- reactive_input$race |>
+  selected["race"] <- input$race |>
     switch(
       "Minorité racisée" = "Racialized minority",
       "Blanc·che" = "White",
-      reactive_input$race
+      input$race
     )
 
-  selected["immigrant"] <- reactive_input$immigrant |>
+  selected["immigrant"] <- input$immigrant |>
     switch(
       "Oui" = "Yes",
       "Non" = "No",
-      reactive_input$immigrant
+      input$immigrant
     )
 
-  selected["homeowner"] <- reactive_input$homeowner |>
+  selected["homeowner"] <- input$homeowner |>
     switch(
       "Oui" = "Yes",
       "Non" = "No",
-      reactive_input$homeowner
+      input$homeowner
     )
 
-  selected["education"] <- reactive_input$education |>
+  selected["education"] <- input$education |>
     switch(
       "Moins que les études secondaires" = "Less than high school",
       "Diplôme d’études secondaires" = "High school",
       "Apprentissage/Diplôme d’études professionnelles (DEP)" = "Associate's degree or trades", # nolint
       "Baccalauréat" = "Bachelor's degree",
       "Maitrise, doctorat, diplôme professionnel" = "Post-graduate degree",
-      reactive_input$education
+      input$education
     )
 
-  selected["income"] <- reactive_input$income |>
+  selected["income"] <- input$income |>
     switch(
       "Moins de $49,999" = "Less than $49,999",
       "200,000 $ ou plus" = "$200,000 or more",
-      reactive_input$income
+      input$income
     )
 
   return(selected)

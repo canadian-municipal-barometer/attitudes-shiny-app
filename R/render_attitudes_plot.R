@@ -2,15 +2,17 @@ library(shiny)
 
 render_attitudes_plot <- function(
   statements_r,
-  input_err,
-  input_r,
   filtered_svy_data_r,
-  translator_r
+  translator_r,
+  user_selected,
+  input_err
 ) {
   plot <- renderPlot(
     {
-      # un-translated inputs if they were translated to French in the UI
-      user_selected <- un_translate_input(reactive_input = input_r()) # nolint
+      statements_r <- isolate(statements_r)
+      filtered_svy_data_r <- isolate(filtered_svy_data_r)
+      translator_r <- isolate(translator_r)
+      user_selected <- user_selected()
 
       # verify that data has the levels needed for the model to run
       validate(
