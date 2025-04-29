@@ -17,55 +17,48 @@ server <- function(input, output, session) {
   cat("server function entered")
 
   # Initialize reactive values
-  current_lang <- reactiveVal("en")
-  input_state <- reactiveVal(TRUE)
+  current_lang_r <- reactiveVal("en")
+  # input_state_r <- reactiveVal(TRUE)
   translator_r <- reactiveVal(translator)
-  statements <- reactiveVal(statements_en)
-  data <- reactiveVal()
+  statements_r <- reactiveVal(statements_en) # nolint
+  svy_data_r <- reactiveVal(tbl) #nolint
 
   # Handle language toggle
   observeEvent(input$lang_toggle, {
     # Toggle language between English and French
-    if (current_lang() == "en") {
+    if (current_lang_r() == "en") {
       updateSelectInput(
         session = session,
         inputId = "policy_domain",
         choices = statement_tags_en, # nolint
         selected = statement_tags_en[1]
       )
-      selected <- statements_update(
+      statements_update(
         session = session,
-        statement_data = statements_en, # nolint
+        statements = statements_en, # nolint
+        # this needs to be equivalent to what `input$policy` normally would be
         domain = statement_tags_en[1] # nolint
       )
-      plot_data <- filter_statements(statement_tags_en, selected)
-      data(plot_data)
-      statements(statements_en)
+      svy_data_r <- filter_statements(statement_tags_en, selected)
+      statements_r(statements_en)
 
-      current_lang("fr")
+      updateActionButton(
+        session,
+        "lang_toggle",
+        # Update without shiny.i18n to avoid circular dependency
+        label = ifelse(current_lang_r() == "en", "FR", "EN")
+      )
+
+      current_lang_r("fr")
       translator_r()$set_translation_language("fr")
     } else {
       # TODO:
-      current_lang("en")
-      translator_r()$set_translation_language("en")
+      message("French lang toggle branch")
+      # current_lang_r("en")
+      # translator_r()$set_translation_language("en")
     }
     message("\nlang_toggle complete")
-    message(paste("`current_lang`:", current_lang(), "\n"))
-    # invalidate `input_state` because of updates to underlying statements and
-    # tags data
-    input_state(FALSE)
-    message(paste("`input_state` = ", input_state()))
-  })
-
-  observeEvent(input$lang_toggle, {
-    message("\n`lang_toggle` label updated\n")
-    # Update button text
-    updateActionButton(
-      session,
-      "lang_toggle",
-      # Update without shiny.i18n to avoid circular dependency
-      label = ifelse(current_lang() == "en", "FR", "EN")
-    )
+    message(paste("`current_lang`:", current_lang_r(), "\n"))
   })
 
   # main reactive elements --------------------
@@ -98,9 +91,9 @@ server <- function(input, output, session) {
   observeEvent(input$select_domain, {
     message("\n`select_domain` observer")
     statements_update(
-      session,
-      statements,
-      input$select_domain
+      session = session,
+      statements_r = statements_r,
+      domain = input$select_domain
     )
   })
 
@@ -114,29 +107,28 @@ server <- function(input, output, session) {
   # sidebar
   output$sidebar_contents <- render_sidebar(translator = translator_r) # nolint
 
-  filtered_svy <- eventReactive(input$policy, {
+  filtered_svy_r <- eventReactive(input$policy, {
     filter_statements(
-      statements = statements,
-      svy_data = tbl,
+      statements = statements_r,
+      svy_data_r = svy_data_r,
       policy = input$policy
     )
   })
 
   # plot
   output$predictions <- render_attitudes_plot(
-    statements = statements,
+    statements_r = statements_r,
     input_err = input_err,
-    input = reactive({
+    input_r = reactive({
       input
     }),
-    tbl = filtered_svy, # nolint
-    translator = translator_r,
-    input_state = input_state
+    filtered_svy_data_r = filtered_svy_r, # nolint
+    translator_r = translator_r
   )
 
-  # mainPanel
+  # mainpanel
   output$mainpanel <- render_mainpanel(
-    translator = translator_r,
-    statements = statements
+    translator_r = translator_r,
+    statements_r = statements_r
   )
 }

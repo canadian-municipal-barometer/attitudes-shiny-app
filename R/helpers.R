@@ -74,14 +74,14 @@ un_translate_input <- function(reactive_input) {
   return(selected)
 }
 
-statements_update <- function(session = session, statement_data, domain) {
+statements_update <- function(session = session, statements_r, domain) {
   cat("---`statements_update` ran\n")
 
-  filtered_statements <- statement_data() |>
+  filtered_statements <- statements_r() |>
     dplyr::filter(
       purrr::map_lgl(tags, function(x) any(x %in% domain))
     ) |>
-    dplyr::pull(statement)
+    dplyr::pull(statement) # nolint
 
   updateSelectInput(
     session,
@@ -91,11 +91,11 @@ statements_update <- function(session = session, statement_data, domain) {
   )
 }
 
-filter_statements <- function(statements, svy_data, policy) {
+filter_statements <- function(statements, svy_data_r, policy) {
   # Find the selected policy in statements
   index <- which(statements()$statement == policy) # input$policy
   val <- statements()$var_name[index]
-  tbl <- svy_data() |> dplyr::filter(policy == val)
+  tbl <- svy_data_r() |> dplyr::filter(policy == val)
   return(tbl)
 }
 
@@ -104,11 +104,11 @@ lang_update <- function(
   tags,
   statements,
   data,
-  svy_data,
+  svy_data_r,
   lang_status,
   translator
 ) {
-  # TODO: Are reactives really out of scope?
+  # BUG: throws vague errors
   updateSelectInput(
     session = session,
     inputId = "policy_domain",

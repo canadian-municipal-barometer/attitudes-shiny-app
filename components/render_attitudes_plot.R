@@ -1,24 +1,28 @@
 library(shiny)
 
 render_attitudes_plot <- function(
-  statements,
+  statements_r,
   input_err,
-  input,
-  tbl,
-  translator
+  input_r,
+  filtered_svy_data_r,
+  translator_r
 ) {
   plot <- renderPlot(
     {
       # un-translated inputs if they were translated to French in the UI
-      user_selected <- un_translate_input(reactive_input = input()) # nolint
+      user_selected <- un_translate_input(reactive_input = input_r()) # nolint
 
       # verify that data has the levels needed for the model to run
       validate(
-        need(user_selected["province"] %in% tbl()$province, input_err)
+        need(
+          user_selected["province"] %in% filtered_svy_data_r()$province,
+          input_err
+        )
       )
 
       # an immediately invoked function
       model <- (function() {
+        # TODO: remove sync before deployment
         sink("/dev/null") # disable console logging
         model <- nnet::multinom(
           factor(outcome) ~
@@ -31,8 +35,8 @@ render_attitudes_plot <- function(
               factor(income) +
               factor(immigrant) +
               factor(popcat), # nolint
-          data = tbl(),
-          weights = tbl()$wgt
+          data = filtered_svy_data_r(),
+          weights = filtered_svy_data_r()$wgt
         )
         sink()
         if (!is.null(model)) {
@@ -92,9 +96,9 @@ render_attitudes_plot <- function(
         ggplot2::theme_minimal(base_size = 20) +
         ggplot2::scale_x_discrete(
           labels = c(
-            "Agree" = translator()$t("Agree"),
-            "Disagree" = translator()$t("Disagree"),
-            "No opinion" = translator()$t("No opinion")
+            "Agree" = translator_r()$t("Agree"),
+            "Disagree" = translator_r()$t("Disagree"),
+            "No opinion" = translator_r()$t("No opinion")
           )
         ) +
         ggplot2::scale_fill_manual(
