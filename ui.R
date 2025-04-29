@@ -1,8 +1,5 @@
 library(shiny)
 library(shiny.i18n)
-source("components/render_sidebar.R")
-source("components/render_mainpanel.R")
-source("components/render_attitudes_plot.R")
 
 ui <- fluidPage(
   # formatting --------------------
