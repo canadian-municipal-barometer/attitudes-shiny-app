@@ -1,6 +1,5 @@
 library(shiny)
 library(shiny.i18n)
-source("helpers.R")
 source("components/render_sidebar.R")
 source("components/render_mainpanel.R")
 source("components/render_attitudes_plot.R")

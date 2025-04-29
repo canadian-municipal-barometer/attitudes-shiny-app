@@ -1,13 +1,11 @@
 library(shiny)
-source("helpers.R")
 
 render_attitudes_plot <- function(
   statements,
   input_err,
   input,
   tbl,
-  translator,
-  input_state
+  translator
 ) {
   plot <- renderPlot(
     {

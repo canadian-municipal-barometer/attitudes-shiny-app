@@ -95,6 +95,44 @@ filter_statements <- function(statements, svy_data, policy) {
   # Find the selected policy in statements
   index <- which(statements()$statement == policy) # input$policy
   val <- statements()$var_name[index]
-  tbl <- svy_data |> dplyr::filter(policy == val)
+  tbl <- svy_data() |> dplyr::filter(policy == val)
   return(tbl)
+}
+
+lang_update <- function(
+  session = session,
+  tags,
+  statements,
+  data,
+  svy_data,
+  lang_status,
+  translator
+) {
+  # TODO: Are reactives really out of scope?
+  updateSelectInput(
+    session = session,
+    inputId = "policy_domain",
+    choices = tags, # nolint
+    selected = tags[1]
+  )
+  statements_update(
+    session = session,
+    statement_data = statements, # nolint
+    domain = tags[1] # nolint
+  )
+
+  lang_status("fr")
+  translator()$set_translation_language("fr")
+
+  # this is meant to be setting initialization state for once the language
+  # is toggled. After initial plot data is set, the goal is to have the
+  # rest of the reactivity take over, as it does before language toggle is
+  # pressed
+  plot_data <- filter_statements(
+    statements = statements,
+    svy_data = data,
+    # NOTE: Should this be a call to statements()$statement[1]?
+    policy = statements$statement[1]
+  )
+  svy_data(plot_data)
 }
