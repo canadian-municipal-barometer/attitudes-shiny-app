@@ -74,27 +74,12 @@ un_translate_input <- function(reactive_input) {
   return(selected)
 }
 
-tags_update <- function(
-  session,
-  statement_tags
-) {
-  cat("---`all_policy_menus_update` ran\n")
-  cat("---`select_domain` input widget updated\n")
-  updateSelectInput(
-    session,
-    "select_domain",
-    choices = statement_tags(),
-    selected = statement_tags()[1]
-  )
-}
-
-statements_update <- function(session, statements, select_domain) {
+statements_update <- function(session = session, statement_data, domain) {
   cat("---`statements_update` ran\n")
-  data <- statements()
 
-  filtered_statements <- data |>
+  filtered_statements <- statement_data() |>
     dplyr::filter(
-      purrr::map_lgl(tags, function(x) any(x %in% select_domain))
+      purrr::map_lgl(tags, function(x) any(x %in% domain))
     ) |>
     dplyr::pull(statement)
 
@@ -104,5 +89,12 @@ statements_update <- function(session, statements, select_domain) {
     choices = filtered_statements,
     selected = filtered_statements[1]
   )
-  return(filtered_statements[1])
+}
+
+filter_statements <- function(statements, svy_data, policy) {
+  # Find the selected policy in statements
+  index <- which(statements()$statement == policy) # input$policy
+  val <- statements()$var_name[index]
+  tbl <- svy_data |> dplyr::filter(policy == val)
+  return(tbl)
 }

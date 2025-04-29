@@ -11,35 +11,12 @@ render_attitudes_plot <- function(
 ) {
   plot <- renderPlot(
     {
-      statements <- isolate(statements)
-      tbl <- isolate(tbl)
-      translator <- isolate(translator)
-
-      message(paste("\n`render_attitudes_plot` attempted"))
-      message(paste("\n`input_state` =", input_state()))
-
-      req(input_state())
-
-      # Find the selected policy in statements
-      policy_index <- which(statements()$statement == input()$policy)
-
-      message(paste("`policy_index`:", policy_index))
-
-      # Get the var_name for the selected policy
-      filter_value <- statements()$var_name[policy_index]
-
-      message(paste("`filter_value`:", filter_value))
-      message(paste("`tbl$policy[1]`:", tbl$policy[1]))
-
-      tbl <- tbl |>
-        dplyr::filter(policy == filter_value)
-
       # un-translated inputs if they were translated to French in the UI
       user_selected <- un_translate_input(reactive_input = input()) # nolint
 
       # verify that data has the levels needed for the model to run
       validate(
-        need(user_selected["province"] %in% tbl$province, input_err)
+        need(user_selected["province"] %in% tbl()$province, input_err)
       )
 
       # an immediately invoked function
@@ -56,8 +33,8 @@ render_attitudes_plot <- function(
               factor(income) +
               factor(immigrant) +
               factor(popcat), # nolint
-          data = tbl,
-          weights = tbl$wgt
+          data = tbl(),
+          weights = tbl()$wgt
         )
         sink()
         if (!is.null(model)) {

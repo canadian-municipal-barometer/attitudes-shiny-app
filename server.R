@@ -20,33 +20,32 @@ server <- function(input, output, session) {
   current_lang <- reactiveVal("en")
   input_state <- reactiveVal(TRUE)
   translator_r <- reactiveVal(translator)
-  statements <- reactiveVal(statements_en) # nolint
-  statement_tags <- reactiveVal(statement_tags_en) # nolint
-
-  observe({
-    message(paste(
-      "\n=====",
-      "\n`statements() updated`",
-      "\n---`statements$statement[1]`:",
-      statements()$statement[1],
-      "\n\n`statement_tags()` updated",
-      "\n---`statement_tags[1]`:",
-      statement_tags()[1],
-      "\n"
-    ))
-  })
+  statements <- reactiveVal(statements_en)
+  data <- reactiveVal()
 
   # Handle language toggle
   observeEvent(input$lang_toggle, {
     # Toggle language between English and French
     if (current_lang() == "en") {
-      statements(statements_fr) # nolint
-      statement_tags(statement_tags_fr) # nolint
+      updateSelectInput(
+        session = session,
+        inputId = "policy_domain",
+        choices = statement_tags_en, # nolint
+        selected = statement_tags_en[1]
+      )
+      selected <- statements_update(
+        session = session,
+        statement_data = statements_en, # nolint
+        domain = statement_tags_en[1] # nolint
+      )
+      plot_data <- filter_statements(statement_tags_en, selected)
+      data(plot_data)
+      statements(statements_en)
+
       current_lang("fr")
       translator_r()$set_translation_language("fr")
     } else {
-      statements(statements_en) # nolint
-      statement_tags(statement_tags_en) # nolint
+      # TODO:
       current_lang("en")
       translator_r()$set_translation_language("en")
     }
@@ -69,48 +68,15 @@ server <- function(input, output, session) {
     )
   })
 
-  reactive_policy <- eventReactive(input$policy, {
-    input$policy
-  })
-
-  reactive_domain <- eventReactive(input$policy_domain, {
-    input$policy_domain
-  })
-
-  observe({
-    message("\n===================================================")
-    message("state observer entered")
-    message(paste("\n`reactive_policy` (`input$policy`) =", reactive_policy()))
-    message(paste(
-      "\nstatements()$statement[1]` = ",
-      statements()$statement[1]
-    ))
-    message(paste(
-      "\n`reactive_domain` (`input$select_domain`) =",
-      reactive_domain()
-    ))
-    message(paste("\n`statement_tags()[1]` = ", statement_tags()[1]))
-    # only operate while in the updating state, when `input_state` is invalidated # nolint
-
-    req(input_state() == FALSE)
-    message("`input_state` observer in invalidated state")
-    # once data and UI values are aligned, validate `input_state`
-    req(statements()$statement[1] == reactive_policy)
-    req(statement_tags()[1] == reactive_domain)
-    input_state(TRUE)
-  })
-
   # main reactive elements --------------------
 
   # Policy domain menu
-  # BUG: This probably shouldn't run at all after the app is initially loaded,
-  # except to re-set it's label using the translator
   output$select_domain <- renderUI({
     message("`select_domain` initialized")
     selectInput(
       inputId = "select_domain",
       label = translator_r()$t("Policy domain:"),
-      choices = NULL,
+      choices = statement_tags_en, # nolint
       selectize = TRUE,
       width = "325px"
     )
@@ -125,21 +91,6 @@ server <- function(input, output, session) {
       choices = NULL,
       selectize = TRUE,
       width = "auto",
-    )
-  })
-
-  observeEvent(statement_tags(), {
-    isolate(statements())
-
-    # NOTE: only runs when translation is triggered
-    message("\n`statement_tags()` observer")
-
-    tags_update(session, statement_tags) # nolint
-
-    statements_update(
-      session,
-      statements,
-      input$select_domain
     )
   })
 
@@ -163,11 +114,13 @@ server <- function(input, output, session) {
   # sidebar
   output$sidebar_contents <- render_sidebar(translator = translator_r) # nolint
 
-  # mainPanel
-  output$mainpanel <- render_mainpanel(
-    translator = translator_r,
-    statements = statements
-  )
+  filtered_svy <- eventReactive(input$policy, {
+    filter_statements(
+      statements = statements,
+      svy_data = tbl,
+      policy = input$policy
+    )
+  })
 
   # plot
   output$predictions <- render_attitudes_plot(
@@ -176,8 +129,14 @@ server <- function(input, output, session) {
     input = reactive({
       input
     }),
-    tbl = tbl, # nolint
+    tbl = filtered_svy, # nolint
     translator = translator_r,
     input_state = input_state
+  )
+
+  # mainPanel
+  output$mainpanel <- render_mainpanel(
+    translator = translator_r,
+    statements = statements
   )
 }
