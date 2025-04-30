@@ -21,27 +21,15 @@ server <- function(input, output, session) {
   # input_state_r <- reactiveVal(TRUE)
   translator_r <- reactiveVal(translator)
   statements_r <- reactiveVal(statements_en) # nolint
+  statement_tags_r <- reactiveVal(statement_tags_en)
   svy_data_r <- reactiveVal(tbl) #nolint
 
   # Handle language toggle
   observeEvent(input$lang_toggle, {
     # Toggle language between English and French
     if (current_lang_r() == "en") {
-      selected_domain <- statement_tags_fr[1]
       statements_r(statements_fr)
-      updateSelectInput(
-        session = session,
-        inputId = "policy_domain",
-        choices = statement_tags_fr, # nolint
-        selected = selected_domain
-      )
-      statements_update(
-        session = session,
-        statements_r = statements_r, # nolint
-        # this needs to be equivalent to what `input$policy` is when this is
-        # called outside of a language update
-        domain = selected_domain # nolint
-      )
+      statement_tags_r(statement_tags_fr)
 
       updateActionButton(
         session,
@@ -51,7 +39,11 @@ server <- function(input, output, session) {
       )
 
       current_lang_r("fr")
-      translator_r()$set_translation_language("fr")
+
+      # NOTE: Disabling shiny.i18n translation while implementing data update
+      # upon language toggle
+
+      # translator_r()$set_translation_language("fr")
     } else {
       # TODO:
       message("English lang toggle branch")
@@ -83,6 +75,15 @@ server <- function(input, output, session) {
       choices = NULL,
       selectize = TRUE,
       width = "auto",
+    )
+  })
+
+  observeEvent(statement_tags_r(), {
+    message("\n`select_domain` UI update")
+    updateSelectInput(
+      session,
+      "select_domain",
+      choices = statement_tags_r()
     )
   })
 
