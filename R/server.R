@@ -15,10 +15,12 @@ if (.Platform$OS.type == "windows") {
 # `tbl`: main voter data
 load("data/voter-data.rda")
 
-app_language <- "fr"
+app_language <- "en"
 
-statements <- load_statements(data_lang = app_language)
-statement_tags <- load_statement_tags(data_lang = app_language)
+statements_en <- load_statements(data_lang = "en")
+statement_tags_en <- load_statement_tags(data_lang = "en")
+statements_fr <- load_statements(data_lang = "fr")
+statement_tags_fr <- load_statement_tags(data_lang = "fr")
 
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
@@ -30,7 +32,7 @@ server <- function(input, output, session) {
   cat("server function entered")
 
   # Initialize reactive values
-  current_lang_r <- reactiveVal("en")
+  current_lang_r <- reactiveVal(app_language)
   # input_state_r <- reactiveVal(TRUE)
   translator_r <- reactiveVal(translator)
   statements_r <- reactiveVal(statements) # nolint
@@ -48,18 +50,26 @@ server <- function(input, output, session) {
         session,
         "lang_toggle",
         # Update without shiny.i18n to avoid circular dependency
-        label = ifelse(current_lang_r() == "en", "FR", "EN")
+        label = "EN"
       )
 
       current_lang_r("fr")
 
-      # NOTE: Disabling shiny.i18n translation while implementing data update
-      # upon language toggle
-
-      # translator_r()$set_translation_language("fr")
+      translator_r()$set_translation_language("fr")
     } else {
-      # TODO:
-      message("English lang toggle branch")
+      statements_r(statements_en)
+      statement_tags_r(statement_tags_en)
+
+      updateActionButton(
+        session,
+        "lang_toggle",
+        # Update without shiny.i18n to avoid circular dependency
+        label = "FR"
+      )
+
+      current_lang_r("en")
+
+      translator_r()$set_translation_language("en")
     }
     message("\nlang_toggle complete")
     message(paste("`current_lang`:", current_lang_r(), "\n"))
