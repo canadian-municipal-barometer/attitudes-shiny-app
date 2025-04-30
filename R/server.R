@@ -1,11 +1,22 @@
 library(shiny)
+library(shiny.i18n)
+
+# Set locale for R session
+if (.Platform$OS.type == "windows") {
+  Sys.setlocale(category = "LC_ALL", locale = "French_France.UTF-8")
+} else {
+  Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
+}
 
 # data prep --------------------
 
+# RDA file loading
+
 # `tbl`: main voter data
 load("data/voter-data.rda")
-# `statements_en`, `statements_fr`, `statement_tags_en`, `statement_tags_fr`
-load("data/statements.rda")
+
+statements <- load_statements(data_lang = "en")
+statement_tags <- load_statement_tags(data_lang = "en")
 
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
@@ -20,9 +31,9 @@ server <- function(input, output, session) {
   current_lang_r <- reactiveVal("en")
   # input_state_r <- reactiveVal(TRUE)
   translator_r <- reactiveVal(translator)
-  statements_r <- reactiveVal(statements_en) # nolint
-  statement_tags_r <- reactiveVal(statement_tags_en)
-  svy_data_r <- reactiveVal(tbl) #nolint
+  statements_r <- reactiveVal(statements) # nolint
+  statement_tags_r <- reactiveVal(statement_tags) # nolint
+  svy_data_r <- reactiveVal(svy_data) #nolint
 
   # Handle language toggle
   observeEvent(input$lang_toggle, {
@@ -60,7 +71,8 @@ server <- function(input, output, session) {
     selectInput(
       inputId = "select_domain",
       label = translator_r()$t("Policy domain:"),
-      choices = statement_tags_en, # nolint
+      choices = statement_tags_r(), # nolint
+      # choices = NULL, # nolint
       selectize = TRUE,
       width = "325px"
     )
