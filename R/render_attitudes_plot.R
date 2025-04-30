@@ -9,6 +9,8 @@ render_attitudes_plot <- function(
 ) {
   plot <- renderPlot(
     {
+      message("`renderPlot` called")
+
       statements_r <- isolate(statements_r)
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       translator_r <- isolate(translator_r)

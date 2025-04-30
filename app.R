@@ -7,5 +7,4 @@
 # Connect Cloud.
 
 # This loads all the R code in `R/`
-devtools::load_all()
 shinyApp(ui, server)

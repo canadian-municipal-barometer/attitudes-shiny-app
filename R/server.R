@@ -15,8 +15,10 @@ if (.Platform$OS.type == "windows") {
 # `tbl`: main voter data
 load("data/voter-data.rda")
 
-statements <- load_statements(data_lang = "en")
-statement_tags <- load_statement_tags(data_lang = "en")
+app_language <- "fr"
+
+statements <- load_statements(data_lang = app_language)
+statement_tags <- load_statement_tags(data_lang = app_language)
 
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
@@ -80,6 +82,7 @@ server <- function(input, output, session) {
 
   # policy statements menu
   output$policy <- renderUI({
+    message("`policy` menu rendered")
     selectInput(
       inputId = "policy",
       label = translator_r()$t("Select a policy:"),
@@ -120,6 +123,7 @@ server <- function(input, output, session) {
   output$sidebar_contents <- render_sidebar(translator = translator_r) # nolint
 
   filtered_svy_r <- eventReactive(input$policy, {
+    message("data filtering reactive called")
     filter_statements(
       statements = statements_r,
       svy_data_r = svy_data_r,
@@ -129,6 +133,7 @@ server <- function(input, output, session) {
 
   # un-translated inputs if they were translated to French in the UI
   user_selected <- reactive({
+    message("`un_translate_input` reactive called")
     un_translate_input(input)
   })
 
