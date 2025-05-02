@@ -6,6 +6,7 @@ render_mainpanel <- function(translator_r, statements_r) {
     mainPanel(
       tabsetPanel(
         type = "pill",
+        selected = "Instructions",
         tabPanel(
           title = translator_r()$t("Plot"),
           # prevent lazy loading
