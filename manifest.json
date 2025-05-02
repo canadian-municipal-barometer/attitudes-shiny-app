@@ -166,6 +166,34 @@
         "Archs": "base64enc.so.dSYM"
       }
     },
+    "brio": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "brio",
+        "Title": "Basic R Input Output",
+        "Version": "1.1.5",
+        "Authors@R": "c(\n    person(\"Jim\", \"Hester\", role = \"aut\",\n           comment = c(ORCID = \"0000-0002-2739-7082\")),\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(given = \"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Functions to handle basic input output, these functions\n    always read and write UTF-8 (8-bit Unicode Transformation Format)\n    files and provide more explicit control over line endings.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://brio.r-lib.org, https://github.com/r-lib/brio",
+        "BugReports": "https://github.com/r-lib/brio/issues",
+        "Depends": "R (>= 3.6)",
+        "Suggests": "covr, testthat (>= 3.0.0)",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "yes",
+        "Packaged": "2024-04-24 18:51:29 UTC; gaborcsardi",
+        "Author": "Jim Hester [aut] (<https://orcid.org/0000-0002-2739-7082>),\n  Gábor Csárdi [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-04-24 19:20:07 UTC",
+        "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-04-24 21:05:13 UTC; unix",
+        "Archs": "brio.so.dSYM"
+      }
+    },
     "bslib": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -225,6 +253,35 @@
         "Date/Publication": "2024-05-16 09:50:11 UTC",
         "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-05-16 11:29:46 UTC; unix",
         "Archs": "cachem.so.dSYM"
+      }
+    },
+    "callr": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "callr",
+        "Title": "Call R from R",
+        "Version": "3.7.6",
+        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"),\n           comment = c(ORCID = \"0000-0001-7098-9676\")),\n    person(\"Winston\", \"Chang\", role = \"aut\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"Ascent Digital Services\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "It is sometimes useful to perform a computation in a separate\n    R process, without affecting the current R process at all.  This\n    packages does exactly that.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://callr.r-lib.org, https://github.com/r-lib/callr",
+        "BugReports": "https://github.com/r-lib/callr/issues",
+        "Depends": "R (>= 3.4)",
+        "Imports": "processx (>= 3.6.1), R6, utils",
+        "Suggests": "asciicast (>= 2.3.1), cli (>= 1.1.0), mockery, ps, rprojroot,\nspelling, testthat (>= 3.2.0), withr (>= 2.3.0)",
+        "Config/Needs/website": "r-lib/asciicast, glue, htmlwidgets, igraph,\ntibble, tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "Language": "en-US",
+        "RoxygenNote": "7.3.1.9000",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-03-25 12:10:25 UTC; gaborcsardi",
+        "Author": "Gábor Csárdi [aut, cre, cph] (<https://orcid.org/0000-0001-7098-9676>),\n  Winston Chang [aut],\n  Posit Software, PBC [cph, fnd],\n  Ascent Digital Services [cph, fnd]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-03-25 13:30:06 UTC",
+        "Built": "R 4.4.0; ; 2024-04-06 02:54:18 UTC; unix"
       }
     },
     "cli": {
@@ -369,6 +426,66 @@
         "Built": "R 4.4.0; ; 2024-06-20 13:14:47 UTC; unix"
       }
     },
+    "desc": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "desc",
+        "Title": "Manipulate DESCRIPTION Files",
+        "Version": "1.4.3",
+        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Kirill\", \"Müller\", role = \"aut\"),\n    person(\"Jim\", \"Hester\", , \"james.f.hester@gmail.com\", role = \"aut\"),\n    person(\"Maëlle\", \"Salmon\", role = \"ctb\",\n           comment = c(ORCID = \"0000-0002-2815-0399\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Description": "Tools to read, write, create, and manipulate DESCRIPTION\n    files.  It is intended for packages that create or manipulate other\n    packages.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://desc.r-lib.org/, https://github.com/r-lib/desc",
+        "BugReports": "https://github.com/r-lib/desc/issues",
+        "Depends": "R (>= 3.4)",
+        "Imports": "cli, R6, utils",
+        "Suggests": "callr, covr, gh, spelling, testthat, whoami, withr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "Language": "en-US",
+        "RoxygenNote": "7.2.3",
+        "Collate": "'assertions.R' 'authors-at-r.R' 'built.R' 'classes.R'\n'collate.R' 'constants.R' 'deps.R' 'desc-package.R'\n'description.R' 'encoding.R' 'find-package-root.R' 'latex.R'\n'non-oo-api.R' 'package-archives.R' 'read.R' 'remotes.R'\n'str.R' 'syntax_checks.R' 'urls.R' 'utils.R' 'validate.R'\n'version.R'",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-12-10 11:07:50 UTC; gaborcsardi",
+        "Author": "Gábor Csárdi [aut, cre],\n  Kirill Müller [aut],\n  Jim Hester [aut],\n  Maëlle Salmon [ctb] (<https://orcid.org/0000-0002-2815-0399>),\n  Posit Software, PBC [cph, fnd]",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-12-10 11:40:08 UTC",
+        "Built": "R 4.4.0; ; 2024-04-05 15:11:25 UTC; unix"
+      }
+    },
+    "diffobj": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "diffobj",
+        "Type": "Package",
+        "Title": "Diffs for R Objects",
+        "Description": "Generate a colorized diff of two R objects for an intuitive\n    visualization of their differences.",
+        "Version": "0.3.5",
+        "Authors@R": "c(\n    person(\n    \"Brodie\", \"Gaslam\", email=\"brodie.gaslam@yahoo.com\",\n    role=c(\"aut\", \"cre\")),\n    person(\n    \"Michael B.\", \"Allen\", email=\"ioplex@gmail.com\",\n    role=c(\"ctb\", \"cph\"),\n    comment=\"Original C implementation of Myers Diff Algorithm\"))",
+        "Depends": "R (>= 3.1.0)",
+        "License": "GPL-2 | GPL-3",
+        "URL": "https://github.com/brodieG/diffobj",
+        "BugReports": "https://github.com/brodieG/diffobj/issues",
+        "RoxygenNote": "7.1.1",
+        "VignetteBuilder": "knitr",
+        "Encoding": "UTF-8",
+        "Suggests": "knitr, rmarkdown",
+        "Collate": "'capt.R' 'options.R' 'pager.R' 'check.R' 'finalizer.R'\n'misc.R' 'html.R' 'styles.R' 's4.R' 'core.R' 'diff.R' 'get.R'\n'guides.R' 'hunks.R' 'layout.R' 'myerssimple.R' 'rdiff.R'\n'rds.R' 'set.R' 'subset.R' 'summmary.R' 'system.R' 'text.R'\n'tochar.R' 'trim.R' 'word.R'",
+        "Imports": "crayon (>= 1.3.2), tools, methods, utils, stats",
+        "NeedsCompilation": "yes",
+        "Packaged": "2021-10-05 01:16:56 UTC; bg",
+        "Author": "Brodie Gaslam [aut, cre],\n  Michael B. Allen [ctb, cph] (Original C implementation of Myers Diff\n    Algorithm)",
+        "Maintainer": "Brodie Gaslam <brodie.gaslam@yahoo.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2021-10-05 07:10:17 UTC",
+        "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-04-05 15:13:57 UTC; unix",
+        "Archs": "diffobj.so.dSYM"
+      }
+    },
     "digest": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -425,6 +542,35 @@
         "Date/Publication": "2023-11-17 16:50:02 UTC",
         "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-04-06 10:52:28 UTC; unix",
         "Archs": "dplyr.so.dSYM"
+      }
+    },
+    "evaluate": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Type": "Package",
+        "Package": "evaluate",
+        "Title": "Parsing and Evaluation Tools that Provide More Details than the\nDefault",
+        "Version": "0.24.0",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Yihui\", \"Xie\", role = \"aut\",\n           comment = c(ORCID = \"0000-0003-0645-5666\")),\n    person(\"Michael\", \"Lawrence\", role = \"ctb\"),\n    person(\"Thomas\", \"Kluyver\", role = \"ctb\"),\n    person(\"Jeroen\", \"Ooms\", role = \"ctb\"),\n    person(\"Barret\", \"Schloerke\", role = \"ctb\"),\n    person(\"Adam\", \"Ryczkowski\", role = \"ctb\"),\n    person(\"Hiroaki\", \"Yutani\", role = \"ctb\"),\n    person(\"Michel\", \"Lang\", role = \"ctb\"),\n    person(\"Karolis\", \"Koncevičius\", role = \"ctb\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Parsing and evaluation tools that make it easy to recreate\n    the command line behaviour of R.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/r-lib/evaluate",
+        "BugReports": "https://github.com/r-lib/evaluate/issues",
+        "Depends": "R (>= 4.0.0)",
+        "Imports": "methods",
+        "Suggests": "covr, ggplot2, lattice, rlang, testthat (>= 3.0.0), withr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-06-10 13:33:57 UTC; hadleywickham",
+        "Author": "Hadley Wickham [aut, cre],\n  Yihui Xie [aut] (<https://orcid.org/0000-0003-0645-5666>),\n  Michael Lawrence [ctb],\n  Thomas Kluyver [ctb],\n  Jeroen Ooms [ctb],\n  Barret Schloerke [ctb],\n  Adam Ryczkowski [ctb],\n  Hiroaki Yutani [ctb],\n  Michel Lang [ctb],\n  Karolis Koncevičius [ctb],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Hadley Wickham <hadley@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-06-10 14:10:02 UTC",
+        "Built": "R 4.4.0; ; 2024-06-10 15:49:12 UTC; unix"
       }
     },
     "fansi": {
@@ -1163,6 +1309,34 @@
         "Built": "R 4.4.1; ; 2025-01-07 12:43:33 UTC; unix"
       }
     },
+    "pkgbuild": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "pkgbuild",
+        "Title": "Find Tools Needed to Build R Packages",
+        "Version": "1.4.4",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", role = \"aut\"),\n    person(\"Jim\", \"Hester\", role = \"aut\"),\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Provides functions used to build R packages. Locates\n    compilers needed to build R packages on various platforms and ensures\n    the PATH is configured appropriately so R can use them.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/r-lib/pkgbuild, https://pkgbuild.r-lib.org",
+        "BugReports": "https://github.com/r-lib/pkgbuild/issues",
+        "Depends": "R (>= 3.5)",
+        "Imports": "callr (>= 3.2.0), cli (>= 3.4.0), desc, processx, R6",
+        "Suggests": "covr, cpp11, knitr, mockery, Rcpp, rmarkdown, testthat (>=\n3.0.0), withr (>= 2.3.0)",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-03-17 14:13:01 UTC; gaborcsardi",
+        "Author": "Hadley Wickham [aut],\n  Jim Hester [aut],\n  Gábor Csárdi [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-03-17 14:40:02 UTC",
+        "Built": "R 4.4.0; ; 2024-04-06 06:43:15 UTC; unix"
+      }
+    },
     "pkgconfig": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -1185,6 +1359,87 @@
         "Repository": "CRAN",
         "Date/Publication": "2019-09-22 09:20:02 UTC",
         "Built": "R 4.4.0; ; 2024-04-05 15:00:21 UTC; unix"
+      }
+    },
+    "pkgload": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "pkgload",
+        "Title": "Simulate Package Installation and Attach",
+        "Version": "1.4.0",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", role = \"aut\"),\n    person(\"Winston\", \"Chang\", role = \"aut\"),\n    person(\"Jim\", \"Hester\", role = \"aut\"),\n    person(\"Lionel\", \"Henry\", , \"lionel@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"R Core team\", role = \"ctb\",\n           comment = \"Some namespace and vignette code extracted from base R\")\n  )",
+        "Description": "Simulates the process of installing a package and then\n    attaching it. This is a key part of the 'devtools' package as it\n    allows you to rapidly iterate while developing a package.",
+        "License": "GPL-3",
+        "URL": "https://github.com/r-lib/pkgload, https://pkgload.r-lib.org",
+        "BugReports": "https://github.com/r-lib/pkgload/issues",
+        "Depends": "R (>= 3.4.0)",
+        "Imports": "cli (>= 3.3.0), desc, fs, glue, lifecycle, methods, pkgbuild,\nprocessx, rlang (>= 1.1.1), rprojroot, utils, withr (>= 2.4.3)",
+        "Suggests": "bitops, jsonlite, mathjaxr, pak, Rcpp, remotes, rstudioapi,\ntestthat (>= 3.2.1.1), usethis",
+        "Config/Needs/website": "tidyverse/tidytemplate, ggplot2",
+        "Config/testthat/edition": "3",
+        "Config/testthat/parallel": "TRUE",
+        "Config/testthat/start-first": "dll",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.1",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-06-28 10:36:56 UTC; lionel",
+        "Author": "Hadley Wickham [aut],\n  Winston Chang [aut],\n  Jim Hester [aut],\n  Lionel Henry [aut, cre],\n  Posit Software, PBC [cph, fnd],\n  R Core team [ctb] (Some namespace and vignette code extracted from base\n    R)",
+        "Maintainer": "Lionel Henry <lionel@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-06-28 11:30:02 UTC",
+        "Built": "R 4.4.0; ; 2024-06-28 12:27:35 UTC; unix"
+      }
+    },
+    "praise": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "praise",
+        "Title": "Praise Users",
+        "Version": "1.0.0",
+        "Author": "Gabor Csardi, Sindre Sorhus",
+        "Maintainer": "Gabor Csardi <csardi.gabor@gmail.com>",
+        "Description": "Build friendly R packages that\n    praise their users if they have done something\n    good, or they just need it to feel better.",
+        "License": "MIT + file LICENSE",
+        "LazyData": "true",
+        "URL": "https://github.com/gaborcsardi/praise",
+        "BugReports": "https://github.com/gaborcsardi/praise/issues",
+        "Suggests": "testthat",
+        "Collate": "'adjective.R' 'adverb.R' 'exclamation.R' 'verb.R' 'rpackage.R'\n'package.R'",
+        "NeedsCompilation": "no",
+        "Packaged": "2015-08-11 02:01:43 UTC; gaborcsardi",
+        "Repository": "CRAN",
+        "Date/Publication": "2015-08-11 08:22:28",
+        "Built": "R 4.4.0; ; 2024-04-05 15:13:00 UTC; unix"
+      }
+    },
+    "processx": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "processx",
+        "Title": "Execute and Control System Processes",
+        "Version": "3.8.4",
+        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\", \"cph\"),\n           comment = c(ORCID = \"0000-0001-7098-9676\")),\n    person(\"Winston\", \"Chang\", role = \"aut\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"Ascent Digital Services\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Tools to run system processes in the background.  It can\n    check if a background process is running; wait on a background process\n    to finish; get the exit status of finished processes; kill background\n    processes. It can read the standard output and error of the processes,\n    using non-blocking connections. 'processx' can poll a process for\n    standard output or error, with a timeout. It can also poll several\n    processes at once.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://processx.r-lib.org, https://github.com/r-lib/processx",
+        "BugReports": "https://github.com/r-lib/processx/issues",
+        "Depends": "R (>= 3.4.0)",
+        "Imports": "ps (>= 1.2.0), R6, utils",
+        "Suggests": "callr (>= 3.7.3), cli (>= 3.3.0), codetools, covr, curl,\ndebugme, parallel, rlang (>= 1.0.2), testthat (>= 3.0.0),\nwebfakes, withr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.1.9000",
+        "NeedsCompilation": "yes",
+        "Packaged": "2024-03-16 14:10:21 UTC; gaborcsardi",
+        "Author": "Gábor Csárdi [aut, cre, cph] (<https://orcid.org/0000-0001-7098-9676>),\n  Winston Chang [aut],\n  Posit Software, PBC [cph, fnd],\n  Ascent Digital Services [cph, fnd]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-03-16 14:50:02 UTC",
+        "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-04-05 22:37:06 UTC; unix"
       }
     },
     "promises": {
@@ -1216,6 +1471,35 @@
         "Date/Publication": "2024-04-05 15:00:06 UTC",
         "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-04-07 21:44:51 UTC; unix",
         "Archs": "promises.so.dSYM"
+      }
+    },
+    "ps": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "ps",
+        "Title": "List, Query, Manipulate System Processes",
+        "Version": "1.7.7",
+        "Authors@R": "c(\n    person(\"Jay\", \"Loden\", role = \"aut\"),\n    person(\"Dave\", \"Daeschler\", role = \"aut\"),\n    person(\"Giampaolo\", \"Rodola'\", role = \"aut\"),\n    person(\"Gábor\", \"Csárdi\", , \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "List, query and manipulate all system processes, on\n    'Windows', 'Linux' and 'macOS'.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/r-lib/ps, https://ps.r-lib.org/",
+        "BugReports": "https://github.com/r-lib/ps/issues",
+        "Depends": "R (>= 3.4)",
+        "Imports": "utils",
+        "Suggests": "callr, covr, curl, pillar, pingr, processx (>= 3.1.0), R6,\nrlang, testthat (>= 3.0.0), webfakes",
+        "Biarch": "true",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "yes",
+        "Packaged": "2024-07-02 17:34:07 UTC; gaborcsardi",
+        "Author": "Jay Loden [aut],\n  Dave Daeschler [aut],\n  Giampaolo Rodola' [aut],\n  Gábor Csárdi [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-07-02 18:10:02 UTC",
+        "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-07-02 21:10:56 UTC; unix"
       }
     },
     "purrr": {
@@ -1279,6 +1563,32 @@
         "Archs": "rappdirs.so.dSYM"
       }
     },
+    "rematch2": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "rematch2",
+        "Title": "Tidy Output from Regular Expression Matching",
+        "Version": "2.1.2",
+        "Authors@R": "c(\n    person(\"Gábor\", \"Csárdi\", email = \"csardi.gabor@gmail.com\", role = c(\"aut\", \"cre\")),\n    person(\"Matthew\", \"Lincoln\", email = \"matthew.d.lincoln@gmail.com\", role = c(\"ctb\")))",
+        "Description": "Wrappers on 'regexpr' and 'gregexpr' to return the match\n    results in tidy data frames.",
+        "License": "MIT + file LICENSE",
+        "LazyData": "true",
+        "URL": "https://github.com/r-lib/rematch2#readme",
+        "BugReports": "https://github.com/r-lib/rematch2/issues",
+        "RoxygenNote": "7.1.0",
+        "Imports": "tibble",
+        "Suggests": "covr, testthat",
+        "Encoding": "UTF-8",
+        "NeedsCompilation": "no",
+        "Packaged": "2020-04-30 10:31:13 UTC; gaborcsardi",
+        "Author": "Gábor Csárdi [aut, cre],\n  Matthew Lincoln [ctb]",
+        "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2020-05-01 06:50:02 UTC",
+        "Built": "R 4.4.0; ; 2024-04-06 09:14:59 UTC; unix"
+      }
+    },
     "rlang": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -1309,6 +1619,33 @@
         "Date/Publication": "2024-06-04 09:45:03 UTC",
         "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-06-05 02:08:53 UTC; unix",
         "Archs": "rlang.so.dSYM"
+      }
+    },
+    "rprojroot": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "rprojroot",
+        "Title": "Finding Files in Project Subdirectories",
+        "Version": "2.0.4",
+        "Authors@R": "\n    person(given = \"Kirill\",\n           family = \"M\\u00fcller\",\n           role = c(\"aut\", \"cre\"),\n           email = \"kirill@cynkra.com\",\n           comment = c(ORCID = \"0000-0002-1416-3412\"))",
+        "Description": "Robust, reliable and flexible paths to files below\n    a project root. The 'root' of a project is defined as a directory that\n    matches a certain criterion, e.g., it contains a certain regular file.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://rprojroot.r-lib.org/, https://github.com/r-lib/rprojroot",
+        "BugReports": "https://github.com/r-lib/rprojroot/issues",
+        "Depends": "R (>= 3.0.0)",
+        "Suggests": "covr, knitr, lifecycle, mockr, rlang, rmarkdown, testthat (>=\n3.0.0), withr",
+        "VignetteBuilder": "knitr",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-11-05 06:47:23 UTC; kirill",
+        "Author": "Kirill Müller [aut, cre] (<https://orcid.org/0000-0002-1416-3412>)",
+        "Maintainer": "Kirill Müller <kirill@cynkra.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-11-05 10:20:02 UTC",
+        "Built": "R 4.4.0; ; 2024-04-05 15:11:41 UTC; unix"
       }
     },
     "rstudioapi": {
@@ -1537,6 +1874,38 @@
         "Built": "R 4.4.0; ; 2024-04-06 06:42:00 UTC; unix"
       }
     },
+    "testthat": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "testthat",
+        "Title": "Unit Testing for R",
+        "Version": "3.2.1.1",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"R Core team\", role = \"ctb\",\n           comment = \"Implementation of utils::recover()\")\n  )",
+        "Description": "Software testing is important, but, in part because it is\n    frustrating and boring, many of us avoid it. 'testthat' is a testing\n    framework for R that is easy to learn and use, and integrates with\n    your existing 'workflow'.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://testthat.r-lib.org, https://github.com/r-lib/testthat",
+        "BugReports": "https://github.com/r-lib/testthat/issues",
+        "Depends": "R (>= 3.6.0)",
+        "Imports": "brio (>= 1.1.3), callr (>= 3.7.3), cli (>= 3.6.1), desc (>=\n1.4.2), digest (>= 0.6.33), evaluate (>= 0.21), jsonlite (>=\n1.8.7), lifecycle (>= 1.0.3), magrittr (>= 2.0.3), methods,\npkgload (>= 1.3.2.1), praise (>= 1.0.0), processx (>= 3.8.2),\nps (>= 1.7.5), R6 (>= 2.5.1), rlang (>= 1.1.1), utils, waldo\n(>= 0.5.1), withr (>= 2.5.0)",
+        "Suggests": "covr, curl (>= 0.9.5), diffviewer (>= 0.1.0), knitr,\nrmarkdown, rstudioapi, shiny, usethis, vctrs (>= 0.1.0), xml2",
+        "VignetteBuilder": "knitr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Config/testthat/parallel": "true",
+        "Config/testthat/start-first": "watcher, parallel*",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "yes",
+        "Packaged": "2024-04-14 03:24:27 UTC; ripley",
+        "Author": "Hadley Wickham [aut, cre],\n  Posit Software, PBC [cph, fnd],\n  R Core team [ctb] (Implementation of utils::recover())",
+        "Maintainer": "Hadley Wickham <hadley@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2024-04-14 05:24:52",
+        "Built": "R 4.4.0; aarch64-apple-darwin20; 2024-04-14 03:51:11 UTC; unix",
+        "Archs": "testthat.so.dSYM"
+      }
+    },
     "tibble": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -1720,6 +2089,34 @@
         "Built": "R 4.4.0; ; 2024-04-05 07:33:43 UTC; unix"
       }
     },
+    "waldo": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "waldo",
+        "Title": "Find Differences Between R Objects",
+        "Version": "0.5.2",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Compare complex R objects and reveal the key differences.\n    Designed particularly for use in testing packages where being able to\n    quickly isolate key differences makes understanding test failures much\n    easier.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://waldo.r-lib.org, https://github.com/r-lib/waldo",
+        "BugReports": "https://github.com/r-lib/waldo/issues",
+        "Depends": "R (>= 3.6)",
+        "Imports": "cli, diffobj (>= 0.3.4), fansi, glue, methods, rematch2, rlang\n(>= 1.0.0), tibble",
+        "Suggests": "covr, R6, testthat (>= 3.0.0), withr, xml2",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-11-01 22:05:31 UTC; hadleywickham",
+        "Author": "Hadley Wickham [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Hadley Wickham <hadley@posit.co>",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-11-02 13:10:02 UTC",
+        "Built": "R 4.4.0; ; 2024-04-06 10:53:39 UTC; unix"
+      }
+    },
     "withr": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -1801,32 +2198,65 @@
     }
   },
   "files": {
-    "app.R": {
-      "checksum": "537c216d803deba290772c2e5b39d555"
+    ".Rbuildignore": {
+      "checksum": "87f9d4ec0ffedff42d9aa1a7e04c6c96"
     },
-    "data/statements.rda": {
-      "checksum": "766c40e7a07598d8d685e45005c830ef"
+    "app.R": {
+      "checksum": "9c7767f2f7807ad77215ee6080a6375a"
+    },
+    "data/statement_tags_en.rda": {
+      "checksum": "e20e34341a7726244144dd9f99cdcbc4"
+    },
+    "data/statement_tags_fr.rda": {
+      "checksum": "5e9b921edfb7f0e6ec9d17b7fed59cf1"
+    },
+    "data/statements_en.rda": {
+      "checksum": "6b201129aaac37b88f95f58e8bb19ca8"
+    },
+    "data/statements_fr.rda": {
+      "checksum": "3603bdd6cf0935262343f7508c2dc796"
     },
     "data/translation/translation_fr.csv": {
-      "checksum": "f39564153ca1f0338083510c71c168d8"
-    },
-    "data/unique-tags.rda": {
-      "checksum": "39fe63762578bd1139af1a1e60416d33"
+      "checksum": "839e1e7f8c18277d94518bfebee965a9"
     },
     "data/voter-data.rda": {
-      "checksum": "57bf25e5f5a094f8e2cba36a0d3fdfb6"
+      "checksum": "c8283bf4208b32db14b929256c5620c9"
     },
-    "helpers.R": {
-      "checksum": "f08205b1191e01a41601bb71be47060f"
+    "DESCRIPTION": {
+      "checksum": "c470fab97de4fd222f09f287adf8894c"
+    },
+    "R/helpers.R": {
+      "checksum": "5821f32c6cd26e0c15cf30ea0a8eb283"
+    },
+    "R/load-data.R": {
+      "checksum": "200f390db37dd9747fcd9bb0d7ed548b"
+    },
+    "R/render_attitudes_plot.R": {
+      "checksum": "945de3740c8b4ce258e8bcd1641096b5"
+    },
+    "R/render_mainpanel.R": {
+      "checksum": "017111c11bf9c126248abfae7ca2e39d"
+    },
+    "R/render_sidebar.R": {
+      "checksum": "0acbe870cf0814782b7dfa06e3bfed63"
+    },
+    "R/server.R": {
+      "checksum": "b9311ae5172722953f8586a30f490491"
+    },
+    "R/ui.R": {
+      "checksum": "cd491ac2d909f908bdcb0437eab1a28e"
     },
     "README.md": {
-      "checksum": "e8a98a4b29fa857cf13fe64dbdb1d1e7"
+      "checksum": "12f265226196331e5b9543b5e3356b62"
     },
-    "tmp/app.R": {
-      "checksum": "9f3f23746fac6cf9ef689ab28fa514b2"
+    "tests/testthat.R": {
+      "checksum": "98a1de2006b445d171135e3241f97a96"
     },
-    "tmp/data/translation/translation_fr.csv": {
-      "checksum": "e127f4f1b2e157933761b813f432599b"
+    "tests/testthat/test-helpers.R": {
+      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    "tests/testthat/test-load-data.R": {
+      "checksum": "8cb0d843076ecd90dda9ce02110e737c"
     }
   },
   "users": null
