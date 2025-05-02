@@ -11,6 +11,7 @@ render_mainpanel <- function(translator_r, statements_r) {
           title = translator_r()$t("Plot"),
           # prevent lazy loading
           loadOnActivate = FALSE,
+          suspendWhenHidden = FALSE,
           # spacing hack
           h1("\n"),
           p(
