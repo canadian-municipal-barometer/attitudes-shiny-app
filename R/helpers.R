@@ -75,7 +75,12 @@ un_translate_input <- function(input) {
   return(selected)
 }
 
-statements_update <- function(session = session, statements_r, domain) {
+statements_update <- function(
+  session = session,
+  translator_r,
+  statements_r,
+  domain
+) {
   cat("---`statements_update` ran\n")
 
   filtered_statements <- statements_r() |>
@@ -87,6 +92,7 @@ statements_update <- function(session = session, statements_r, domain) {
   updateSelectInput(
     session,
     "policy",
+    label = translator_r()$t("Select a policy:"),
     choices = filtered_statements,
     selected = filtered_statements[1]
   )
@@ -98,42 +104,4 @@ filter_statements <- function(statements, svy_data_r, policy) {
   val <- statements()$var_name[index]
   tbl <- svy_data_r() |> dplyr::filter(policy == val)
   return(tbl)
-}
-
-lang_update <- function(
-  session = session,
-  tags,
-  statements,
-  data,
-  svy_data_r,
-  lang_status,
-  translator
-) {
-  # BUG: throws vague errors
-  updateSelectInput(
-    session = session,
-    inputId = "policy_domain",
-    choices = tags, # nolint
-    selected = tags[1]
-  )
-  statements_update(
-    session = session,
-    statement_data = statements, # nolint
-    domain = tags[1] # nolint
-  )
-
-  lang_status("fr")
-  translator()$set_translation_language("fr")
-
-  # this is meant to be setting initialization state for once the language
-  # is toggled. After initial plot data is set, the goal is to have the
-  # rest of the reactivity take over, as it does before language toggle is
-  # pressed
-  plot_data <- filter_statements(
-    statements = statements,
-    svy_data = data,
-    # NOTE: Should this be a call to statements()$statement[1]?
-    policy = statements$statement[1]
-  )
-  svy_data(plot_data)
 }

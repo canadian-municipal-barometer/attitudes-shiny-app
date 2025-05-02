@@ -1,13 +1,6 @@
 library(shiny)
 library(shiny.i18n)
 
-# Set locale for R session
-if (.Platform$OS.type == "windows") {
-  Sys.setlocale(category = "LC_ALL", locale = "French_France.UTF-8")
-} else {
-  Sys.setlocale(category = "LC_ALL", locale = "fr_FR.UTF-8")
-}
-
 # data prep --------------------
 
 # RDA file loading
@@ -34,45 +27,37 @@ server <- function(input, output, session) {
   # Initialize reactive values
   current_lang_r <- reactiveVal(app_language)
   # input_state_r <- reactiveVal(TRUE)
-  translator_r <- reactiveVal(translator)
-  statements_r <- reactiveVal(statements) # nolint
-  statement_tags_r <- reactiveVal(statement_tags) # nolint
+  statements_r <- reactiveVal(statements_en) # nolint
+  statement_tags_r <- reactiveVal(statement_tags_en) # nolint
   svy_data_r <- reactiveVal(svy_data) #nolint
 
-  # Handle language toggle
+  # Handle language toggle of data
   observeEvent(input$lang_toggle, {
     # Toggle language between English and French
     if (current_lang_r() == "en") {
+      current_lang_r("fr")
+
       statements_r(statements_fr)
       statement_tags_r(statement_tags_fr)
 
-      updateActionButton(
-        session,
-        "lang_toggle",
-        # Update without shiny.i18n to avoid circular dependency
-        label = "EN"
-      )
-
-      current_lang_r("fr")
-
-      translator_r()$set_translation_language("fr")
+      # Update without shiny.i18n to avoid circular dependency
+      updateActionButton(session, "lang_toggle", label = "EN")
     } else {
+      current_lang_r("en")
+
       statements_r(statements_en)
       statement_tags_r(statement_tags_en)
 
-      updateActionButton(
-        session,
-        "lang_toggle",
-        # Update without shiny.i18n to avoid circular dependency
-        label = "FR"
-      )
-
-      current_lang_r("en")
-
-      translator_r()$set_translation_language("en")
+      updateActionButton(session, "lang_toggle", label = "FR")
     }
     message("\nlang_toggle complete")
     message(paste("`current_lang`:", current_lang_r(), "\n"))
+  })
+
+  # reacts to `lang_toggle` via changes to `current_lang_r`
+  translator_r <- reactive({
+    translator$set_translation_language(current_lang_r())
+    return(translator)
   })
 
   # main reactive elements --------------------
@@ -95,7 +80,7 @@ server <- function(input, output, session) {
     message("`policy` menu rendered")
     selectInput(
       inputId = "policy",
-      label = translator_r()$t("Select a policy:"),
+      label = "Select a policy:",
       # updated in `server` first time `select_domain` input used
       choices = NULL,
       selectize = TRUE,
@@ -117,6 +102,7 @@ server <- function(input, output, session) {
     message("\n`select_domain` observer")
     statements_update(
       session = session,
+      translator_r = translator_r,
       statements_r = statements_r,
       domain = input$select_domain
     )
@@ -130,7 +116,10 @@ server <- function(input, output, session) {
   })
 
   # sidebar
+
   output$sidebar_contents <- render_sidebar(translator = translator_r) # nolint
+
+  # plot
 
   filtered_svy_r <- eventReactive(input$policy, {
     message("data filtering reactive called")
@@ -147,7 +136,6 @@ server <- function(input, output, session) {
     un_translate_input(input)
   })
 
-  # plot
   output$predictions <- render_attitudes_plot(
     statements_r = statements_r,
     filtered_svy_data_r = filtered_svy_r, # nolint
@@ -157,6 +145,7 @@ server <- function(input, output, session) {
   )
 
   # mainpanel
+
   output$mainpanel <- render_mainpanel(
     translator_r = translator_r,
     statements_r = statements_r
