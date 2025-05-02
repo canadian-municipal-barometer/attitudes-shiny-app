@@ -99,6 +99,7 @@ statements_update <- function(
 }
 
 filter_statements <- function(statements, svy_data_r, policy) {
+  req(!is.null(policy) & policy != "")
   # Find the selected policy in statements
   index <- which(statements()$statement == policy) # input$policy
   val <- statements()$var_name[index]
