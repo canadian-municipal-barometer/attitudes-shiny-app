@@ -15,13 +15,8 @@ render_mainpanel <- function(translator_r, statements_r) {
           h1("\n"),
           p(
             translator_r()$t(
-              "Please select one or more policy domains, and then choose a specific question from the drop-down menu below."
+              "Please select one or more policy domains, and then choose a specific policy from the drop-down menu below."
             ) # nolint
-          ),
-          p(
-            translator_r()$t(
-              'To clear the policy domain box, press the "Reset" button.'
-            )
           ),
           # select the policy group to filter by
           div(
