@@ -20,7 +20,7 @@ render_attitudes_plot <- function(
       validate(
         need(
           user_selected["province"] %in% filtered_svy_data_r()$province,
-          input_err
+          input_err()
         )
       )
 

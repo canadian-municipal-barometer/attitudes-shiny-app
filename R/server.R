@@ -16,7 +16,8 @@ statements_fr <- load_statements(data_lang = "fr")
 statement_tags_fr <- load_statement_tags(data_lang = "fr")
 
 # Set the error that is displayed if model inputs aren't present for a policy
-input_err <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
+input_err_en <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
+input_err_fr <- "La combinaison de la question de politique publique et des caractéristiques démographiques que vous avez sélectionnée ne figure pas dans les données. Veuillez faire une autre sélection." # nolint
 
 # load translation file to create shiny.i18n translator object
 translator <- Translator$new(translation_csvs_path = "data/translation/")
@@ -30,6 +31,7 @@ server <- function(input, output, session) {
   statements_r <- reactiveVal(statements_en) # nolint
   statement_tags_r <- reactiveVal(statement_tags_en) # nolint
   svy_data_r <- reactiveVal(svy_data) #nolint
+  input_err <- reactiveVal(input_err_en)
 
   # Handle language toggle of data
   observeEvent(input$lang_toggle, {
@@ -39,6 +41,7 @@ server <- function(input, output, session) {
 
       statements_r(statements_fr)
       statement_tags_r(statement_tags_fr)
+      input_err(input_err_fr)
 
       # Update without shiny.i18n to avoid circular dependency
       updateActionButton(session, "lang_toggle", label = "EN")
@@ -47,6 +50,7 @@ server <- function(input, output, session) {
 
       statements_r(statements_en)
       statement_tags_r(statement_tags_en)
+      input_err(input_err_en)
 
       updateActionButton(session, "lang_toggle", label = "FR")
     }
