@@ -27,7 +27,6 @@ server <- function(input, output, session) {
 
   # Initialize reactive values
   current_lang_r <- reactiveVal(app_language)
-  # input_state_r <- reactiveVal(TRUE)
   statements_r <- reactiveVal(statements_en) # nolint
   statement_tags_r <- reactiveVal(statement_tags_en) # nolint
   svy_data_r <- reactiveVal(svy_data) #nolint
@@ -73,7 +72,6 @@ server <- function(input, output, session) {
       inputId = "select_domain",
       label = translator_r()$t("Policy domain:"),
       choices = statement_tags_r(), # nolint
-      # choices = NULL, # nolint
       selectize = TRUE,
       width = "325px"
     )
