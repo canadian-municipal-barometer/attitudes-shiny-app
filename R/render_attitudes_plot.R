@@ -26,7 +26,6 @@ render_attitudes_plot <- function(
 
       # an immediately invoked function
       model <- (function() {
-        # TODO: remove sync before deployment
         sink("/dev/null") # disable console logging
         model <- nnet::multinom(
           factor(outcome) ~

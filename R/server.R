@@ -3,17 +3,17 @@ library(shiny.i18n)
 
 # data prep --------------------
 
-# RDA file loading
+default_language <- "en"
 
-# `tbl`: main voter data
-load("data/voter-data.rda")
+# main voter data
+svy_data <- readRDS("data/voter-data.rds")
 
 app_language <- "en"
 
-statements_en <- load_statements(data_lang = "en")
-statement_tags_en <- load_statement_tags(data_lang = "en")
-statements_fr <- load_statements(data_lang = "fr")
-statement_tags_fr <- load_statement_tags(data_lang = "fr")
+statements_en <- readRDS("data/statements_en.rds")
+statement_tags_en <- readRDS("data/statement_tags_en.rds")
+statements_fr <- readRDS("data/statements_fr.rds")
+statement_tags_fr <- readRDS("data/statement_tags_fr.rds")
 
 # Set the error that is displayed if model inputs aren't present for a policy
 input_err_en <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
@@ -26,7 +26,7 @@ server <- function(input, output, session) {
   cat("server function entered")
 
   # Initialize reactive values
-  current_lang_r <- reactiveVal(app_language)
+  current_lang_r <- reactiveVal(default_language)
   statements_r <- reactiveVal(statements_en) # nolint
   statement_tags_r <- reactiveVal(statement_tags_en) # nolint
   svy_data_r <- reactiveVal(svy_data) #nolint
