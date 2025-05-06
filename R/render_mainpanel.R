@@ -22,9 +22,8 @@ render_mainpanel <- function(translator_r, statements_r) {
           div(
             style = "
                     display: flex;
-                    align-items: flex-start;
-                     align-items: end;
-                   ",
+                    align-items: end;
+                    ",
             uiOutput(
               outputId = "select_domain",
               # Make the select_domain div's formatting match the reset button # nolint

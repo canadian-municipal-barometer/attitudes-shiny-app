@@ -108,6 +108,13 @@ render_sidebar <- function(translator) {
         ),
         selectize = FALSE
       ),
+      br(),
+      shinyWidgets::materialSwitch(
+        inputId = "avg_switch",
+        label = "Compare to the national average",
+        value = TRUE,
+        status = "primary"
+      )
     )
   })
 }
