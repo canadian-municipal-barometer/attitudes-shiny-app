@@ -5,7 +5,7 @@ library(shiny)
 # Also converts the input object to a list, which is required by
 # `render_attitudes_plot` even when no language translation occurs.
 un_translate_input <- function(input) {
-  cat("---`un_translate_selected` ran")
+  cat("---`un_translate_input` ran")
   selected <- list()
 
   selected["province"] <- input$province |>
@@ -105,4 +105,79 @@ filter_statements <- function(statements, svy_data_r, policy) {
   val <- statements()$var_name[index]
   tbl <- svy_data_r() |> dplyr::filter(policy == val)
   return(tbl)
+}
+
+simple_plot <- function(preds) {
+  ggplot2::ggplot(
+    preds,
+    ggplot2::aes(x = cats, y = probs, fill = cats) # nolint
+  ) +
+    ggplot2::geom_col() +
+    ggplot2::coord_flip() +
+    ggplot2::geom_text(
+      ggplot2::aes(label = paste0(probs, "%")),
+      nudge_y = 3.5
+    ) +
+    ggplot2::theme_minimal(base_size = 20) +
+    ggplot2::scale_x_discrete(
+      labels = c(
+        "Agree",
+        "Disagree",
+        "No opinion"
+      )
+    ) +
+    ggplot2::scale_fill_manual(
+      values = c(
+        "#6C6E74",
+        "#000",
+        "#0091AC"
+      )
+    ) +
+    ggplot2::theme(
+      legend.position = "none",
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+}
+
+natl_avg_plot <- function(preds) {
+  ggplot2::ggplot(
+    preds,
+    ggplot2::aes(x = cats, y = probs, fill = fill_group, group = group) # nolint
+  ) +
+    ggplot2::geom_col(position = "dodge") +
+    ggplot2::coord_flip() +
+    ggplot2::geom_text(
+      ggplot2::aes(label = paste0(probs, "%")),
+      nudge_y = 3.5
+    ) +
+    ggplot2::theme_minimal(base_size = 20) +
+    ggplot2::scale_x_discrete(
+      labels = c(
+        "Agree",
+        "Disagree",
+        "No opinion"
+      )
+    ) +
+    ggplot2::scale_fill_manual(
+      values = c(
+        "#7d7d7d",
+        "#6C6E74",
+        "#000000",
+        "#0091AC"
+      )
+    ) +
+    ggplot2::theme(
+      legend.position = "none",
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
 }
