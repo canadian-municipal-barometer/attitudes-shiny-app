@@ -119,13 +119,6 @@ simple_plot <- function(preds) {
       nudge_y = 3.5
     ) +
     ggplot2::theme_minimal(base_size = 20) +
-    ggplot2::scale_x_discrete(
-      labels = c(
-        "Agree",
-        "Disagree",
-        "No opinion"
-      )
-    ) +
     ggplot2::scale_fill_manual(
       values = c(
         "#6C6E74",
@@ -156,13 +149,6 @@ natl_avg_plot <- function(preds) {
       nudge_y = 3.5
     ) +
     ggplot2::theme_minimal(base_size = 20) +
-    ggplot2::scale_x_discrete(
-      labels = c(
-        "Agree",
-        "Disagree",
-        "No opinion"
-      )
-    ) +
     ggplot2::scale_fill_manual(
       values = c(
         "#7d7d7d",

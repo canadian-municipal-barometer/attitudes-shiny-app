@@ -88,11 +88,12 @@ render_attitudes_plot <- function(
         ordered = TRUE
       )
 
+      message(paste("preds:", preds))
+
       if (show_natl_avg()) {
         policy_i <- filtered_svy_data_r()$policy[1]
         natl_avg_i <- natl_avg[[policy_i]]
         preds <- dplyr::bind_rows(preds, natl_avg_i)
-        print(paste("++++++++++++++", preds))
         preds$fill_group <- ifelse(preds$group == "preds", preds$cats, "comp")
         natl_avg_plot(preds)
       } else {
