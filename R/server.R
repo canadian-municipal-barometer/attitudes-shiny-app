@@ -22,7 +22,9 @@ input_err_en <- "The combination of the policy question and demographic characte
 input_err_fr <- "La combinaison de la question de politique publique et des caractéristiques démographiques que vous avez sélectionnée ne figure pas dans les données. Veuillez faire une autre sélection." # nolint
 
 # load translation file to create shiny.i18n translator object
-translator <- Translator$new(translation_csvs_path = "data/translation/")
+translator <- shiny.i18n::Translator$new(
+  translation_csvs_path = "data/translation/"
+)
 
 server <- function(input, output, session) {
   cat("server function entered")
