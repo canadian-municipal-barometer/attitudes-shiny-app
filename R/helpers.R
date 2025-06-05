@@ -113,11 +113,12 @@ simple_plot <- function(preds) {
     ggplot2::aes(x = cats, y = probs, fill = cats) # nolint
   ) +
     ggplot2::geom_col() +
-    ggplot2::coord_flip() +
     ggplot2::geom_text(
       ggplot2::aes(label = paste0(probs, "%")),
-      nudge_y = 3.5
+      hjust = -0.1,
+      size = 5
     ) +
+    ggplot2::coord_flip() +
     ggplot2::theme_minimal(base_size = 20) +
     ggplot2::scale_fill_manual(
       values = c(
@@ -146,19 +147,23 @@ natl_avg_plot <- function(preds) {
     ggplot2::coord_flip() +
     ggplot2::geom_text(
       ggplot2::aes(label = paste0(probs, "%")),
-      nudge_y = 3.5
+      position = ggplot2::position_dodge(width = 0.9),
+      hjust = -0.1,
+      size = 5
     ) +
     ggplot2::theme_minimal(base_size = 20) +
     ggplot2::scale_fill_manual(
       values = c(
-        "#7d7d7d",
-        "#6C6E74",
-        "#000000",
-        "#0091AC"
-      )
+        "National Average" = "#c7c7c7",
+        "No opinion" = "#6C6E74",
+        "Disagree" = "#000000",
+        "Agree" = "#0091AC"
+      ),
+      breaks = c("National Average")
     ) +
     ggplot2::theme(
-      legend.position = "none",
+      legend.position = "bottom",
+      legend.title = ggplot2::element_blank(),
       axis.title.x = ggplot2::element_blank(),
       axis.title.y = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
