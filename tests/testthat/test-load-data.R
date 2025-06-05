@@ -1,10 +1,9 @@
 test_that("statement data colnames are correct", {
-  # NOTE: I can't set this up like a proper package, because my deployment
-  # (Posit Connect Cloud) seems to require different structure than
-  # what a real package needs, so the working directory doesn't set properly
-  # in `testthat`
-  setwd("../../") # TODO: There must be a better way...
-  print(getwd())
+  # NOTE: The working directory can't be set properly in `testthat`
+  # I can't set this repo up like a proper package, because my Shiny deployment
+  # (Posit Connect Cloud) seems to require a different structure than what a
+  # real package has.
+  setwd("../../")
   colnames <- c("tags", "statement", "var_name")
   data_en <- readRDS("data/statements_en.rds")
   data_fr <- readRDS("data/statements_fr.rds")
