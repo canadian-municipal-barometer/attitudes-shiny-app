@@ -114,7 +114,9 @@ render_sidebar <- function(translator) {
         label = "Compare to the national average",
         value = TRUE,
         status = "primary"
-      )
+      ),
+      br(),
+      downloadButton("download_plot", "Download Plot")
     )
   })
 }

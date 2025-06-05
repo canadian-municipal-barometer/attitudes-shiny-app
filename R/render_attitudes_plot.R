@@ -9,7 +9,7 @@ render_attitudes_plot <- function(
   user_selected,
   input_err
 ) {
-  plot <- renderPlot(
+  plot <- reactive(
     {
       message("`renderPlot` called")
 
@@ -106,7 +106,6 @@ render_attitudes_plot <- function(
       } else {
         simple_plot(preds)
       }
-    },
-    bg = "transparent"
+    }
   )
 }

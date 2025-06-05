@@ -159,6 +159,7 @@ natl_avg_plot <- function(preds) {
         "Disagree" = "#000000",
         "Agree" = "#0091AC"
       ),
+      # This makes its contents the only label in the legend
       breaks = c("National Average")
     ) +
     ggplot2::theme(
@@ -171,4 +172,9 @@ natl_avg_plot <- function(preds) {
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank()
     )
+}
+
+create_download_plot <- function(gg_plot, title) {
+  gg_plot +
+    ggplot2::ggtitle(title)
 }

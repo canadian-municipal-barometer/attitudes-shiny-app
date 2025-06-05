@@ -40,7 +40,7 @@ render_mainpanel <- function(translator_r, statements_r) {
             id = "plot-container",
             style = "background: transparent !important;",
             plotOutput(
-              "predictions",
+              "plot",
               width = "100%",
               height = "400px"
             )
