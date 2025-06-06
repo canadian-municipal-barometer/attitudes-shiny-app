@@ -5,7 +5,7 @@ library(shiny)
 # Also converts the input object to a list, which is required by
 # `render_attitudes_plot` even when no language translation occurs.
 un_translate_input <- function(input) {
-  cat("---`un_translate_input` ran")
+  cat("---`un_translate_input` ran\n")
   selected <- list()
 
   selected["province"] <- input$province |>
