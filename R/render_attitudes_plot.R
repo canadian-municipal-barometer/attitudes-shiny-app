@@ -16,14 +16,14 @@ render_attitudes_plot <- function(
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       translator_r <- isolate(translator_r)
       input_err_r <- isolate(input_err_r)
+      user_selected <- isolate(user_selected())
 
-      req(user_selected())
       req(data_ready_r())
 
       # verify that data has the levels needed for the model to run
       validate(
         need(
-          user_selected()["province"] %in% filtered_svy_data_r()$province,
+          user_selected["province"] %in% filtered_svy_data_r()$province,
           input_err_r
         )
       )
@@ -58,15 +58,15 @@ render_attitudes_plot <- function(
       )
 
       pred_data <- data.frame(
-        province = user_selected()["province"],
-        popcat = user_selected()["popcat"],
-        gender = user_selected()["gender"],
-        agecat = user_selected()["agecat"],
-        race = user_selected()["race"],
-        immigrant = user_selected()["immigrant"],
-        homeowner = user_selected()["homeowner"],
-        education = user_selected()["education"],
-        income = user_selected()["income"]
+        province = user_selected["province"],
+        popcat = user_selected["popcat"],
+        gender = user_selected["gender"],
+        agecat = user_selected["agecat"],
+        race = user_selected["race"],
+        immigrant = user_selected["immigrant"],
+        homeowner = user_selected["homeowner"],
+        education = user_selected["education"],
+        income = user_selected["income"]
       )
 
       preds <- predict(model, pred_data, type = "probs")
