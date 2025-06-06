@@ -137,6 +137,7 @@ server <- function(input, output, session) {
 
   # un-translated inputs if they were translated to French in the UI
   user_selected <- reactive({
+    message("`un_translate_input` reactive entered")
     req(
       input$province,
       input$agecat,
@@ -148,7 +149,8 @@ server <- function(input, output, session) {
       input$education,
       input$income
     )
-    un_translate_input(input)
+    result <- un_translate_input(input)
+    return(result)
   })
 
   observeEvent(user_selected(), {
