@@ -3,19 +3,18 @@ library(shiny)
 render_attitudes_plot <- function(
   statements_r,
   filtered_svy_data_r,
-  translator_r,
-  input_err_r,
-  data_ready_r,
-  user_selected
+  natl_avg,
+  show_natl_avg,
+  current_lang_r,
+  user_selected,
+  input_err
 ) {
-  plot <- renderPlot(
+  plot <- reactive(
     {
       message("`renderPlot` called")
 
       statements_r <- isolate(statements_r)
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
-      translator_r <- isolate(translator_r)
-      input_err_r <- isolate(input_err_r)
       user_selected <- user_selected()
 
       req(data_ready_r())
@@ -30,7 +29,6 @@ render_attitudes_plot <- function(
 
       # an immediately invoked function
       model <- (function() {
-        # TODO: remove sync before deployment
         sink("/dev/null") # disable console logging
         model <- nnet::multinom(
           factor(outcome) ~
@@ -73,7 +71,8 @@ render_attitudes_plot <- function(
       preds <- round(preds * 100, 0)
       preds <- tidyr::tibble(
         cats = names(preds),
-        probs = preds
+        probs = preds,
+        group = as.factor("preds")
       )
 
       preds$cats <- factor(
@@ -91,42 +90,16 @@ render_attitudes_plot <- function(
         ordered = TRUE
       )
 
-      plot <- ggplot2::ggplot(
+      message(paste("preds:", preds))
+
+      build_plot(
         preds,
-        ggplot2::aes(x = cats, y = probs, fill = cats) # nolint
-      ) +
-        ggplot2::geom_col() +
-        ggplot2::coord_flip() +
-        ggplot2::geom_text(
-          ggplot2::aes(label = paste0(probs, "%")),
-          nudge_y = 3.5
-        ) +
-        ggplot2::theme_minimal(base_size = 20) +
-        ggplot2::scale_x_discrete(
-          labels = c(
-            "Agree" = translator_r()$t("Agree"),
-            "Disagree" = translator_r()$t("Disagree"),
-            "No opinion" = translator_r()$t("No opinion")
-          )
-        ) +
-        ggplot2::scale_fill_manual(
-          values = c(
-            "#6C6E74",
-            "#000",
-            "#0091AC"
-          )
-        ) +
-        ggplot2::theme(
-          legend.position = "none",
-          axis.title.x = ggplot2::element_blank(),
-          axis.title.y = ggplot2::element_blank(),
-          axis.text.x = ggplot2::element_blank(),
-          axis.ticks = ggplot2::element_blank(),
-          panel.grid.major = ggplot2::element_blank(),
-          panel.grid.minor = ggplot2::element_blank()
-        )
-      return(plot)
-    },
-    bg = "transparent"
+        filtered_svy_data_r,
+        show_natl_avg,
+        natl_avg,
+        current_lang_r
+      )
+    }
   )
+  return(plot)
 }
