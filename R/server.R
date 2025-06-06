@@ -35,9 +35,11 @@ server <- function(input, output, session) {
   statement_tags_r <- reactiveVal(statement_tags_en) # nolint
   svy_data_r <- reactiveVal(svy_data) #nolint
   input_err_r <- reactiveVal(input_err_en)
+  lang_toggle_in_progress <- reactiveVal(FALSE)
 
   # Handle language toggle of data
   observeEvent(input$lang_toggle, {
+    lang_toggle_in_progress(TRUE)
     # Toggle language between English and French
     if (current_lang_r() == "en") {
       current_lang_r("fr")
@@ -57,6 +59,7 @@ server <- function(input, output, session) {
 
       updateActionButton(session, "lang_toggle", label = "FR")
     }
+    lang_toggle_in_progress(FALSE)
     message("\nlang_toggle complete")
     message(paste("`current_lang`:", current_lang_r(), "\n"))
   })
@@ -139,6 +142,7 @@ server <- function(input, output, session) {
   # un-translated inputs if they were translated to French in the UI
   user_selected <- reactive({
     message("`un_translate_input` reactive entered")
+    req(!lang_toggle_in_progress())
     # req(
     #   input$province,
     #   input$agecat,
@@ -150,8 +154,7 @@ server <- function(input, output, session) {
     #   input$education,
     #   input$income
     # )
-    result <- un_translate_input(input)
-    return(result)
+    un_translate_input(input)
   })
 
   plot_r <- render_attitudes_plot(
@@ -163,7 +166,8 @@ server <- function(input, output, session) {
     }),
     current_lang_r = current_lang_r,
     user_selected = user_selected,
-    input_err_r = input_err_r
+    input_err_r = input_err_r,
+    lang_toggle_in_progress
   )
 
   # NOTE: This might seem like a useless abstraction, but it lets me have the

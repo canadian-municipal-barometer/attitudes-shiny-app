@@ -7,11 +7,14 @@ render_attitudes_plot <- function(
   show_natl_avg,
   current_lang_r,
   user_selected,
-  input_err_r
+  input_err_r,
+  lang_toggle_in_progress
 ) {
   plot <- reactive(
     {
       message("`renderPlot` called")
+      req(!lang_toggle_in_progress())
+      message("`renderPlot` running")
 
       statements_r <- isolate(statements_r)
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
