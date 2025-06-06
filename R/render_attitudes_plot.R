@@ -4,8 +4,8 @@ render_attitudes_plot <- function(
   statements_r,
   filtered_svy_data_r,
   translator_r,
-  user_selected,
-  input_err
+  input_err_r,
+  user_selected
 ) {
   plot <- renderPlot(
     {
@@ -14,12 +14,13 @@ render_attitudes_plot <- function(
       statements_r <- isolate(statements_r)
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       translator_r <- isolate(translator_r)
+      input_err_r <- isolate(input_err_r)
 
       # verify that data has the levels needed for the model to run
       validate(
         need(
           user_selected()["province"] %in% filtered_svy_data_r()$province,
-          input_err()
+          input_err_r
         )
       )
 
