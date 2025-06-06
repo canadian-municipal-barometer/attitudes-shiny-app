@@ -97,7 +97,6 @@ ui <- fluidPage(
       ),
       sidebarLayout(
         fluid = TRUE,
-        # from "components/"
         uiOutput("sidebar_contents"),
         div(
           class = "main-panel",

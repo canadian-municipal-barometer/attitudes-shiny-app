@@ -683,6 +683,36 @@
         "Built": "R 4.4.0; ; 2024-04-06 02:47:47 UTC; unix"
       }
     },
+    "forcats": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "forcats",
+        "Title": "Tools for Working with Categorical Variables (Factors)",
+        "Version": "1.0.0",
+        "Authors@R": "c(\n    person(\"Hadley\", \"Wickham\", , \"hadley@rstudio.com\", role = c(\"aut\", \"cre\")),\n    person(\"RStudio\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Helpers for reordering factor levels (including moving\n    specified levels to front, ordering by first appearance, reversing,\n    and randomly shuffling), and tools for modifying factor levels\n    (including collapsing rare levels into other, 'anonymising', and\n    manually 'recoding').",
+        "License": "MIT + file LICENSE",
+        "URL": "https://forcats.tidyverse.org/,\nhttps://github.com/tidyverse/forcats",
+        "BugReports": "https://github.com/tidyverse/forcats/issues",
+        "Depends": "R (>= 3.4)",
+        "Imports": "cli (>= 3.4.0), glue, lifecycle, magrittr, rlang (>= 1.0.0),\ntibble",
+        "Suggests": "covr, dplyr, ggplot2, knitr, readr, rmarkdown, testthat (>=\n3.0.0), withr",
+        "VignetteBuilder": "knitr",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-01-27 14:11:11 UTC; hadleywickham",
+        "Author": "Hadley Wickham [aut, cre],\n  RStudio [cph, fnd]",
+        "Maintainer": "Hadley Wickham <hadley@rstudio.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2023-01-29 22:20:02 UTC",
+        "Built": "R 4.4.0; ; 2024-04-06 10:51:33 UTC; unix"
+      }
+    },
     "fs": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -1790,6 +1820,33 @@
         "Built": "R 4.4.0; ; 2024-04-06 09:54:02 UTC; unix"
       }
     },
+    "shinyWidgets": {
+      "Source": "CRAN",
+      "Repository": "https://cran.r-project.org",
+      "description": {
+        "Package": "shinyWidgets",
+        "Title": "Custom Inputs Widgets for Shiny",
+        "Version": "0.9.0",
+        "Authors@R": "c(\n  person(\"Victor\", \"Perrier\", email = \"victor.perrier@dreamrs.fr\", role = c(\"aut\", \"cre\", \"cph\")),\n  person(\"Fanny\", \"Meyer\", role = \"aut\"),\n  person(\"David\", \"Granjon\", role = \"aut\"),\n  person(\"Ian\", \"Fellows\", role = \"ctb\", comment = \"Methods for mutating vertical tabs & updateMultiInput\"),\n  person(\"Wil\", \"Davis\", role = \"ctb\", comment = \"numericRangeInput function\"),\n  person(\"Spencer\", \"Matthews\", role = \"ctb\", comment = \"autoNumeric methods\"),\n  person(family = \"JavaScript and CSS libraries authors\", role = c(\"ctb\", \"cph\"), comment = \"All authors are listed in LICENSE.md\")\n  )",
+        "Description": "Collection of custom input controls and user interface components for 'Shiny' applications. \n  Give your applications a unique and colorful style !",
+        "URL": "https://github.com/dreamRs/shinyWidgets,\nhttps://dreamrs.github.io/shinyWidgets/",
+        "BugReports": "https://github.com/dreamRs/shinyWidgets/issues",
+        "License": "GPL-3",
+        "Encoding": "UTF-8",
+        "LazyData": "true",
+        "RoxygenNote": "7.3.2",
+        "Depends": "R (>= 3.1.0)",
+        "Imports": "bslib, sass, shiny (>= 1.6.0), htmltools (>= 0.5.1), jsonlite,\ngrDevices, rlang",
+        "Suggests": "testthat, covr, ggplot2, DT, scales, shinydashboard,\nshinydashboardPlus",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-02-21 09:09:48 UTC; perri",
+        "Author": "Victor Perrier [aut, cre, cph],\n  Fanny Meyer [aut],\n  David Granjon [aut],\n  Ian Fellows [ctb] (Methods for mutating vertical tabs &\n    updateMultiInput),\n  Wil Davis [ctb] (numericRangeInput function),\n  Spencer Matthews [ctb] (autoNumeric methods),\n  JavaScript and CSS libraries authors [ctb, cph] (All authors are listed\n    in LICENSE.md)",
+        "Maintainer": "Victor Perrier <victor.perrier@dreamrs.fr>",
+        "Repository": "CRAN",
+        "Date/Publication": "2025-02-21 12:30:02 UTC",
+        "Built": "R 4.4.1; ; 2025-02-21 14:14:55 UTC; unix"
+      }
+    },
     "sourcetools": {
       "Source": "CRAN",
       "Repository": "https://cran.r-project.org",
@@ -2202,46 +2259,46 @@
       "checksum": "87f9d4ec0ffedff42d9aa1a7e04c6c96"
     },
     "app.R": {
-      "checksum": "9c7767f2f7807ad77215ee6080a6375a"
+      "checksum": "7c6523b75fe7ef816deff76a1415b983"
     },
-    "data/statement_tags_en.rda": {
-      "checksum": "e20e34341a7726244144dd9f99cdcbc4"
+    "data/natl_avg.rds": {
+      "checksum": "f1495e60ae3802158a92648920c4a2ea"
     },
-    "data/statement_tags_fr.rda": {
-      "checksum": "5e9b921edfb7f0e6ec9d17b7fed59cf1"
+    "data/statement_tags_en.rds": {
+      "checksum": "264e3123a48ae4b16a45e10465aa65d3"
     },
-    "data/statements_en.rda": {
-      "checksum": "6b201129aaac37b88f95f58e8bb19ca8"
+    "data/statement_tags_fr.rds": {
+      "checksum": "99f3b38b47e71ec8e6d5f87d59874ce3"
     },
-    "data/statements_fr.rda": {
-      "checksum": "3603bdd6cf0935262343f7508c2dc796"
+    "data/statements_en.rds": {
+      "checksum": "41f34ccd4570954b19b79691033e71dc"
+    },
+    "data/statements_fr.rds": {
+      "checksum": "af3a5900102fb3c7495e50250de3e86f"
     },
     "data/translation/translation_fr.csv": {
       "checksum": "839e1e7f8c18277d94518bfebee965a9"
     },
-    "data/voter-data.rda": {
-      "checksum": "c8283bf4208b32db14b929256c5620c9"
+    "data/voter-data.rds": {
+      "checksum": "836d29d8e0b0494f96a24e150afd9cda"
     },
     "DESCRIPTION": {
       "checksum": "c470fab97de4fd222f09f287adf8894c"
     },
     "R/helpers.R": {
-      "checksum": "5821f32c6cd26e0c15cf30ea0a8eb283"
-    },
-    "R/load-data.R": {
-      "checksum": "200f390db37dd9747fcd9bb0d7ed548b"
+      "checksum": "c5429b26b1bd34ce74843a9e1799eef1"
     },
     "R/render_attitudes_plot.R": {
-      "checksum": "945de3740c8b4ce258e8bcd1641096b5"
+      "checksum": "746aed0b84ace82780a58feafb60fa94"
     },
     "R/render_mainpanel.R": {
-      "checksum": "017111c11bf9c126248abfae7ca2e39d"
+      "checksum": "e8cc85500e3160537f6fb9bcaa8dcbb6"
     },
     "R/render_sidebar.R": {
-      "checksum": "0acbe870cf0814782b7dfa06e3bfed63"
+      "checksum": "03ed06d0f9fbb8ddce3a472b382335e6"
     },
     "R/server.R": {
-      "checksum": "b9311ae5172722953f8586a30f490491"
+      "checksum": "6f87df9bbb419a2caecea6a76bcf01b5"
     },
     "R/ui.R": {
       "checksum": "cd491ac2d909f908bdcb0437eab1a28e"
@@ -2249,14 +2306,14 @@
     "README.md": {
       "checksum": "12f265226196331e5b9543b5e3356b62"
     },
+    "tests/profiling/v1.Rprofvis": {
+      "checksum": "45c66ba2d6d7b67645db6a51b29719c9"
+    },
     "tests/testthat.R": {
       "checksum": "98a1de2006b445d171135e3241f97a96"
     },
-    "tests/testthat/test-helpers.R": {
-      "checksum": "d41d8cd98f00b204e9800998ecf8427e"
-    },
     "tests/testthat/test-load-data.R": {
-      "checksum": "8cb0d843076ecd90dda9ce02110e737c"
+      "checksum": "25a54d436eeb9c5f028af8f2e2cc6a39"
     }
   },
   "users": null

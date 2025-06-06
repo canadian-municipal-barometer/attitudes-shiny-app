@@ -8,19 +8,23 @@ default_language <- "en"
 # main voter data
 svy_data <- readRDS("data/voter-data.rds")
 
-app_language <- "en"
-
+# statement data
 statements_en <- readRDS("data/statements_en.rds")
 statement_tags_en <- readRDS("data/statement_tags_en.rds")
 statements_fr <- readRDS("data/statements_fr.rds")
 statement_tags_fr <- readRDS("data/statement_tags_fr.rds")
 
-# Set the error that is displayed if model inputs aren't present for a policy
+# national average data
+natl_avg <- readRDS("data/natl_avg.rds")
+
+# the error that is displayed if model inputs aren't present for a policy
 input_err_en <- "The combination of the policy question and demographic characteristics that you have selected aren't in the data. Please make another selection." # nolint
 input_err_fr <- "La combinaison de la question de politique publique et des caractéristiques démographiques que vous avez sélectionnée ne figure pas dans les données. Veuillez faire une autre sélection." # nolint
 
 # load translation file to create shiny.i18n translator object
-translator <- Translator$new(translation_csvs_path = "data/translation/")
+translator <- shiny.i18n::Translator$new(
+  translation_csvs_path = "data/translation/"
+)
 
 server <- function(input, output, session) {
   cat("server function entered")
@@ -138,12 +142,27 @@ server <- function(input, output, session) {
     un_translate_input(input)
   })
 
-  output$predictions <- render_attitudes_plot(
+  plot_r <- render_attitudes_plot(
     statements_r = statements_r,
     filtered_svy_data_r = filtered_svy_r, # nolint
-    translator_r = translator_r,
+    natl_avg = natl_avg,
+    show_natl_avg = reactive({
+      input$avg_switch
+    }),
+    current_lang_r = current_lang_r,
     user_selected = user_selected,
     input_err = input_err
+  )
+
+  # NOTE: This might seem like a useless abstraction, but it lets me have the
+  # original plot object (plot_r) and do stuff to it besides just rendering it
+  # to the UI. This is used to add things to the plot when users press the
+  # "download plot" button.
+  output$plot <- renderPlot(
+    {
+      plot_r()
+    },
+    bg = "transparent"
   )
 
   # mainpanel
