@@ -152,16 +152,6 @@ natl_avg_plot <- function(preds) {
       size = 5
     ) +
     ggplot2::theme_minimal(base_size = 20) +
-    ggplot2::scale_fill_manual(
-      values = c(
-        "National Average" = "#c7c7c7",
-        "No opinion" = "#6C6E74",
-        "Disagree" = "#000000",
-        "Agree" = "#0091AC"
-      ),
-      # This makes its contents the only label in the legend
-      breaks = c("National Average")
-    ) +
     ggplot2::theme(
       legend.position = "bottom",
       legend.title = ggplot2::element_blank(),
@@ -174,7 +164,75 @@ natl_avg_plot <- function(preds) {
     )
 }
 
-create_download_plot <- function(gg_plot, title) {
-  gg_plot +
-    ggplot2::ggtitle(title)
+build_plot <- function(
+  preds,
+  filtered_svy_data_r,
+  show_natl_avg,
+  natl_avg,
+  current_lang_r
+) {
+  if (show_natl_avg()) {
+    # prepare data, assuming English is the current language
+    policy_i <- filtered_svy_data_r()$policy[1]
+    natl_avg_i <- natl_avg[[policy_i]]
+    natl_avg_i$fill_group <- "National average"
+    preds$fill_group <- preds$cats
+    preds$fill_group <- preds$fill_group |>
+      factor(ordered = TRUE) |>
+      forcats::fct_rev()
+    preds <- dplyr::bind_rows(preds, natl_avg_i)
+    preds$group <- preds$group |>
+      forcats::fct_rev()
+
+    # translate the plot data to french if current language is French
+    if (current_lang_r() == "fr") {
+      preds$cats <- preds$cats |>
+        forcats::fct_recode(
+          "Pas d'opinion" = "No opinion",
+          "Désaccord" = "Disagree",
+          "D'accord" = "Agree"
+        )
+      preds$fill_group <- preds$fill_group |>
+        forcats::fct_collapse(
+          "Moyenne nationale" = "National average",
+          "Pas d'opinion" = "No opinion",
+          "Désaccord" = "Disagree",
+          "D'accord" = "Agree"
+        )
+    }
+
+    # call the plot constructor
+    plot <- natl_avg_plot(preds)
+  } else {
+    # call the plot constructor
+    plot <- simple_plot(preds)
+  }
+
+  # add scale spec (dependent on current language)
+  if (current_lang_r() == "en") {
+    plot <- plot +
+      ggplot2::scale_fill_manual(
+        values = c(
+          "National average" = "#c7c7c7",
+          "No opinion" = "#6C6E74",
+          "Disagree" = "#000000",
+          "Agree" = "#0091AC"
+        ),
+        # This makes its contents the only label in the legend
+        breaks = c("National average")
+      )
+  } else {
+    plot <- plot +
+      ggplot2::scale_fill_manual(
+        values = c(
+          "Moyenne nationale" = "#c7c7c7",
+          "Pas d'opinion" = "#6C6E74",
+          "Désaccord" = "#000000",
+          "D'accord" = "#0091AC"
+        ),
+        # This makes its contents the only label in the legend
+        breaks = c("Moyenne nationale")
+      )
+  }
+  return(plot)
 }

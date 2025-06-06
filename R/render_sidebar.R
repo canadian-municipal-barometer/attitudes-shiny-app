@@ -115,8 +115,6 @@ render_sidebar <- function(translator) {
         value = TRUE,
         status = "primary"
       ),
-      br(),
-      downloadButton("download_plot", "Download Plot")
     )
   })
 }

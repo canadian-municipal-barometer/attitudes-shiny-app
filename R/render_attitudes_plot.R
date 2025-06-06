@@ -90,22 +90,14 @@ render_attitudes_plot <- function(
 
       message(paste("preds:", preds))
 
-      if (show_natl_avg()) {
-        policy_i <- filtered_svy_data_r()$policy[1]
-        natl_avg_i <- natl_avg[[policy_i]]
-        natl_avg_i$fill_group <- "National Average"
-        preds$fill_group <- preds$cats
-        preds$fill_group <- preds$fill_group |>
-          factor(ordered = TRUE) |>
-          forcats::fct_rev()
-        preds <- dplyr::bind_rows(preds, natl_avg_i)
-        preds$group <- preds$group |>
-          forcats::fct_rev()
-        print(preds)
-        natl_avg_plot(preds)
-      } else {
-        simple_plot(preds)
-      }
+      build_plot(
+        preds,
+        filtered_svy_data_r,
+        show_natl_avg,
+        natl_avg,
+        current_lang_r
+      )
     }
   )
+  return(plot)
 }
