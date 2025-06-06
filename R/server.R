@@ -5,6 +5,9 @@ print(Sys.getlocale("LC_ALL"))
 
 Sys.setlocale(category = "LC_ALL", locale = "en_US.UTF-8")
 
+print("++++++++++++++++++++++++++++++++++++++++++")
+print(Sys.getlocale("LC_ALL"))
+
 # data prep --------------------
 
 default_language <- "en"
