@@ -16,7 +16,7 @@ render_attitudes_plot <- function(
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       translator_r <- isolate(translator_r)
       input_err_r <- isolate(input_err_r)
-      user_selected <- isolate(user_selected())
+      user_selected <- user_selected()
 
       req(data_ready_r())
 
