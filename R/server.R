@@ -148,7 +148,6 @@ server <- function(input, output, session) {
       input$education,
       input$income
     )
-    message("`un_translate_input` reactive called")
     un_translate_input(input)
   })
 
