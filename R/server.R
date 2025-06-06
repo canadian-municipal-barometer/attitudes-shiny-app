@@ -1,6 +1,8 @@
 library(shiny)
 library(shiny.i18n)
 
+Sys.setlocale(category = "LC_ALL", locale = "en_US.UTF-8")
+
 # data prep --------------------
 
 default_language <- "en"
