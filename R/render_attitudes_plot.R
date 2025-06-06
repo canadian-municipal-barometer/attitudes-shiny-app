@@ -5,6 +5,7 @@ render_attitudes_plot <- function(
   filtered_svy_data_r,
   translator_r,
   input_err_r,
+  data_ready_r,
   user_selected
 ) {
   plot <- renderPlot(
@@ -15,6 +16,9 @@ render_attitudes_plot <- function(
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       translator_r <- isolate(translator_r)
       input_err_r <- isolate(input_err_r)
+
+      req(user_selected())
+      req(data_ready_r())
 
       # verify that data has the levels needed for the model to run
       validate(
