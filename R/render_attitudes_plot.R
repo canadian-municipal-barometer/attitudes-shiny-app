@@ -14,12 +14,11 @@ render_attitudes_plot <- function(
       statements_r <- isolate(statements_r)
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       translator_r <- isolate(translator_r)
-      user_selected <- user_selected()
 
       # verify that data has the levels needed for the model to run
       validate(
         need(
-          user_selected["province"] %in% filtered_svy_data_r()$province,
+          user_selected()["province"] %in% filtered_svy_data_r()$province,
           input_err()
         )
       )
@@ -54,15 +53,15 @@ render_attitudes_plot <- function(
       )
 
       pred_data <- data.frame(
-        province = user_selected["province"],
-        popcat = user_selected["popcat"],
-        gender = user_selected["gender"],
-        agecat = user_selected["agecat"],
-        race = user_selected["race"],
-        immigrant = user_selected["immigrant"],
-        homeowner = user_selected["homeowner"],
-        education = user_selected["education"],
-        income = user_selected["income"]
+        province = user_selected()["province"],
+        popcat = user_selected()["popcat"],
+        gender = user_selected()["gender"],
+        agecat = user_selected()["agecat"],
+        race = user_selected()["race"],
+        immigrant = user_selected()["immigrant"],
+        homeowner = user_selected()["homeowner"],
+        education = user_selected()["education"],
+        income = user_selected()["income"]
       )
 
       preds <- predict(model, pred_data, type = "probs")
@@ -86,9 +85,6 @@ render_attitudes_plot <- function(
         ),
         ordered = TRUE
       )
-
-      message("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-      message("ééééééééééé")
 
       plot <- ggplot2::ggplot(
         preds,
