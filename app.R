@@ -6,5 +6,7 @@
 # A single entry point in the app's root directory is a requirement of
 # deployment on Posit Connect Cloud.
 
+Sys.setlocale(category = "LC_ALL", locale = "en_US.UTF-8")
+
 shinyApp(ui, server) # nolint
 # profvis::profvis(runApp(shinyApp(ui, server)))
