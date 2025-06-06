@@ -7,7 +7,7 @@ render_attitudes_plot <- function(
   show_natl_avg,
   current_lang_r,
   user_selected,
-  input_err
+  input_err_r
 ) {
   plot <- reactive(
     {
@@ -21,7 +21,7 @@ render_attitudes_plot <- function(
       validate(
         need(
           user_selected["province"] %in% filtered_svy_data_r()$province,
-          input_err()
+          input_err_r()
         )
       )
 
