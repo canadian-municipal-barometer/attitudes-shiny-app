@@ -35,14 +35,12 @@ server <- function(input, output, session) {
   statement_tags_r <- reactiveVal(statement_tags_en) # nolint
   svy_data_r <- reactiveVal(svy_data) #nolint
   input_err_r <- reactiveVal(input_err_en)
-  data_ready_r <- reactiveVal(TRUE)
 
   # Handle language toggle of data
   observeEvent(input$lang_toggle, {
     # Toggle language between English and French
     if (current_lang_r() == "en") {
       current_lang_r("fr")
-      data_ready_r(FALSE)
 
       statements_r(statements_fr)
       statement_tags_r(statement_tags_fr)
@@ -52,7 +50,6 @@ server <- function(input, output, session) {
       updateActionButton(session, "lang_toggle", label = "EN")
     } else {
       current_lang_r("en")
-      data_ready_r(FALSE)
 
       statements_r(statements_en)
       statement_tags_r(statement_tags_en)
@@ -142,24 +139,19 @@ server <- function(input, output, session) {
   # un-translated inputs if they were translated to French in the UI
   user_selected <- reactive({
     message("`un_translate_input` reactive entered")
-    req(
-      input$province,
-      input$agecat,
-      input$popcat,
-      input$gender,
-      input$race,
-      input$immigrant,
-      input$homeowner,
-      input$education,
-      input$income
-    )
+    # req(
+    #   input$province,
+    #   input$agecat,
+    #   input$popcat,
+    #   input$gender,
+    #   input$race,
+    #   input$immigrant,
+    #   input$homeowner,
+    #   input$education,
+    #   input$income
+    # )
     result <- un_translate_input(input)
     return(result)
-  })
-
-  observeEvent(user_selected(), {
-    message("Setting `data_ready(TRUE)`")
-    data_ready_r(TRUE)
   })
 
   plot_r <- render_attitudes_plot(
@@ -171,7 +163,7 @@ server <- function(input, output, session) {
     }),
     current_lang_r = current_lang_r,
     user_selected = user_selected,
-    input_err = input_err
+    input_err_r = input_err_r
   )
 
   # NOTE: This might seem like a useless abstraction, but it lets me have the

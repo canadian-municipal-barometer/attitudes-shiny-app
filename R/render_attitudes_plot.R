@@ -7,7 +7,7 @@ render_attitudes_plot <- function(
   show_natl_avg,
   current_lang_r,
   user_selected,
-  input_err
+  input_err_r
 ) {
   plot <- reactive(
     {
@@ -17,13 +17,11 @@ render_attitudes_plot <- function(
       filtered_svy_data_r <- isolate(filtered_svy_data_r)
       user_selected <- user_selected()
 
-      req(data_ready_r())
-
       # verify that data has the levels needed for the model to run
       validate(
         need(
           user_selected["province"] %in% filtered_svy_data_r()$province,
-          input_err_r
+          input_err_r()
         )
       )
 
