@@ -1,6 +1,8 @@
 library(shiny)
 library(shiny.i18n)
 
+print(Sys.getlocale("LC_ALL"))
+
 Sys.setlocale(category = "LC_ALL", locale = "en_US.UTF-8")
 
 # data prep --------------------
