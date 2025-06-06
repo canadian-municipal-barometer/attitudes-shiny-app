@@ -87,6 +87,9 @@ render_attitudes_plot <- function(
         ordered = TRUE
       )
 
+      message("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+      message("ééééééééééé")
+
       plot <- ggplot2::ggplot(
         preds,
         ggplot2::aes(x = cats, y = probs, fill = cats) # nolint
