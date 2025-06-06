@@ -111,7 +111,7 @@ render_sidebar <- function(translator) {
       br(),
       shinyWidgets::materialSwitch(
         inputId = "avg_switch",
-        label = "Compare to the national average",
+        label = translator()$t("Compare to the national average"),
         value = TRUE,
         status = "primary"
       )
